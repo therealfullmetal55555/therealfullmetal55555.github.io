@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analytics Pipeline — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--dark); }
+
+/* ── Hero ─────────────────────────────────── */
+.hero-wrap {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  background: oklch(5% 0.01 220);
+  padding: 0 48px 64px;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 70% 50% at 70% 25%, oklch(18% 0.06 220 / 0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 55% at 20% 75%, oklch(14% 0.04 190 / 0.5) 0%, transparent 55%),
+    repeating-linear-gradient(90deg, oklch(16% 0.02 220 / 0.06) 0 1px, transparent 1px 52px),
+    repeating-linear-gradient(0deg,  oklch(16% 0.02 220 / 0.06) 0 1px, transparent 1px 52px);
+  animation: pulse 8s ease-in-out infinite alternate;
+}
+@keyframes pulse { from { opacity: 0.7; } to { opacity: 1; } }
+
+/* Floating chart lines */
+.hero-chart {
+  position: absolute;
+  right: 52px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.12;
+  pointer-events: none;
+}
+
+.hero-meta { position: relative; z-index: 2; margin-bottom: 28px; }
+.hero-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: oklch(36% 0.003 220); text-decoration: none; transition: color 0.2s;
+}
+.hero-back:hover { color: var(--void-text); }
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: oklch(40% 0.005 220); margin-bottom: 20px;
+}
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(44px, 8vw, 100px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+  color: var(--void-text);
+  margin-bottom: 32px;
+}
+
+.hero-title span {
+  color: oklch(72% 0.14 85);
+}
+
+.hero-desc {
+  font-size: 16px; font-weight: 300;
+  color: oklch(50% 0.003 220); line-height: 1.8;
+  max-width: 52ch; margin-bottom: 40px;
+}
+
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: oklch(40% 0.005 220); border: 1px solid oklch(18% 0.01 220);
+  padding: 6px 12px;
+}
+
+/* ── Stats ────────────────────────────────── */
+.stats-strip {
+  background: oklch(4% 0.008 220);
+  border-top: 1px solid oklch(13% 0.01 220);
+  border-bottom: 1px solid oklch(13% 0.01 220);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.stat-item {
+  padding: 0 32px;
+  border-right: 1px solid oklch(14% 0.01 220);
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child  { border-right: none; }
+
+.stat-num {
+  font-family: var(--f-head);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: oklch(72% 0.14 85);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-label {
+  font-size: 12px; font-weight: 300;
+  color: oklch(40% 0.005 220); line-height: 1.5;
+}
+
+/* ── Sections ─────────────────────────────── */
+.content-section {
+  padding: 88px 48px;
+  border-top: 1px solid oklch(11% 0.008 220);
+}
+
+.section-label {
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: oklch(32% 0.005 220); margin-bottom: 56px;
+}
+
+/* Dashboard preview */
+.dashboard-preview {
+  background: oklch(7% 0.012 220);
+  border: 1px solid oklch(14% 0.01 220);
+  padding: 32px;
+  font-family: monospace;
+  color: oklch(40% 0.005 220);
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-preview::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(72% 0.14 85 / 0.4), transparent);
+}
+
+.dp-accent { color: oklch(72% 0.14 85); }
+.dp-muted  { color: oklch(30% 0.003 220); }
+.dp-green  { color: oklch(65% 0.15 145); }
+.dp-row    { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid oklch(12% 0.008 220); }
+
+/* Feature grid */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.feature-card {
+  background: oklch(8% 0.012 220);
+  padding: 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.feature-card:hover { background: oklch(9.5% 0.014 220); }
+
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, oklch(72% 0.14 85 / 0.4), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 1; }
+
+.feature-icon {
+  width: 32px; height: 32px; margin-bottom: 20px;
+  color: oklch(72% 0.14 85);
+}
+
+.feature-name {
+  font-family: var(--f-head);
+  font-size: 16px; font-weight: 700;
+  color: var(--dark-text); letter-spacing: -0.02em; margin-bottom: 12px;
+}
+
+.feature-desc {
+  font-size: 13px; font-weight: 300;
+  color: oklch(45% 0.005 220); line-height: 1.6;
+}
+
+/* Stack */
+.stack-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 0; border-bottom: 1px solid oklch(11% 0.008 220);
+}
+.stack-name {
+  font-family: var(--f-head); font-size: 15px; font-weight: 600;
+  color: var(--dark-text); width: 140px; flex-shrink: 0;
+}
+.stack-role { font-size: 13px; font-weight: 300; color: oklch(42% 0.005 220); flex: 1; }
+.stack-tag {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: oklch(72% 0.14 85); border: 1px solid oklch(72% 0.14 85 / 0.3);
+  padding: 3px 8px;
+}
+
+/* Pending */
+.pending-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 0; border-bottom: 1px solid oklch(11% 0.008 220);
+  font-size: 13px; color: oklch(38% 0.005 220);
+}
+.pending-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: oklch(16% 0.01 220); flex-shrink: 0;
+}
+.pending-dot.active { background: oklch(72% 0.14 85); }
+
+@media (max-width: 768px) {
+  .hero-wrap, .content-section { padding-left: 24px; padding-right: 24px; }
+  .stats-strip { grid-template-columns: 1fr 1fr; padding: 32px 24px; gap: 32px 0; }
+  .stat-item { border-right: none; padding: 0; }
+  .stat-item:nth-child(odd) { border-right: 1px solid oklch(14% 0.01 220); }
+  .feature-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="site-nav">
+    <a href="projects.html" class="active">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+<!-- Hero -->
+<section class="hero-wrap">
+  <div class="hero-bg"></div>
+
+  <!-- Floating SVG chart -->
+  <div class="hero-chart">
+    <svg width="320" height="240" viewBox="0 0 320 240" fill="none">
+      <polyline points="0,200 40,180 80,160 120,140 160,100 200,120 240,80 280,60 320,40"
+        stroke="oklch(72% 0.14 85)" stroke-width="1.5" opacity="0.5"/>
+      <polyline points="0,220 40,210 80,195 120,200 160,175 200,185 240,150 280,140 320,120"
+        stroke="oklch(55% 0.10 220)" stroke-width="1" opacity="0.4"/>
+      <line x1="0" y1="0" x2="0" y2="240" stroke="oklch(20% 0.01 220)" stroke-width="0.5"/>
+      <line x1="80" y1="0" x2="80" y2="240" stroke="oklch(20% 0.01 220)" stroke-width="0.5"/>
+      <line x1="160" y1="0" x2="160" y2="240" stroke="oklch(20% 0.01 220)" stroke-width="0.5"/>
+      <line x1="240" y1="0" x2="240" y2="240" stroke="oklch(20% 0.01 220)" stroke-width="0.5"/>
+      <line x1="320" y1="0" x2="320" y2="240" stroke="oklch(20% 0.01 220)" stroke-width="0.5"/>
+    </svg>
+  </div>
+
+  <div class="hero-meta">
+    <a class="hero-back" href="projects.html">← Проекты</a>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Аналитика · 2026 · B2B</p>
+    <h1 class="hero-title">Analytics<br><span>Pipeline</span></h1>
+    <p class="hero-desc">
+      End-to-end аналитический дашборд: AmoCRM → Python pipeline →
+      Streamlit dashboard с воронкой, менеджерами, тепловой картой и Telegram-отчётами.
+      Мультиклиентская архитектура.
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">Python</span>
+      <span class="hero-tag">Streamlit</span>
+      <span class="hero-tag">AmoCRM API</span>
+      <span class="hero-tag">Plotly</span>
+      <span class="hero-tag">Telegram Bot</span>
+      <span class="hero-tag">Data Engineering</span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">197</div>
+    <div class="stat-label">лидов обработано<br>за 30 дней</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">8</div>
+    <div class="stat-label">секций<br>в дашборде</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">клиентов на<br>одном коде</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">5 мин</div>
+    <div class="stat-label">кеш данных<br>из CRM</div>
+  </div>
+</div>
+
+<!-- Dashboard preview -->
+<section class="content-section">
+  <p class="section-label">— Что внутри</p>
+
+  <div class="dashboard-preview">
+    <div class="dp-row">
+      <span><span class="dp-accent">ЛИДОВ</span></span>
+      <span><span class="dp-accent">СДЕЛОК</span></span>
+      <span><span class="dp-accent">КОНВЕРСИЯ</span></span>
+      <span><span class="dp-accent">ВЫРУЧКА</span></span>
+      <span><span class="dp-accent">СР. ЗАКРЫТИЕ</span></span>
+    </div>
+    <div class="dp-row">
+      <span>197</span>
+      <span><span class="dp-green">4</span></span>
+      <span>2.0% <span class="dp-muted">↑18%</span></span>
+      <span>2.6M ₽</span>
+      <span>12 дн.</span>
+    </div>
+    <br>
+    <div class="dp-muted">── МЕНЕДЖЕРЫ ──────────────────────────────</div>
+    <div class="dp-row"><span>Алексей С.</span><span>56 лидов</span><span class="dp-green">14 сделок</span><span>25%</span><span>1.2M ₽</span></div>
+    <div class="dp-row"><span>Марина К.</span><span>41 лид</span><span class="dp-green">8 сделок</span><span>19%</span><span>780к ₽</span></div>
+    <div class="dp-row dp-muted"><span>...</span></div>
+    <br>
+    <div class="dp-muted">── ТЕПЛОВАЯ КАРТА — активность по часам ───</div>
+    <div style="margin-top:8px; font-size:11px; letter-spacing:.05em">
+      <span class="dp-muted">Пн </span><span style="color:oklch(25% 0.01 220)">░░░░░░░░</span><span style="color:oklch(50% 0.10 85)">▓▓▓▓</span><span style="color:oklch(72% 0.14 85)">████</span><span style="color:oklch(50% 0.10 85)">▓▓▓</span><span class="dp-muted">░░░░░</span><br>
+      <span class="dp-muted">Вт </span><span class="dp-muted">░░░░░░░</span><span style="color:oklch(40% 0.08 85)">▒▒▒▒▒▒</span><span style="color:oklch(72% 0.14 85)">████</span><span class="dp-muted">░░░░░░</span><br>
+      <span class="dp-muted">Сб </span><span class="dp-muted">░░░░░░░░░░░░░░░░░░░░░░░░</span>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+      </svg>
+      <div class="feature-name">KPI + Дельта</div>
+      <div class="feature-desc">Лиды, сделки, конверсия, выручка и среднее время закрытия. Стрелки роста/падения к предыдущему периоду.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
+      <div class="feature-name">Воронка</div>
+      <div class="feature-desc">Plotly Funnel с реальными статусами AmoCRM. Процент конверсии на каждом этапе.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+      <div class="feature-name">Менеджеры</div>
+      <div class="feature-desc">Рейтинг по лидам, сделкам, конверсии и выручке. Видно кто тянет, а кто нет.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      <div class="feature-name">Тепловая карта</div>
+      <div class="feature-desc">Дни недели × часы суток. Видно когда лиды приходят — понимаешь когда включать рекламу.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+      <div class="feature-name">Причины отказов</div>
+      <div class="feature-desc">Топ причин потери сделок из AmoCRM loss_reason. Видно где системная проблема.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+      </svg>
+      <div class="feature-name">Telegram-отчёты</div>
+      <div class="feature-desc">Автоматический отчёт в группу по расписанию. Лиды, сделки, выручка, топ кампаний.</div>
+    </div>
+  </div>
+</section>
+
+<!-- Stack -->
+<section class="content-section">
+  <p class="section-label">— Стек</p>
+
+  <div class="stack-row">
+    <span class="stack-name">Python 3.14</span>
+    <span class="stack-role">Сбор данных, обработка, отчёты</span>
+    <span class="stack-tag">Core</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">Streamlit</span>
+    <span class="stack-role">Интерактивный дашборд с фильтрацией и кешем</span>
+    <span class="stack-tag">Dashboard</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">Plotly</span>
+    <span class="stack-role">Funnel, Bar, Heatmap, Line графики</span>
+    <span class="stack-tag">Визуализация</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">AmoCRM API v4</span>
+    <span class="stack-role">Лиды, статусы, менеджеры, UTM, причины отказов</span>
+    <span class="stack-tag">Data Source</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">Telegram Bot API</span>
+    <span class="stack-role">HTML-отчёты в групповой чат</span>
+    <span class="stack-tag">Delivery</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">pandas</span>
+    <span class="stack-role">Агрегация, merge данных, pivot-таблицы</span>
+    <span class="stack-tag">Analytics</span>
+  </div>
+</section>
+
+<!-- Roadmap -->
+<section class="content-section">
+  <p class="section-label">— Roadmap</p>
+
+  <div class="pending-row">
+    <div class="pending-dot active"></div>
+    <span>AmoCRM — лиды, воронка, менеджеры</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot active"></div>
+    <span>Streamlit дашборд с 8 секциями</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot active"></div>
+    <span>Telegram-отчёт автоматический</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot active"></div>
+    <span>Мультиклиентская архитектура (один код — разные клиенты)</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot"></div>
+    <span>Яндекс Директ — расходы, CPL по кампаниям</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot"></div>
+    <span>Meta Ads — интеграция расходов</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot"></div>
+    <span>ROAS и ДРР — полная сквозная атрибуция</span>
+  </div>
+  <div class="pending-row">
+    <div class="pending-dot"></div>
+    <span>Деплой на постоянный хостинг с доступом для клиента</span>
+  </div>
+</section>
+
+<footer class="site-footer" style="border-top-color: oklch(13% 0.01 220);">
+  <span>© 2026 Кирилл Цыганов</span>
+  <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+</footer>
+
+</div>
+<script>
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: 0.04, rootMargin: '0px 0px -20px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

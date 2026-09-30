@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Industrial Lo-Fi Panel — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); }
+
+/* ── Grain overlay ───────────────────────────── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+/* ── Palette overrides ───────────────────────── */
+:root {
+  --panel-bg:     oklch(4%  0.003 40);
+  --panel-mid:    oklch(8%  0.004 40);
+  --panel-card:   oklch(7%  0.004 40);
+  --panel-border: oklch(13% 0.004 40);
+  --panel-muted:  oklch(38% 0.003 40);
+  --panel-text:   oklch(88% 0.005 60);
+  --panel-accent: oklch(68% 0.10  65);   /* warm amber */
+  --panel-dim:    oklch(50% 0.06  65);
+}
+
+/* ── Hero ─────────────────────────────────────── */
+.hero-wrap {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+  background: var(--panel-bg);
+  padding: 0 48px 64px;
+}
+
+/* Darkroom gradient */
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 60% at 75% 30%, oklch(12% 0.04 40 / 0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 35% 50% at 15% 80%, oklch(9%  0.03 30 / 0.5) 0%, transparent 55%);
+}
+
+/* Film strip decoration */
+.hero-filmstrip {
+  position: absolute;
+  top: 0; right: 80px;
+  width: 48px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 0;
+  opacity: 0.06;
+  pointer-events: none;
+}
+.hero-filmstrip-hole {
+  width: 20px; height: 14px;
+  border: 1px solid var(--panel-text);
+  border-radius: 2px;
+  margin: 0 auto;
+  flex-shrink: 0;
+}
+
+/* Scanlines */
+.hero-scanlines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    oklch(0% 0 0 / 0.03) 3px,
+    oklch(0% 0 0 / 0.03) 4px
+  );
+  pointer-events: none;
+}
+
+.hero-meta { position: relative; z-index: 2; margin-bottom: 28px; }
+.hero-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--panel-muted); text-decoration: none; transition: color 0.2s;
+}
+.hero-back:hover { color: var(--panel-text); }
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--panel-muted); margin-bottom: 20px;
+  font-family: monospace;
+}
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(44px, 8vw, 100px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--panel-text);
+  margin-bottom: 32px;
+}
+.hero-title em {
+  font-style: normal;
+  color: var(--panel-accent);
+}
+
+.hero-desc {
+  font-size: 15px; font-weight: 300;
+  color: var(--panel-muted); line-height: 1.8;
+  max-width: 48ch; margin-bottom: 40px;
+}
+
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--panel-muted); border: 1px solid var(--panel-border);
+  padding: 6px 12px; font-family: monospace;
+}
+
+/* ── Stats strip ─────────────────────────────── */
+.stats-strip {
+  background: oklch(3.5% 0.003 40);
+  border-top: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--panel-border);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+.stat-item {
+  padding: 0 32px;
+  border-right: 1px solid var(--panel-border);
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child  { border-right: none; }
+
+.stat-num {
+  font-family: var(--f-head);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--panel-accent);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-label {
+  font-size: 12px; font-weight: 300;
+  color: var(--panel-muted); line-height: 1.5;
+}
+
+/* ── Content sections ────────────────────────── */
+.content-section {
+  padding: 88px 48px;
+  border-top: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+}
+
+.section-label {
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: oklch(28% 0.003 40); margin-bottom: 56px;
+  font-family: monospace;
+}
+
+/* ── Tab mockup ──────────────────────────────── */
+.tab-mockup {
+  background: oklch(6% 0.004 40);
+  border: 1px solid var(--panel-border);
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+.tab-mockup::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--panel-accent) 40%, transparent);
+  opacity: 0.35;
+}
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--panel-border);
+  padding: 0 24px;
+}
+.tab-btn {
+  font-family: monospace; font-size: 11px; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--panel-muted);
+  padding: 14px 20px; border-bottom: 2px solid transparent;
+  cursor: default; margin-bottom: -1px;
+}
+.tab-btn.active { color: var(--panel-accent); border-bottom-color: var(--panel-accent); }
+
+.tab-content { padding: 28px 24px 32px; }
+
+/* ── FX preset grid ──────────────────────────── */
+.fx-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+}
+
+.fx-card {
+  background: oklch(7% 0.004 40);
+  padding: 18px 16px;
+  position: relative; overflow: hidden;
+  cursor: default;
+  transition: background 0.2s;
+}
+.fx-card:hover { background: oklch(9% 0.005 40); }
+
+.fx-card::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: var(--panel-border);
+}
+
+.fx-num {
+  font-family: monospace; font-size: 9px;
+  color: oklch(25% 0.003 40); letter-spacing: 0.06em;
+  margin-bottom: 12px;
+}
+
+.fx-name {
+  font-family: var(--f-head);
+  font-size: 13px; font-weight: 700;
+  color: var(--panel-text); letter-spacing: -0.01em;
+  margin-bottom: 8px; line-height: 1.2;
+}
+
+.fx-desc {
+  font-size: 11px; font-weight: 300;
+  color: var(--panel-muted); line-height: 1.5;
+}
+
+/* Hover accent line */
+.fx-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--panel-accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s var(--ease);
+}
+.fx-card:hover::before { transform: scaleX(1); }
+
+/* ── Tri-X sliders mockup ─────────────────────── */
+.trix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.trix-group {
+  background: oklch(7% 0.004 40);
+  padding: 28px;
+}
+
+.trix-group-name {
+  font-family: monospace; font-size: 10px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--panel-accent);
+  margin-bottom: 20px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.trix-param {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid oklch(10% 0.003 40);
+}
+.trix-param:last-child { border-bottom: none; }
+
+.trix-label {
+  font-size: 12px; font-weight: 300; color: var(--panel-muted);
+  width: 100px; flex-shrink: 0;
+}
+
+.trix-track {
+  flex: 1; height: 2px;
+  background: oklch(13% 0.003 40);
+  position: relative;
+}
+.trix-fill {
+  position: absolute; left: 0; top: 0; bottom: 0;
+  background: var(--panel-dim);
+}
+.trix-thumb {
+  position: absolute; top: 50%;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--panel-accent);
+  transform: translate(-50%, -50%);
+}
+
+.trix-val {
+  font-family: monospace; font-size: 11px;
+  color: var(--panel-accent); width: 30px; text-align: right;
+}
+
+/* ── Feature cards ───────────────────────────── */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.feature-card {
+  background: var(--panel-card);
+  padding: 28px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.feature-card:hover { background: oklch(9% 0.005 40); }
+
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--panel-accent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 0.5; }
+
+.feature-icon {
+  width: 28px; height: 28px; margin-bottom: 20px;
+  color: var(--panel-accent);
+}
+
+.feature-name {
+  font-family: var(--f-head);
+  font-size: 15px; font-weight: 700;
+  color: var(--panel-text); letter-spacing: -0.02em; margin-bottom: 10px;
+}
+
+.feature-desc {
+  font-size: 13px; font-weight: 300;
+  color: var(--panel-muted); line-height: 1.6;
+}
+
+/* ── Stack table ─────────────────────────────── */
+.stack-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 0; border-bottom: 1px solid var(--panel-border);
+}
+.stack-name {
+  font-family: monospace; font-size: 14px; font-weight: 600;
+  color: var(--panel-text); width: 180px; flex-shrink: 0;
+}
+.stack-role { font-size: 13px; font-weight: 300; color: var(--panel-muted); flex: 1; }
+.stack-tag {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--panel-accent); border: 1px solid oklch(68% 0.10 65 / 0.3);
+  padding: 3px 8px; font-family: monospace;
+}
+
+/* ── "Code detail" note ──────────────────────── */
+.code-note {
+  background: oklch(6% 0.004 40);
+  border: 1px solid var(--panel-border);
+  border-left: 2px solid var(--panel-accent);
+  padding: 24px 28px;
+  margin-top: 48px;
+  font-family: monospace;
+  font-size: 12px;
+  color: var(--panel-muted);
+  line-height: 1.8;
+}
+.code-note .cn-label {
+  font-size: 9px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--panel-accent); margin-bottom: 10px;
+}
+
+/* ── Responsive ─────────────────────────────── */
+@media (max-width: 860px) {
+  .hero-wrap, .content-section { padding-left: 24px; padding-right: 24px; }
+  .stats-strip { grid-template-columns: 1fr 1fr; padding: 32px 24px; gap: 32px 0; }
+  .stat-item { border-right: none; padding: 0; }
+  .stat-item:nth-child(odd) { border-right: 1px solid var(--panel-border); }
+  .fx-grid { grid-template-columns: repeat(2, 1fr); }
+  .trix-grid { grid-template-columns: 1fr; }
+  .feature-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .fx-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="site-nav">
+    <a href="projects.html" class="active">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+<!-- Hero -->
+<section class="hero-wrap">
+  <div class="hero-bg"></div>
+  <div class="hero-scanlines"></div>
+
+  <!-- Film strip decoration -->
+  <div class="hero-filmstrip" aria-hidden="true">
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+    <div class="hero-filmstrip-hole"></div><div class="hero-filmstrip-hole"></div>
+  </div>
+
+  <div class="hero-meta">
+    <a class="hero-back" href="projects.html">← Проекты</a>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">ExtendScript · Photoshop · v2.9</p>
+    <h1 class="hero-title">Industrial<br><em>Lo-Fi</em><br>Panel</h1>
+    <p class="hero-desc">
+      Кастомная панель для Photoshop: 10 деструктивных FX-пресетов в один клик
+      и параметрический Tri-X модуль для аналоговой плёночной обработки.
+      Написана на ExtendScript / JSX, работает через ActionManager API.
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">ExtendScript</span>
+      <span class="hero-tag">ActionManager API</span>
+      <span class="hero-tag">Photoshop</span>
+      <span class="hero-tag">Generative FX</span>
+      <span class="hero-tag">Film Simulation</span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">10</div>
+    <div class="stat-label">FX-пресетов<br>в один клик</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">2</div>
+    <div class="stat-label">вкладки:<br>FX + Tri-X</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">v2.9</div>
+    <div class="stat-label">текущая<br>версия</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">PS 27</div>
+    <div class="stat-label">совместимость<br>(modal workaround)</div>
+  </div>
+</div>
+
+<!-- FX Presets -->
+<section class="content-section" id="sec-fx">
+  <p class="section-label">— FX вкладка · 10 деструктивных пресетов</p>
+
+  <div class="tab-mockup">
+    <div class="tab-bar">
+      <div class="tab-btn active">FX</div>
+      <div class="tab-btn" onclick="document.getElementById('sec-trix').scrollIntoView({behavior:'smooth'})" style="cursor:pointer">Tri-X</div>
+    </div>
+    <div class="tab-content">
+      <div class="fx-grid">
+
+        <div class="fx-card">
+          <div class="fx-num">01</div>
+          <div class="fx-name">Crushed Noir</div>
+          <div class="fx-desc">Жёсткий контраст, задавленные тени, монохром с выжженными светами.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">02</div>
+          <div class="fx-name">Xerox Scan</div>
+          <div class="fx-desc">Эффект ксерокопии: порог по яркости, артефакты растрирования.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">03</div>
+          <div class="fx-name">Silver Gelatin</div>
+          <div class="fx-desc">Имитация серебряно-желатинового отпечатка: мягкие полутона, тонирование.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">04</div>
+          <div class="fx-name">Toxic Cyan</div>
+          <div class="fx-desc">Агрессивный сдвиг канала в сторону циана, posterize, индустриальный привкус.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">05</div>
+          <div class="fx-name">CCTV Pixelate</div>
+          <div class="fx-desc">Пикселизация под камеру наблюдения с downsample-артефактами.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">06</div>
+          <div class="fx-name">Unsharp Artifacts</div>
+          <div class="fx-desc">Экстремальный unsharp mask → галоэффекты, разрушение краёв.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">07</div>
+          <div class="fx-name">Direct Flash</div>
+          <div class="fx-desc">Симуляция грубой вспышки в упор: пересвет центра, резкое затухание к краям.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">08</div>
+          <div class="fx-name">Shutter Drag</div>
+          <div class="fx-desc">Размытие движения с длинной выдержкой, motion streak по горизонтали.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">09</div>
+          <div class="fx-name">RGB Split</div>
+          <div class="fx-desc">Хроматическая аберрация: разброс каналов R/G/B с пространственным смещением.</div>
+        </div>
+
+        <div class="fx-card">
+          <div class="fx-num">10</div>
+          <div class="fx-name">Solarize Thermal</div>
+          <div class="fx-desc">Соляризация + тепловая палитра. Инверсия средних тонов, термографический вид.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Tri-X module -->
+<section class="content-section" id="sec-trix">
+  <p class="section-label">— Tri-X вкладка · параметрическая плёнка</p>
+
+  <div class="tab-mockup">
+    <div class="tab-bar">
+      <div class="tab-btn" onclick="document.getElementById('sec-fx').scrollIntoView({behavior:'smooth'})" style="cursor:pointer">FX</div>
+      <div class="tab-btn active">Tri-X</div>
+    </div>
+    <div class="tab-content">
+      <div class="trix-grid">
+
+        <div class="trix-group">
+          <div class="trix-group-name">Grain</div>
+          <div class="trix-param">
+            <span class="trix-label">Grain</span>
+            <div class="trix-track"><div class="trix-fill" style="width:55%"></div><div class="trix-thumb" style="left:55%"></div></div>
+            <span class="trix-val">55</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">GrainSize</span>
+            <div class="trix-track"><div class="trix-fill" style="width:30%"></div><div class="trix-thumb" style="left:30%"></div></div>
+            <span class="trix-val">30</span>
+          </div>
+        </div>
+
+        <div class="trix-group">
+          <div class="trix-group-name">Tones</div>
+          <div class="trix-param">
+            <span class="trix-label">Blacks</span>
+            <div class="trix-track"><div class="trix-fill" style="width:20%"></div><div class="trix-thumb" style="left:20%"></div></div>
+            <span class="trix-val">20</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Highlights</span>
+            <div class="trix-track"><div class="trix-fill" style="width:70%"></div><div class="trix-thumb" style="left:70%"></div></div>
+            <span class="trix-val">70</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Midtones</span>
+            <div class="trix-track"><div class="trix-fill" style="width:50%"></div><div class="trix-thumb" style="left:50%"></div></div>
+            <span class="trix-val">50</span>
+          </div>
+        </div>
+
+        <div class="trix-group">
+          <div class="trix-group-name">Rendering</div>
+          <div class="trix-param">
+            <span class="trix-label">Softness</span>
+            <div class="trix-track"><div class="trix-fill" style="width:40%"></div><div class="trix-thumb" style="left:40%"></div></div>
+            <span class="trix-val">40</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Warmth</span>
+            <div class="trix-track"><div class="trix-fill" style="width:15%"></div><div class="trix-thumb" style="left:15%"></div></div>
+            <span class="trix-val">15</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Vignette</span>
+            <div class="trix-track"><div class="trix-fill" style="width:60%"></div><div class="trix-thumb" style="left:60%"></div></div>
+            <span class="trix-val">60</span>
+          </div>
+        </div>
+
+        <div class="trix-group">
+          <div class="trix-group-name">B&W Channel Mix</div>
+          <div class="trix-param">
+            <span class="trix-label">Reds</span>
+            <div class="trix-track"><div class="trix-fill" style="width:65%"></div><div class="trix-thumb" style="left:65%"></div></div>
+            <span class="trix-val">65</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Yellows</span>
+            <div class="trix-track"><div class="trix-fill" style="width:80%"></div><div class="trix-thumb" style="left:80%"></div></div>
+            <span class="trix-val">80</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Greens</span>
+            <div class="trix-track"><div class="trix-fill" style="width:45%"></div><div class="trix-thumb" style="left:45%"></div></div>
+            <span class="trix-val">45</span>
+          </div>
+          <div class="trix-param">
+            <span class="trix-label">Blues</span>
+            <div class="trix-track"><div class="trix-fill" style="width:25%"></div><div class="trix-thumb" style="left:25%"></div></div>
+            <span class="trix-val">25</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- Technical features -->
+<section class="content-section">
+  <p class="section-label">— Технические особенности</p>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      <div class="feature-name">ActionManager API</div>
+      <div class="feature-desc">Каждый эффект собирается через низкоуровневый ActionDescriptor / ActionReference — доступ к внутренностям Photoshop без ScriptingListener.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <div class="feature-name">PS 27 Modal Fix</div>
+      <div class="feature-desc">Photoshop 2024 сломал синхронный EventLoop в панелях. Обход через <code>sched()</code> + <code>while(true)</code> — панель держит modal-сессию без зависаний.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      <div class="feature-name">Деструктивный подход</div>
+      <div class="feature-desc">Все эффекты применяются прямо на слой — намеренно. Для творческого процесса быстрый результат важнее обратимости.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/>
+        <line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/>
+        <line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>
+      </svg>
+      <div class="feature-name">Tri-X параметрика</div>
+      <div class="feature-desc">Слайдеры — не фильтры Lightroom. Под каждым параметром кастомные Curves / Channel Mixer / Add Noise вызовы через scriptExecute.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      <div class="feature-name">ExtendScript / JSX</div>
+      <div class="feature-desc">Панель — CEP-расширение на чистом ExtendScript. Никаких сторонних зависимостей. Устанавливается копированием папки в Extensions.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+      <div class="feature-name">CEP архитектура</div>
+      <div class="feature-desc">HTML-панель + JSX-бридж. UI живёт в Chromium (CEF), вызовы в Photoshop идут через csInterface.evalScript().</div>
+    </div>
+  </div>
+
+  <div class="code-note">
+    <div class="cn-label">// PS 27 modal event loop workaround</div>
+    <span style="color: oklch(45% 0.003 40);">// Photoshop 2024 перестал держать модальный диалог через стандартный app.activeDocument.suspendHistory()</span><br>
+    <span style="color: var(--panel-accent);">function</span> <span style="color: var(--panel-text);">sched</span><span style="color: oklch(45% 0.003 40)">(fn, delay) { setTimeout(fn, delay || 0); }</span><br>
+    <span style="color: var(--panel-accent);">while</span><span style="color: oklch(45% 0.003 40)">(true) {</span><br>
+    &nbsp;&nbsp;<span style="color: oklch(45% 0.003 40);">// keeps the script alive — receives callbacks from CEF panel</span><br>
+    &nbsp;&nbsp;<span style="color: var(--panel-text);">app</span><span style="color: oklch(45% 0.003 40);">.</span><span style="color: var(--panel-dim);">refresh</span><span style="color: oklch(45% 0.003 40);">();</span><br>
+    <span style="color: oklch(45% 0.003 40);">}</span>
+  </div>
+</section>
+
+<!-- Stack -->
+<section class="content-section">
+  <p class="section-label">— Стек</p>
+
+  <div class="stack-row">
+    <span class="stack-name">ExtendScript (JSX)</span>
+    <span class="stack-role">Основная логика: эффекты, слайдеры, modal-бридж</span>
+    <span class="stack-tag">Core</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">ActionManager API</span>
+    <span class="stack-role">Низкоуровневый доступ к операциям Photoshop</span>
+    <span class="stack-tag">PS Internal</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">CEP (Chromium Embedded)</span>
+    <span class="stack-role">Рендеринг HTML-панели внутри Photoshop</span>
+    <span class="stack-tag">UI Runtime</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">csInterface.js</span>
+    <span class="stack-role">Мост между HTML-интерфейсом и JSX-бэкендом</span>
+    <span class="stack-tag">Bridge</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">HTML + CSS</span>
+    <span class="stack-role">UI панели: кнопки FX, слайдеры Tri-X, вкладки</span>
+    <span class="stack-tag">UI</span>
+  </div>
+</section>
+
+<footer class="site-footer" style="border-top-color: var(--panel-border);">
+  <span>© 2026 Кирилл Цыганов</span>
+  <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+</footer>
+
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

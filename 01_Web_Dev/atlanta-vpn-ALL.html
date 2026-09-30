@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlanta VPN — Все экраны</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:    #060500;
+  --bg2:   #0D0B02;
+  --card:  #0F0D03;
+  --amber: #FFB800;
+  --amber2:#FFD84D;
+  --dim:   #3D3200;
+  --green: #00E676;
+  --red:   #FF3B5C;
+  --text:  #FFF8E0;
+  --muted: #5A4E20;
+  --mono:  'IBM Plex Mono', monospace;
+  --disp:  'Space Grotesk', sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:#030200;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);
+  padding:60px 20px;
+}
+
+/* ── SCENE ── */
+.scene{display:flex;flex-direction:column;align-items:center;gap:52px}
+
+/* Airport header sign */
+.airport-sign{
+  display:flex;align-items:center;gap:0;
+  background:#FFB800;
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(255,184,0,.2),0 4px 20px rgba(0,0,0,.5);
+}
+.sign-black{
+  background:#111;
+  padding:10px 20px;
+  display:flex;align-items:center;gap:10px;
+}
+.sign-arrow{
+  width:0;height:0;
+  border-top:18px solid transparent;
+  border-bottom:18px solid transparent;
+  border-left:14px solid #111;
+}
+.sign-yellow{
+  background:#FFB800;
+  padding:10px 20px;
+}
+.sign-text-w{font-family:var(--disp);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fff}
+.sign-text-b{font-family:var(--disp);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#111}
+
+/* ── PHONES ── */
+.phones{display:flex;gap:44px;flex-wrap:wrap;justify-content:center}
+.pcol{display:flex;flex-direction:column;align-items:center;gap:14px}
+.ptag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,184,0,.25);font-weight:600;font-family:var(--mono)}
+
+/* ── PHONE ── */
+.phone{
+  width:375px;padding:10px;
+  background:#0A0900;
+  border-radius:52px;
+  box-shadow:
+    0 0 0 1px rgba(255,184,0,.06),
+    0 60px 120px rgba(0,0,0,.9),
+    0 0 60px rgba(255,184,0,.03);
+}
+.screen{
+  border-radius:42px;overflow:hidden;height:844px;
+  display:flex;flex-direction:column;
+  background:var(--bg);position:relative;
+}
+
+/* Ambient light */
+.amb{position:absolute;inset:0;pointer-events:none;border-radius:42px;overflow:hidden}
+.ag{position:absolute;border-radius:50%;filter:blur(100px);opacity:.4}
+.ag1{width:300px;height:300px;background:#2A1E00;top:-60px;left:-60px;animation:ag1 16s ease-in-out infinite alternate}
+.ag2{width:200px;height:200px;background:#1A1500;top:200px;right:-50px;animation:ag2 20s ease-in-out infinite alternate}
+@keyframes ag1{to{transform:translate(20px,30px)}}
+@keyframes ag2{to{transform:translate(-15px,20px)}}
+
+.screen>*:not(.amb){position:relative;z-index:2}
+
+/* ── ISLAND ── */
+.island{width:120px;height:34px;background:#000;border-radius:20px;margin:12px auto 0;flex-shrink:0;z-index:10;position:relative}
+
+/* ── STATUS BAR ── */
+.sb{display:flex;justify-content:space-between;align-items:center;padding:10px 26px 0;flex-shrink:0}
+.sb-t{font-size:14px;font-weight:600;color:var(--text);letter-spacing:1px;font-family:var(--mono)}
+.sb-i{display:flex;gap:6px;align-items:center}
+
+/* ── TOP BAR ── */
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:14px 20px 0;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:0;overflow:hidden;border-radius:10px;border:1px solid rgba(255,184,0,.2)}
+.logo-l{
+  background:#FFB800;
+  padding:7px 12px;
+  display:flex;align-items:center;gap:6px;
+}
+.logo-l svg{flex-shrink:0}
+.logo-atl{font-family:var(--disp);font-size:14px;font-weight:800;color:#111;letter-spacing:1px}
+.logo-r{
+  background:#111008;
+  padding:7px 14px;
+}
+.logo-vpn{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--amber);letter-spacing:2px}
+.menu-btn{
+  width:40px;height:40px;border-radius:13px;
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,184,0,.08);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background .2s;
+}
+.menu-btn:hover{background:rgba(255,184,0,.06)}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow:hidden;padding:0 16px;display:flex;flex-direction:column}
+
+/* ═══ DEPARTURE BOARD ═══ */
+.dep-board{
+  background:#0A0800;
+  border:1px solid rgba(255,184,0,.12);
+  border-radius:14px;
+  overflow:hidden;
+  margin:14px 0 10px;
+  flex-shrink:0;
+}
+.board-header{
+  background:#111008;
+  border-bottom:1px solid rgba(255,184,0,.1);
+  padding:8px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.board-header-l{display:flex;align-items:center;gap:8px}
+.board-dot{
+  width:6px;height:6px;border-radius:50%;
+  flex-shrink:0;
+}
+.board-dot.on{background:#FFB800;box-shadow:0 0 8px #FFB800;animation:dp 2s infinite}
+.board-dot.off{background:rgba(255,184,0,.2)}
+@keyframes dp{50%{opacity:.3;transform:scale(.7)}}
+.board-title{font-size:9px;font-weight:600;letter-spacing:3px;color:rgba(255,184,0,.5);text-transform:uppercase}
+.board-time{font-size:10px;color:rgba(255,184,0,.3);letter-spacing:1px}
+
+/* Main board display */
+.board-main{padding:14px 14px 12px}
+.board-dest{
+  font-family:var(--disp);
+  font-size:28px;font-weight:800;
+  color:var(--amber2);
+  letter-spacing:-0.5px;
+  line-height:1;
+  text-shadow:0 0 30px rgba(255,184,0,.4);
+}
+.board-dest.small{font-size:20px;color:rgba(255,184,0,.35)}
+.board-row{display:flex;align-items:flex-end;justify-content:space-between;margin-top:10px}
+.board-info-col{display:flex;flex-direction:column;gap:4px}
+.board-label{font-size:8px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;font-weight:500}
+.board-val{font-size:13px;font-weight:600;color:var(--amber);letter-spacing:.5px}
+.board-val.lg{font-size:16px;font-weight:700}
+
+/* Status chip */
+.status-chip{
+  border-radius:6px;padding:5px 12px;
+  font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  flex-shrink:0;
+}
+.status-chip.boarding{background:rgba(0,230,118,.12);border:1px solid rgba(0,230,118,.25);color:#00E676}
+.status-chip.checkin{background:rgba(255,184,0,.1);border:1px solid rgba(255,184,0,.2);color:#FFB800}
+.status-chip.cancelled{background:rgba(255,59,92,.1);border:1px solid rgba(255,59,92,.2);color:#FF6B88}
+
+/* Divider with circles (boarding pass tear) */
+.tear-line{
+  display:flex;align-items:center;
+  border-top:1px dashed rgba(255,184,0,.15);
+  margin:0 -1px;
+  position:relative;
+}
+.tear-circle{
+  width:14px;height:14px;border-radius:50%;
+  background:var(--bg);
+  flex-shrink:0;
+  border:1px solid rgba(255,184,0,.12);
+}
+
+/* Board sub-row */
+.board-sub{
+  padding:10px 14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.flight-num{
+  font-size:11px;font-weight:600;color:rgba(255,184,0,.35);letter-spacing:1.5px;
+}
+.enc-badge{
+  display:flex;align-items:center;gap:5px;
+  font-size:9px;font-weight:600;letter-spacing:1px;
+  color:rgba(255,184,0,.25);text-transform:uppercase;
+}
+
+/* ═══ BOARDING PASS ═══ */
+.boarding-pass{
+  background:var(--card);
+  border:1px solid rgba(255,184,0,.1);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:10px;
+  flex-shrink:0;
+  position:relative;
+}
+.bp-body{padding:14px 15px 0;}
+.bp-row{display:flex;align-items:center;gap:0;justify-content:space-between}
+.bp-from,.bp-to{display:flex;flex-direction:column;align-items:center}
+.bp-code{font-family:var(--disp);font-size:32px;font-weight:800;color:var(--amber);letter-spacing:-1px;line-height:1;text-shadow:0 0 20px rgba(255,184,0,.3)}
+.bp-city{font-size:9px;font-weight:500;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-top:3px}
+.bp-arrow{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  padding:0 10px;
+  position:relative;
+}
+.bp-line{width:100%;height:1px;background:linear-gradient(90deg,rgba(255,184,0,.1),rgba(255,184,0,.3),rgba(255,184,0,.1))}
+.bp-plane{
+  position:absolute;
+  color:rgba(255,184,0,.5);
+  font-size:14px;
+}
+.bp-details{
+  display:flex;gap:0;
+  border-top:1px dashed rgba(255,184,0,.1);
+  margin:12px -15px 0;
+}
+.bp-detail{
+  flex:1;padding:9px 15px;
+  border-right:1px dashed rgba(255,184,0,.1);
+}
+.bp-detail:last-child{border-right:none}
+.bp-d-label{font-size:7px;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:4px}
+.bp-d-val{font-size:12px;font-weight:600;color:var(--amber);letter-spacing:.5px}
+
+/* Perforated bottom */
+.bp-perf{
+  height:8px;
+  background:repeating-linear-gradient(90deg,
+    var(--bg) 0,var(--bg) 6px,
+    transparent 6px,transparent 10px,
+    var(--card) 10px,var(--card) 16px
+  );
+  border-top:1px dashed rgba(255,184,0,.08);
+}
+
+/* ═══ STATS STRIP ═══ */
+.stats-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:10px;flex-shrink:0;
+}
+.stat-box{
+  background:var(--card);
+  border:1px solid rgba(255,184,0,.07);
+  border-radius:13px;padding:11px 12px;
+}
+.stat-box-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.stat-box-val{font-size:17px;font-weight:700;color:var(--amber);letter-spacing:-.5px;line-height:1;font-family:var(--disp)}
+.stat-box-val sub{font-size:9px;font-weight:500;color:var(--muted);vertical-align:baseline;margin-left:2px}
+
+/* ═══ DEPARTURES LIST ═══ */
+.departures{flex:1;overflow:hidden}
+.dep-table-head{
+  display:grid;grid-template-columns:1fr 1fr 60px 60px;
+  padding:6px 14px;
+  border-bottom:1px solid rgba(255,184,0,.07);
+  margin-bottom:4px;
+}
+.dep-th{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+
+.dep-row{
+  display:grid;grid-template-columns:1fr 1fr 60px 60px;
+  align-items:center;
+  padding:10px 14px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:background .15s;
+  margin-bottom:2px;
+}
+.dep-row:hover{background:rgba(255,184,0,.03)}
+.dep-row.active-row{background:rgba(255,184,0,.05);border:1px solid rgba(255,184,0,.1)}
+
+.dep-dest{display:flex;flex-direction:column;gap:3px}
+.dep-city{font-family:var(--disp);font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.2px}
+.dep-flag{font-size:11px}
+.dep-gate-cell{font-size:12px;font-weight:600;color:var(--amber);letter-spacing:.5px}
+.dep-ping-cell{font-size:11px;font-weight:600}
+.dep-ping-cell.fast{color:#00E676}
+.dep-ping-cell.ok{color:var(--amber)}
+.dep-status-cell{display:flex}
+
+/* ═══ CONNECT BUTTON ═══ */
+.conn-btn{
+  border-radius:15px;padding:15px 18px;
+  text-align:center;cursor:pointer;
+  margin-bottom:10px;flex-shrink:0;
+  position:relative;overflow:hidden;
+  transition:transform .1s;
+}
+.conn-btn:active{transform:scale(.99)}
+.conn-btn.active-conn{
+  background:linear-gradient(135deg,#7B5200,#B07800,#7B5200);
+  background-size:200%;animation:bgs 5s ease-in-out infinite;
+  box-shadow:0 8px 28px rgba(176,120,0,.35),0 2px 8px rgba(0,0,0,.4);
+  border:1px solid rgba(255,184,0,.2);
+}
+@keyframes bgs{0%,100%{background-position:0%}50%{background-position:100%}}
+.conn-btn::after{
+  content:'';position:absolute;top:0;left:-50%;
+  width:40%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+  animation:glint 6s ease-in-out infinite;
+}
+@keyframes glint{0%,100%{left:-50%}60%{left:110%}}
+.cb-main{font-size:14px;font-weight:700;color:#fff;letter-spacing:.5px;position:relative;text-transform:uppercase}
+.cb-sub{font-size:10px;color:rgba(255,255,255,.4);margin-top:3px;position:relative;letter-spacing:.5px}
+
+/* ═══ ALERT ═══ */
+.alert{
+  border-radius:13px;padding:11px 13px;
+  display:flex;align-items:flex-start;gap:10px;
+  margin-bottom:10px;flex-shrink:0;
+}
+.alert.warn{background:rgba(255,59,92,.05);border:1px solid rgba(255,59,92,.12)}
+.alert-ico{
+  width:28px;height:28px;border-radius:8px;
+  background:rgba(255,59,92,.1);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.alert-t{font-size:11px;font-weight:600;color:#FF6B88;letter-spacing:.3px}
+.alert-s{font-size:10px;color:rgba(255,248,224,.25);margin-top:3px;line-height:1.5;letter-spacing:.2px}
+
+/* ═══ BOTTOM NAV ═══ */
+.bot-nav{
+  flex-shrink:0;
+  background:rgba(6,5,0,.98);
+  border-top:1px solid rgba(255,184,0,.07);
+  padding:10px 0 26px;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  backdrop-filter:blur(20px);
+}
+.nav-it{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;padding:4px;transition:opacity .15s;
+}
+.nav-it:hover{opacity:.7}
+.nav-l{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,184,0,.2)}
+.nav-it.on .nav-l{color:var(--amber)}
+
+/* Section label */
+.sec-lbl{font-size:8px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-left:2px}
+
+/* ── FOOTER SPECS ── */
+.specs{
+  display:flex;gap:50px;flex-wrap:wrap;justify-content:center;
+  border-top:1px solid rgba(255,184,0,.06);
+  padding-top:32px;
+}
+.spec{display:flex;flex-direction:column;gap:4px}
+.spec-t{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,184,0,.2)}
+.spec-v{font-size:12px;color:rgba(255,184,0,.4)}
+
+/* ── SCREENS-SPECIFIC ── */
+/* Page title bar */
+.page-title-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0 12px;flex-shrink:0;
+}
+.page-title-main{
+  font-family:var(--disp);font-size:22px;font-weight:800;
+  color:var(--text);letter-spacing:-.5px;
+}
+.page-title-sub{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--muted);margin-top:3px;
+}
+.filter-btn{
+  width:36px;height:36px;border-radius:11px;
+  background:rgba(255,184,0,.06);border:1px solid rgba(255,184,0,.12);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+
+/* Search bar */
+.search-bar{
+  display:flex;align-items:center;gap:9px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,184,0,.08);
+  border-radius:13px;padding:10px 14px;
+  margin-bottom:12px;flex-shrink:0;
+}
+.search-placeholder{font-size:12px;color:var(--muted);letter-spacing:.3px}
+
+/* Region tabs */
+.region-tabs{display:flex;gap:6px;margin-bottom:14px;flex-shrink:0;overflow:hidden}
+.rtab{
+  padding:6px 13px;border-radius:9px;font-size:11px;font-weight:600;
+  letter-spacing:.5px;cursor:pointer;transition:all .15s;flex-shrink:0;
+}
+.rtab.active{background:rgba(255,184,0,.12);border:1px solid rgba(255,184,0,.25);color:var(--amber)}
+.rtab.inactive{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);color:var(--muted)}
+
+/* Terminal section */
+.terminal-section{margin-bottom:10px}
+.terminal-header{
+  display:flex;align-items:center;gap:8px;
+  padding:7px 12px;
+  background:rgba(255,184,0,.05);
+  border:1px solid rgba(255,184,0,.08);
+  border-radius:10px;
+  margin-bottom:6px;
+}
+.term-badge{
+  background:#FFB800;color:#111;
+  font-family:var(--disp);font-size:10px;font-weight:800;
+  padding:2px 8px;border-radius:5px;letter-spacing:1px;
+}
+.term-name{font-size:11px;font-weight:600;color:var(--amber);letter-spacing:1px;text-transform:uppercase}
+.term-count{font-size:9px;color:var(--muted);margin-left:auto;letter-spacing:1px}
+
+/* Server row */
+.srv-row{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 13px;border-radius:12px;
+  cursor:pointer;transition:background .15s;
+  border:1px solid transparent;margin-bottom:3px;
+}
+.srv-row:hover{background:rgba(255,184,0,.03);border-color:rgba(255,184,0,.08)}
+.srv-row.active-srv{background:rgba(255,184,0,.06);border-color:rgba(255,184,0,.15)}
+.srv-flag{font-size:20px;width:30px;text-align:center;flex-shrink:0}
+.srv-info{flex:1;min-width:0}
+.srv-city{font-family:var(--disp);font-size:13px;font-weight:700;color:var(--text);letter-spacing:-.1px}
+.srv-detail{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+.srv-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.srv-gate{font-size:11px;font-weight:600;color:rgba(255,184,0,.5);letter-spacing:.5px}
+.ping-tag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px}
+.ping-tag.fast{background:rgba(0,230,118,.1);color:#00E676}
+.ping-tag.ok{background:rgba(255,184,0,.1);color:var(--amber)}
+.ping-tag.slow{background:rgba(255,59,92,.1);color:#FF6B88}
+.active-dot{width:6px;height:6px;border-radius:50%;background:#00E676;box-shadow:0 0 6px #00E676;animation:dp 2s infinite}
+@keyframes dp{50%{opacity:.3;transform:scale(.7)}}
+
+/* ── ТРАФИК SCREEN ── */
+.traffic-hero{
+  padding:16px 0 14px;
+  display:flex;flex-direction:column;align-items:center;
+  flex-shrink:0;
+}
+.traffic-speed-ring{
+  width:160px;height:160px;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.speed-arc{
+  position:absolute;inset:0;
+  border-radius:50%;
+  background:conic-gradient(
+    rgba(255,184,0,.6) 0deg,
+    rgba(255,184,0,.3) 200deg,
+    rgba(255,184,0,.05) 200deg
+  );
+  filter:blur(.5px);
+}
+.speed-arc::before{content:'';position:absolute;inset:8px;border-radius:50%;background:var(--bg)}
+.speed-inner{
+  position:relative;z-index:2;
+  display:flex;flex-direction:column;align-items:center;
+}
+.speed-val{font-family:var(--disp);font-size:32px;font-weight:800;color:var(--gold);line-height:1;letter-spacing:-1px}
+.speed-unit{font-size:10px;color:var(--muted);letter-spacing:1px;margin-top:2px}
+.speed-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+/* Session stats row */
+.session-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:10px;flex-shrink:0;
+}
+.sess-card{
+  background:rgba(255,255,255,.025);border:1px solid rgba(255,184,0,.07);
+  border-radius:13px;padding:11px 10px;text-align:center;
+}
+.sess-label{font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sess-val{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--amber);letter-spacing:-.3px}
+.sess-val sub{font-size:9px;font-weight:400;color:var(--muted);vertical-align:baseline}
+
+/* Speed chart */
+.chart-section{flex-shrink:0;margin-bottom:10px}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.chart-title{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.chart-legend{display:flex;gap:10px}
+.chart-legend-item{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--muted)}
+.chart-dot{width:5px;height:5px;border-radius:50%}
+.chart-wrap{
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,184,0,.06);
+  border-radius:13px;padding:12px;overflow:hidden;
+}
+.chart-svg{width:100%;height:70px}
+
+/* Flight log */
+.log-section{flex:1;overflow:hidden}
+.log-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:11px;
+  border-bottom:1px solid rgba(255,184,0,.04);
+}
+.log-icon{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.log-icon.conn{background:rgba(0,230,118,.1)}
+.log-icon.disc{background:rgba(255,59,92,.08)}
+.log-info{flex:1}
+.log-title{font-size:12px;font-weight:600;color:var(--text);letter-spacing:-.1px}
+.log-sub{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+.log-time{font-size:10px;color:var(--muted);flex-shrink:0;letter-spacing:.5px}
+.log-data{font-size:11px;font-weight:600;color:rgba(255,184,0,.5);text-align:right;flex-shrink:0}
+
+/* ── ПАСПОРТ SCREEN ── */
+.passport-card{
+  background:linear-gradient(145deg,#1A1400,#0D0B00);
+  border:1px solid rgba(255,184,0,.2);
+  border-radius:18px;padding:18px;
+  margin:14px 0 12px;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.passport-card::before{
+  content:'ATLANTA VPN';
+  position:absolute;
+  font-family:var(--disp);font-size:80px;font-weight:800;
+  color:rgba(255,184,0,.025);letter-spacing:-4px;
+  right:-10px;bottom:-10px;line-height:1;
+  pointer-events:none;
+}
+.passport-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+.passport-type{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,184,0,.35);margin-bottom:4px}
+.passport-country{font-family:var(--disp);font-size:18px;font-weight:800;color:var(--amber);letter-spacing:-.3px}
+.passport-atl{
+  background:#FFB800;color:#111;
+  font-family:var(--disp);font-size:14px;font-weight:800;
+  padding:6px 12px;border-radius:8px;letter-spacing:1px;
+}
+.passport-divider{
+  border:none;border-top:1px dashed rgba(255,184,0,.15);margin:0 0 14px;
+}
+.passport-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.pp-field{}
+.pp-label{font-size:7px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.pp-val{font-size:12px;font-weight:600;color:var(--text);letter-spacing:.3px}
+.passport-mrz{
+  margin-top:14px;
+  background:rgba(255,184,0,.04);border:1px solid rgba(255,184,0,.08);
+  border-radius:8px;padding:8px 10px;
+  font-size:8px;color:rgba(255,184,0,.25);letter-spacing:2px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+
+/* Visa / plan */
+.visa-section{margin-bottom:10px;flex-shrink:0}
+.visa-card{
+  background:linear-gradient(135deg,#7B5200,#4A3000);
+  border:1px solid rgba(255,184,0,.3);
+  border-radius:15px;padding:14px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.visa-card::after{
+  content:'';position:absolute;top:-20px;right:-20px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,184,0,.06);
+}
+.visa-left{}
+.visa-type-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.visa-type{font-family:var(--disp);font-size:18px;font-weight:800;color:#FFD84D;letter-spacing:-.3px}
+.visa-exp{font-size:10px;color:rgba(255,255,255,.35);margin-top:4px;letter-spacing:.5px}
+.visa-right{text-align:right}
+.visa-flights{font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1px;margin-bottom:4px}
+.visa-count{font-family:var(--disp);font-size:22px;font-weight:800;color:rgba(255,255,255,.5)}
+
+/* Settings rows */
+.settings-section{flex:1;overflow:hidden}
+.settings-group{margin-bottom:12px}
+.settings-group-label{font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:7px;padding-left:4px}
+.setting-row{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 13px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,184,0,.06);
+  border-radius:12px;margin-bottom:4px;
+  cursor:pointer;
+}
+.setting-icon{
+  width:32px;height:32px;border-radius:9px;
+  background:rgba(255,184,0,.08);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.setting-info{flex:1}
+.setting-title{font-size:13px;font-weight:600;color:var(--text);letter-spacing:-.1px}
+.setting-sub{font-size:10px;color:var(--muted);margin-top:2px;letter-spacing:.3px}
+.setting-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.setting-val{font-size:11px;color:rgba(255,184,0,.4);letter-spacing:.3px}
+.toggle{width:36px;height:20px;background:rgba(255,184,0,.8);border-radius:10px;position:relative}
+.toggle::after{content:'';position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#111}
+.toggle.off{background:rgba(255,255,255,.1)}
+.toggle.off::after{right:auto;left:2px;background:rgba(255,255,255,.3)}
+
+/* Bottom nav */
+.bot-nav{
+  flex-shrink:0;background:rgba(6,5,0,.98);border-top:1px solid rgba(255,184,0,.07);
+  padding:10px 0 26px;display:grid;grid-template-columns:repeat(4,1fr);
+  backdrop-filter:blur(20px);
+}
+.nav-it{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px;transition:opacity .15s}
+.nav-it:hover{opacity:.7}
+.nav-l{font-size:8px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:rgba(255,184,0,.2)}
+.nav-it.on .nav-l{color:var(--amber)}
+
+/* Sec label */
+.sec-lbl{font-size:8px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;padding-left:2px;flex-shrink:0}
+
+/* Scrollable area */
+.scroll-area{flex:1;overflow:hidden;display:flex;flex-direction:column}
+
+/* Status bar icons */
+.sb-icons-html{display:flex;gap:6px;align-items:center}
+
+/* Combined grid */
+.all-screens{display:flex;gap:40px;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;padding-bottom:20px}
+</style>
+</head>
+<body>
+<div class="scene">
+
+  <div class="airport-sign">
+    <div class="sign-black">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="white"/>
+      </svg>
+      <span class="sign-text-w">ATLANTA VPN</span>
+    </div>
+    <div class="sign-arrow"></div>
+    <div class="sign-yellow">
+      <span class="sign-text-b">ВСЕ ЭКРАНЫ · 5 SCREENS →</span>
+    </div>
+  </div>
+
+  <div class="all-screens">
+    <!-- ══ CONNECTED / BOARDING ══ -->
+    <div class="pcol">
+      <div class="ptag">// BOARDING</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="amb">
+            <div class="ag ag1"></div>
+            <div class="ag ag2"></div>
+          </div>
+          <div class="island"></div>
+
+          <div class="sb">
+            <span class="sb-t">09:41</span>
+            <div class="sb-i">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+                <rect x="0" y="5" width="3" height="7" rx="1.5" fill="white" opacity=".3"/>
+                <rect x="5" y="3" width="3" height="9" rx="1.5" fill="white" opacity=".55"/>
+                <rect x="10" y="1" width="3" height="11" rx="1.5" fill="white" opacity=".8"/>
+                <rect x="15" y="0" width="3" height="12" rx="1.5" fill="white"/>
+              </svg>
+              <svg width="16" height="12" viewBox="0 0 20 14" fill="none">
+                <path d="M10 3C13 3 15.7 4.2 17.6 6.2L19 4.8C16.7 2.5 13.5 1 10 1 6.5 1 3.3 2.5 1 4.8L2.4 6.2C4.3 4.2 7 3 10 3Z" fill="white" opacity=".5"/>
+                <path d="M10 6.5C12 6.5 13.8 7.3 15.2 8.6L16.6 7.2C14.8 5.6 12.5 4.5 10 4.5 7.5 4.5 5.2 5.6 3.4 7.2L4.8 8.6C6.2 7.3 8 6.5 10 6.5Z" fill="white" opacity=".75"/>
+                <circle cx="10" cy="13" r="2" fill="white"/>
+              </svg>
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+                <rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity=".25"/>
+                <rect x="2" y="2" width="17" height="8" rx="2" fill="white"/>
+                <path d="M24 4.5v3c.8-.3 1.5-.9 1.5-2S24.8 4.8 24 4.5Z" fill="white" opacity=".4"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="topbar">
+            <div class="logo">
+              <div class="logo-l">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="#111"/>
+                </svg>
+                <span class="logo-atl">ATL</span>
+              </div>
+              <div class="logo-r">
+                <span class="logo-vpn">SECURE VPN</span>
+              </div>
+            </div>
+            <div class="menu-btn">
+              <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+                <path d="M1 1H16M1 6H16M5 11H16" stroke="rgba(255,184,0,.35)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="content">
+
+            <!-- Departure board -->
+            <div class="dep-board">
+              <div class="board-header">
+                <div class="board-header-l">
+                  <div class="board-dot on"></div>
+                  <span class="board-title">Вылеты — Активный маршрут</span>
+                </div>
+                <span class="board-time">02:14:38</span>
+              </div>
+              <div class="board-main">
+                <div class="board-dest">AMSTERDAM</div>
+                <div class="board-row">
+                  <div class="board-info-col">
+                    <span class="board-label">Flight</span>
+                    <span class="board-val lg">ATL-2205</span>
+                  </div>
+                  <div class="board-info-col">
+                    <span class="board-label">Gate</span>
+                    <span class="board-val lg">A4</span>
+                  </div>
+                  <div class="board-info-col">
+                    <span class="board-label">Ping</span>
+                    <span class="board-val lg">12 ms</span>
+                  </div>
+                  <div class="status-chip boarding">BOARDING</div>
+                </div>
+              </div>
+              <div class="tear-line">
+                <div class="tear-circle" style="margin-left:-7px"></div>
+                <div class="tear-circle" style="margin-left:auto;margin-right:-7px"></div>
+              </div>
+              <div class="board-sub">
+                <span class="flight-num">🇳🇱 Netherlands · Премиум сервер</span>
+                <div class="enc-badge">
+                  <svg width="9" height="11" viewBox="0 0 12 14" fill="none">
+                    <rect x="1" y="5" width="10" height="8" rx="2" stroke="currentColor" stroke-width="1.3"/>
+                    <path d="M4 5V4a2 2 0 014 0v1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+                  </svg>
+                  AES-256-GCM
+                </div>
+              </div>
+            </div>
+
+            <!-- Boarding pass -->
+            <div class="boarding-pass">
+              <div class="bp-body">
+                <div class="bp-row">
+                  <div class="bp-from">
+                    <div class="bp-code">ATL</div>
+                    <div class="bp-city">Atlanta</div>
+                  </div>
+                  <div class="bp-arrow">
+                    <div class="bp-line"></div>
+                    <div class="bp-plane">✈</div>
+                  </div>
+                  <div class="bp-to">
+                    <div class="bp-code">AMS</div>
+                    <div class="bp-city">Amsterdam</div>
+                  </div>
+                </div>
+                <div class="bp-details">
+                  <div class="bp-detail">
+                    <div class="bp-d-label">Seat</div>
+                    <div class="bp-d-val">PRIV</div>
+                  </div>
+                  <div class="bp-detail">
+                    <div class="bp-d-label">Gate</div>
+                    <div class="bp-d-val">A4</div>
+                  </div>
+                  <div class="bp-detail">
+                    <div class="bp-d-label">IP Masked</div>
+                    <div class="bp-d-val">YES</div>
+                  </div>
+                  <div class="bp-detail">
+                    <div class="bp-d-label">Class</div>
+                    <div class="bp-d-val">PREM</div>
+                  </div>
+                </div>
+              </div>
+              <div class="bp-perf"></div>
+            </div>
+
+            <!-- Stats strip -->
+            <div class="stats-strip">
+              <div class="stat-box">
+                <div class="stat-box-label">Загрузка</div>
+                <div class="stat-box-val">4.2<sub>MB/s</sub></div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-box-label">Скачивание</div>
+                <div class="stat-box-val">18.6<sub>MB/s</sub></div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-box-label">Шифрование</div>
+                <div class="stat-box-val">256<sub>bit</sub></div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="bot-nav">
+            <div class="nav-it on">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="#FFB800"/>
+              </svg>
+              <span class="nav-l">Рейсы</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="13" rx="2" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/>
+                <path d="M8 21h8M12 16v5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="nav-l">Терминалы</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <polyline points="3,17 7,11 12,14 17,7 21,9" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="nav-l">Трафик</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="4" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/>
+                <path d="M4 20c0-3 3.6-5 8-5s8 2 8 5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="nav-l">Паспорт</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ DISCONNECTED / CHECK-IN ══ -->
+    <div class="pcol">
+      <div class="ptag">// CHECK IN</div>
+      <div class="phone">
+        <div class="screen" style="background:#060404">
+          <div class="amb">
+            <div class="ag ag1" style="background:#200800;opacity:.3"></div>
+          </div>
+          <div class="island"></div>
+
+          <div class="sb">
+            <span class="sb-t">09:41</span>
+            <div class="sb-i">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+                <rect x="0" y="5" width="3" height="7" rx="1.5" fill="white" opacity=".3"/>
+                <rect x="5" y="3" width="3" height="9" rx="1.5" fill="white" opacity=".55"/>
+                <rect x="10" y="1" width="3" height="11" rx="1.5" fill="white" opacity=".8"/>
+                <rect x="15" y="0" width="3" height="12" rx="1.5" fill="white"/>
+              </svg>
+              <svg width="16" height="12" viewBox="0 0 20 14" fill="none">
+                <path d="M10 3C13 3 15.7 4.2 17.6 6.2L19 4.8C16.7 2.5 13.5 1 10 1 6.5 1 3.3 2.5 1 4.8L2.4 6.2C4.3 4.2 7 3 10 3Z" fill="white" opacity=".5"/>
+                <path d="M10 6.5C12 6.5 13.8 7.3 15.2 8.6L16.6 7.2C14.8 5.6 12.5 4.5 10 4.5 7.5 4.5 5.2 5.6 3.4 7.2L4.8 8.6C6.2 7.3 8 6.5 10 6.5Z" fill="white" opacity=".75"/>
+                <circle cx="10" cy="13" r="2" fill="white"/>
+              </svg>
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none">
+                <rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity=".25"/>
+                <rect x="2" y="2" width="17" height="8" rx="2" fill="white"/>
+                <path d="M24 4.5v3c.8-.3 1.5-.9 1.5-2S24.8 4.8 24 4.5Z" fill="white" opacity=".4"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="topbar">
+            <div class="logo">
+              <div class="logo-l" style="background:rgba(255,59,92,.15);border-right:1px solid rgba(255,59,92,.2)">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="rgba(255,59,92,.7)"/>
+                </svg>
+                <span class="logo-atl" style="color:rgba(255,59,92,.8)">ATL</span>
+              </div>
+              <div class="logo-r">
+                <span class="logo-vpn" style="color:rgba(255,59,92,.5)">SECURE VPN</span>
+              </div>
+            </div>
+            <div class="menu-btn">
+              <svg width="17" height="12" viewBox="0 0 17 12" fill="none">
+                <path d="M1 1H16M1 6H16M5 11H16" stroke="rgba(255,184,0,.35)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="content">
+
+            <!-- Board: no flight -->
+            <div class="dep-board" style="border-color:rgba(255,59,92,.1)">
+              <div class="board-header" style="border-color:rgba(255,59,92,.08)">
+                <div class="board-header-l">
+                  <div class="board-dot off" style="background:rgba(255,59,92,.4)"></div>
+                  <span class="board-title" style="color:rgba(255,59,92,.4)">Вылеты — Нет маршрута</span>
+                </div>
+                <span class="board-time" style="color:rgba(255,59,92,.25)">-- : -- : --</span>
+              </div>
+              <div class="board-main">
+                <div class="board-dest small">НЕТ АКТИВНОГО РЕЙСА</div>
+                <div class="board-row" style="margin-top:14px">
+                  <div class="board-info-col">
+                    <span class="board-label">Flight</span>
+                    <span class="board-val lg" style="color:rgba(255,184,0,.2)">———</span>
+                  </div>
+                  <div class="board-info-col">
+                    <span class="board-label">Gate</span>
+                    <span class="board-val lg" style="color:rgba(255,184,0,.2)">——</span>
+                  </div>
+                  <div class="board-info-col">
+                    <span class="board-label">Ping</span>
+                    <span class="board-val lg" style="color:rgba(255,184,0,.2)">——</span>
+                  </div>
+                  <div class="status-chip cancelled">GROUNDED</div>
+                </div>
+              </div>
+              <div class="tear-line" style="border-color:rgba(255,59,92,.1)">
+                <div class="tear-circle" style="margin-left:-7px;border-color:rgba(255,59,92,.1)"></div>
+                <div class="tear-circle" style="margin-left:auto;margin-right:-7px;border-color:rgba(255,59,92,.1)"></div>
+              </div>
+              <div class="board-sub">
+                <span class="flight-num" style="color:rgba(255,59,92,.3)">⚠ Маршрут не установлен · Не защищён</span>
+              </div>
+            </div>
+
+            <!-- Alert -->
+            <div class="alert warn">
+              <div class="alert-ico">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 9v4M12 17h.01M10.3 3.5L2 19h20L13.7 3.5a2 2 0 00-3.4 0Z" stroke="#FF6B88" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div>
+                <div class="alert-t">Требуется регистрация</div>
+                <div class="alert-s">Ваш трафик не защищён. Выберите гейт и откройте защищённый маршрут.</div>
+              </div>
+            </div>
+
+            <!-- Connect -->
+            <div class="conn-btn active-conn">
+              <div class="cb-main">▶ Перейти к посадке</div>
+              <div class="cb-sub">Лучший гейт выбран · ATL Hub</div>
+            </div>
+
+            <!-- Departures table -->
+            <div class="sec-lbl">Доступные вылеты</div>
+            <div class="departures">
+              <div class="dep-table-head">
+                <span class="dep-th">Destination</span>
+                <span class="dep-th">Flight</span>
+                <span class="dep-th">Gate</span>
+                <span class="dep-th">Ping</span>
+              </div>
+
+              <div class="dep-row active-row">
+                <div class="dep-dest">
+                  <span class="dep-city">🇩🇪 Frankfurt</span>
+                  <span style="font-size:9px;color:var(--muted)">Germany · Быстрый</span>
+                </div>
+                <span style="font-size:11px;color:rgba(255,184,0,.4)">ATL-0813</span>
+                <span class="dep-gate-cell">B2</span>
+                <span class="dep-ping-cell fast">8 ms</span>
+              </div>
+
+              <div class="dep-row">
+                <div class="dep-dest">
+                  <span class="dep-city">🇳🇱 Amsterdam</span>
+                  <span style="font-size:9px;color:var(--muted)">Netherlands · Премиум</span>
+                </div>
+                <span style="font-size:11px;color:rgba(255,184,0,.4)">ATL-2205</span>
+                <span class="dep-gate-cell">A4</span>
+                <span class="dep-ping-cell ok">24 ms</span>
+              </div>
+
+              <div class="dep-row">
+                <div class="dep-dest">
+                  <span class="dep-city">🇬🇧 London</span>
+                  <span style="font-size:9px;color:var(--muted)">United Kingdom</span>
+                </div>
+                <span style="font-size:11px;color:rgba(255,184,0,.4)">ATL-1147</span>
+                <span class="dep-gate-cell">C7</span>
+                <span class="dep-ping-cell ok">31 ms</span>
+              </div>
+
+              <div class="dep-row">
+                <div class="dep-dest">
+                  <span class="dep-city">🇺🇸 New York</span>
+                  <span style="font-size:9px;color:var(--muted)">United States</span>
+                </div>
+                <span style="font-size:11px;color:rgba(255,184,0,.4)">ATL-0042</span>
+                <span class="dep-gate-cell">D1</span>
+                <span class="dep-ping-cell ok">48 ms</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="bot-nav">
+            <div class="nav-it on">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="rgba(255,59,92,.7)"/>
+              </svg>
+              <span class="nav-l" style="color:rgba(255,59,92,.6)">Рейсы</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <rect x="3" y="3" width="18" height="13" rx="2" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/>
+                <path d="M8 21h8M12 16v5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="nav-l">Терминалы</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <polyline points="3,17 7,11 12,14 17,7 21,9" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="nav-l">Трафик</span>
+            </div>
+            <div class="nav-it">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="8" r="4" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/>
+                <path d="M4 20c0-3 3.6-5 8-5s8 2 8 5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/>
+              </svg>
+              <span class="nav-l">Паспорт</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    <!-- ══════════ ТЕРМИНАЛЫ ══════════ -->
+    <div class="pcol">
+      <div class="ptag">// ТЕРМИНАЛЫ</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="amb"><div class="ag ag1"></div><div class="ag ag2"></div></div>
+          <div class="island"></div>
+          <div class="sb">
+            <span class="sb-t">09:41</span>
+            <div class="sb-i">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="5" width="3" height="7" rx="1.5" fill="white" opacity=".3"/><rect x="5" y="3" width="3" height="9" rx="1.5" fill="white" opacity=".55"/><rect x="10" y="1" width="3" height="11" rx="1.5" fill="white" opacity=".8"/><rect x="15" y="0" width="3" height="12" rx="1.5" fill="white"/></svg>
+              <svg width="16" height="12" viewBox="0 0 20 14" fill="none"><path d="M10 3C13 3 15.7 4.2 17.6 6.2L19 4.8C16.7 2.5 13.5 1 10 1 6.5 1 3.3 2.5 1 4.8L2.4 6.2C4.3 4.2 7 3 10 3Z" fill="white" opacity=".5"/><path d="M10 6.5C12 6.5 13.8 7.3 15.2 8.6L16.6 7.2C14.8 5.6 12.5 4.5 10 4.5 7.5 4.5 5.2 5.6 3.4 7.2L4.8 8.6C6.2 7.3 8 6.5 10 6.5Z" fill="white" opacity=".75"/><circle cx="10" cy="13" r="2" fill="white"/></svg>
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity=".25"/><rect x="2" y="2" width="17" height="8" rx="2" fill="white"/><path d="M24 4.5v3c.8-.3 1.5-.9 1.5-1.5S24.8 4.8 24 4.5Z" fill="white" opacity=".4"/></svg>
+            </div>
+          </div>
+          <div class="topbar">
+            <div class="logo">
+              <div class="logo-l"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="#111"/></svg><span class="logo-atl">ATL</span></div>
+              <div class="logo-r"><span class="logo-vpn">SECURE VPN</span></div>
+            </div>
+            <div class="menu-btn"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M1 1H16M1 6H16M5 11H16" stroke="rgba(255,184,0,.35)" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          </div>
+
+          <div class="content">
+            <div class="page-title-bar">
+              <div>
+                <div class="page-title-main">Терминалы</div>
+                <div class="page-title-sub">47 серверов · 28 стран</div>
+              </div>
+              <div class="filter-btn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M7 12h10M10 18h4" stroke="rgba(255,184,0,.6)" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+
+            <!-- Search -->
+            <div class="search-bar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="rgba(255,184,0,.3)" stroke-width="1.8"/><path d="M16.5 16.5L21 21" stroke="rgba(255,184,0,.3)" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span class="search-placeholder">Поиск маршрута, страны...</span>
+            </div>
+
+            <!-- Tabs -->
+            <div class="region-tabs">
+              <div class="rtab active">Все</div>
+              <div class="rtab inactive">Европа</div>
+              <div class="rtab inactive">Америка</div>
+              <div class="rtab inactive">Азия</div>
+            </div>
+
+            <!-- Terminal A -->
+            <div class="terminal-section">
+              <div class="terminal-header">
+                <span class="term-badge">A</span>
+                <span class="term-name">Terminal A · Europe</span>
+                <span class="term-count">18 серверов</span>
+              </div>
+              <div class="srv-row active-srv">
+                <span class="srv-flag">🇩🇪</span>
+                <div class="srv-info">
+                  <div class="srv-city">Frankfurt</div>
+                  <div class="srv-detail">ATL-0813 · Gate A2 · Premium</div>
+                </div>
+                <div class="srv-right">
+                  <div class="active-dot"></div>
+                  <span class="ping-tag fast">8 ms</span>
+                </div>
+              </div>
+              <div class="srv-row">
+                <span class="srv-flag">🇳🇱</span>
+                <div class="srv-info">
+                  <div class="srv-city">Amsterdam</div>
+                  <div class="srv-detail">ATL-2205 · Gate A4 · Premium</div>
+                </div>
+                <div class="srv-right">
+                  <span class="srv-gate">A4</span>
+                  <span class="ping-tag ok">24 ms</span>
+                </div>
+              </div>
+              <div class="srv-row">
+                <span class="srv-flag">🇬🇧</span>
+                <div class="srv-info">
+                  <div class="srv-city">London</div>
+                  <div class="srv-detail">ATL-1147 · Gate A7 · Standard</div>
+                </div>
+                <div class="srv-right">
+                  <span class="srv-gate">A7</span>
+                  <span class="ping-tag ok">31 ms</span>
+                </div>
+              </div>
+              <div class="srv-row">
+                <span class="srv-flag">🇫🇷</span>
+                <div class="srv-info">
+                  <div class="srv-city">Paris</div>
+                  <div class="srv-detail">ATL-0934 · Gate A9 · Standard</div>
+                </div>
+                <div class="srv-right">
+                  <span class="srv-gate">A9</span>
+                  <span class="ping-tag ok">38 ms</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terminal B -->
+            <div class="terminal-section">
+              <div class="terminal-header">
+                <span class="term-badge">B</span>
+                <span class="term-name">Terminal B · Americas</span>
+                <span class="term-count">14 серверов</span>
+              </div>
+              <div class="srv-row">
+                <span class="srv-flag">🇺🇸</span>
+                <div class="srv-info">
+                  <div class="srv-city">New York</div>
+                  <div class="srv-detail">ATL-0042 · Gate B1 · Standard</div>
+                </div>
+                <div class="srv-right">
+                  <span class="srv-gate">B1</span>
+                  <span class="ping-tag ok">48 ms</span>
+                </div>
+              </div>
+              <div class="srv-row">
+                <span class="srv-flag">🇨🇦</span>
+                <div class="srv-info">
+                  <div class="srv-city">Toronto</div>
+                  <div class="srv-detail">ATL-1822 · Gate B3 · Standard</div>
+                </div>
+                <div class="srv-right">
+                  <span class="srv-gate">B3</span>
+                  <span class="ping-tag slow">62 ms</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="bot-nav">
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="rgba(255,184,0,.25)"/></svg><span class="nav-l">Рейсы</span></div>
+            <div class="nav-it on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="13" rx="2" stroke="#FFB800" stroke-width="1.6"/><path d="M8 21h8M12 16v5" stroke="#FFB800" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Терминалы</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="3,17 7,11 12,14 17,7 21,9" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-l">Трафик</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/><path d="M4 20c0-3 3.6-5 8-5s8 2 8 5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Паспорт</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ТРАФИК ══════════ -->
+    <div class="pcol">
+      <div class="ptag">// ТРАФИК</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="amb"><div class="ag ag1" style="background:#001A20;"></div><div class="ag ag2" style="background:#001510;"></div></div>
+          <div class="island"></div>
+          <div class="sb">
+            <span class="sb-t">09:41</span>
+            <div class="sb-i">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="5" width="3" height="7" rx="1.5" fill="white" opacity=".3"/><rect x="5" y="3" width="3" height="9" rx="1.5" fill="white" opacity=".55"/><rect x="10" y="1" width="3" height="11" rx="1.5" fill="white" opacity=".8"/><rect x="15" y="0" width="3" height="12" rx="1.5" fill="white"/></svg>
+              <svg width="16" height="12" viewBox="0 0 20 14" fill="none"><path d="M10 3C13 3 15.7 4.2 17.6 6.2L19 4.8C16.7 2.5 13.5 1 10 1 6.5 1 3.3 2.5 1 4.8L2.4 6.2C4.3 4.2 7 3 10 3Z" fill="white" opacity=".5"/><path d="M10 6.5C12 6.5 13.8 7.3 15.2 8.6L16.6 7.2C14.8 5.6 12.5 4.5 10 4.5 7.5 4.5 5.2 5.6 3.4 7.2L4.8 8.6C6.2 7.3 8 6.5 10 6.5Z" fill="white" opacity=".75"/><circle cx="10" cy="13" r="2" fill="white"/></svg>
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity=".25"/><rect x="2" y="2" width="17" height="8" rx="2" fill="white"/><path d="M24 4.5v3c.8-.3 1.5-.9 1.5-1.5S24.8 4.8 24 4.5Z" fill="white" opacity=".4"/></svg>
+            </div>
+          </div>
+          <div class="topbar">
+            <div class="logo">
+              <div class="logo-l"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="#111"/></svg><span class="logo-atl">ATL</span></div>
+              <div class="logo-r"><span class="logo-vpn">SECURE VPN</span></div>
+            </div>
+            <div class="menu-btn"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M1 1H16M1 6H16M5 11H16" stroke="rgba(255,184,0,.35)" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          </div>
+
+          <div class="content">
+            <div class="page-title-bar">
+              <div>
+                <div class="page-title-main">Трафик</div>
+                <div class="page-title-sub">Бортовой журнал · Сессия 02:14:38</div>
+              </div>
+            </div>
+
+            <!-- Speed ring -->
+            <div class="traffic-hero">
+              <div class="traffic-speed-ring">
+                <div class="speed-arc"></div>
+                <div class="speed-inner">
+                  <div class="speed-val">18.6</div>
+                  <div class="speed-unit">MB/s ↓</div>
+                </div>
+              </div>
+              <div class="speed-label">Текущая скорость загрузки</div>
+            </div>
+
+            <!-- Session stats -->
+            <div class="session-row">
+              <div class="sess-card">
+                <div class="sess-label">Загрузка</div>
+                <div class="sess-val">4.2<sub>MB/s</sub></div>
+              </div>
+              <div class="sess-card">
+                <div class="sess-label">Данные</div>
+                <div class="sess-val">14.2<sub>GB</sub></div>
+              </div>
+              <div class="sess-card">
+                <div class="sess-label">Ping</div>
+                <div class="sess-val">12<sub>ms</sub></div>
+              </div>
+            </div>
+
+            <!-- Chart -->
+            <div class="chart-section">
+              <div class="chart-header">
+                <span class="chart-title">Скорость · последние 60 сек</span>
+                <div class="chart-legend">
+                  <div class="chart-legend-item"><div class="chart-dot" style="background:#FFB800"></div>↓ Скачивание</div>
+                  <div class="chart-legend-item"><div class="chart-dot" style="background:#00E676"></div>↑ Загрузка</div>
+                </div>
+              </div>
+              <div class="chart-wrap">
+                <svg class="chart-svg" viewBox="0 0 310 70" preserveAspectRatio="none">
+                  <!-- Download line amber -->
+                  <defs>
+                    <linearGradient id="gd" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#FFB800" stop-opacity=".3"/>
+                      <stop offset="100%" stop-color="#FFB800" stop-opacity="0"/>
+                    </linearGradient>
+                    <linearGradient id="gu" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stop-color="#00E676" stop-opacity=".2"/>
+                      <stop offset="100%" stop-color="#00E676" stop-opacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <!-- Download area -->
+                  <path d="M0,50 C20,45 30,20 50,25 C70,30 80,15 100,18 C120,21 130,10 150,12 C170,14 180,8 200,10 C220,12 240,5 260,8 C280,11 295,15 310,12 L310,70 L0,70 Z" fill="url(#gd)" opacity=".8"/>
+                  <path d="M0,50 C20,45 30,20 50,25 C70,30 80,15 100,18 C120,21 130,10 150,12 C170,14 180,8 200,10 C220,12 240,5 260,8 C280,11 295,15 310,12" fill="none" stroke="#FFB800" stroke-width="1.5" stroke-linecap="round"/>
+                  <!-- Upload area -->
+                  <path d="M0,60 C20,58 30,55 50,57 C70,59 80,52 100,54 C120,56 130,50 150,52 C170,54 180,48 200,50 C220,52 240,46 260,48 C280,50 295,52 310,50 L310,70 L0,70 Z" fill="url(#gu)" opacity=".6"/>
+                  <path d="M0,60 C20,58 30,55 50,57 C70,59 80,52 100,54 C120,56 130,50 150,52 C170,54 180,48 200,50 C220,52 240,46 260,48 C280,50 295,52 310,50" fill="none" stroke="#00E676" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <!-- Flight log -->
+            <div class="sec-lbl">Бортовой журнал</div>
+            <div class="log-section">
+              <div class="log-row">
+                <div class="log-icon conn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 1L1 5V11C1 17 5.5 22 12 24C18.5 22 23 17 23 11V5L12 1Z" fill="rgba(0,230,118,.5)"/></svg></div>
+                <div class="log-info">
+                  <div class="log-title">Amsterdam · Gate A4</div>
+                  <div class="log-sub">Подключено · ATL-2205 · 09:27</div>
+                </div>
+                <div>
+                  <div class="log-data">14.2 GB</div>
+                  <div class="log-time">02:14</div>
+                </div>
+              </div>
+              <div class="log-row">
+                <div class="log-icon disc"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="rgba(255,59,92,.5)" stroke-width="2"/><path d="M15 9l-6 6M9 9l6 6" stroke="rgba(255,59,92,.5)" stroke-width="2" stroke-linecap="round"/></svg></div>
+                <div class="log-info">
+                  <div class="log-title">Frankfurt · Gate B2</div>
+                  <div class="log-sub">Отключено · ATL-0813 · вчера</div>
+                </div>
+                <div>
+                  <div class="log-data">8.7 GB</div>
+                  <div class="log-time">05:41</div>
+                </div>
+              </div>
+              <div class="log-row">
+                <div class="log-icon conn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 1L1 5V11C1 17 5.5 22 12 24C18.5 22 23 17 23 11V5L12 1Z" fill="rgba(0,230,118,.5)"/></svg></div>
+                <div class="log-info">
+                  <div class="log-title">London · Gate A7</div>
+                  <div class="log-sub">Подключено · ATL-1147 · вчера</div>
+                </div>
+                <div>
+                  <div class="log-data">3.1 GB</div>
+                  <div class="log-time">01:20</div>
+                </div>
+              </div>
+              <div class="log-row">
+                <div class="log-icon conn"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 1L1 5V11C1 17 5.5 22 12 24C18.5 22 23 17 23 11V5L12 1Z" fill="rgba(0,230,118,.5)"/></svg></div>
+                <div class="log-info">
+                  <div class="log-title">New York · Gate B1</div>
+                  <div class="log-sub">Подключено · ATL-0042 · 2 дня</div>
+                </div>
+                <div>
+                  <div class="log-data">5.4 GB</div>
+                  <div class="log-time">03:08</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bot-nav">
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="rgba(255,184,0,.25)"/></svg><span class="nav-l">Рейсы</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="13" rx="2" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/><path d="M8 21h8M12 16v5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Терминалы</span></div>
+            <div class="nav-it on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="3,17 7,11 12,14 17,7 21,9" stroke="#FFB800" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-l">Трафик</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/><path d="M4 20c0-3 3.6-5 8-5s8 2 8 5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Паспорт</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ ПАСПОРТ ══════════ -->
+    <div class="pcol">
+      <div class="ptag">// ПАСПОРТ</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="amb"><div class="ag ag1" style="background:#1A1200;"></div><div class="ag ag2"></div></div>
+          <div class="island"></div>
+          <div class="sb">
+            <span class="sb-t">09:41</span>
+            <div class="sb-i">
+              <svg width="18" height="12" viewBox="0 0 18 12" fill="none"><rect x="0" y="5" width="3" height="7" rx="1.5" fill="white" opacity=".3"/><rect x="5" y="3" width="3" height="9" rx="1.5" fill="white" opacity=".55"/><rect x="10" y="1" width="3" height="11" rx="1.5" fill="white" opacity=".8"/><rect x="15" y="0" width="3" height="12" rx="1.5" fill="white"/></svg>
+              <svg width="16" height="12" viewBox="0 0 20 14" fill="none"><path d="M10 3C13 3 15.7 4.2 17.6 6.2L19 4.8C16.7 2.5 13.5 1 10 1 6.5 1 3.3 2.5 1 4.8L2.4 6.2C4.3 4.2 7 3 10 3Z" fill="white" opacity=".5"/><path d="M10 6.5C12 6.5 13.8 7.3 15.2 8.6L16.6 7.2C14.8 5.6 12.5 4.5 10 4.5 7.5 4.5 5.2 5.6 3.4 7.2L4.8 8.6C6.2 7.3 8 6.5 10 6.5Z" fill="white" opacity=".75"/><circle cx="10" cy="13" r="2" fill="white"/></svg>
+              <svg width="26" height="12" viewBox="0 0 26 12" fill="none"><rect x=".5" y=".5" width="22" height="11" rx="3.5" stroke="white" stroke-opacity=".25"/><rect x="2" y="2" width="17" height="8" rx="2" fill="white"/><path d="M24 4.5v3c.8-.3 1.5-.9 1.5-1.5S24.8 4.8 24 4.5Z" fill="white" opacity=".4"/></svg>
+            </div>
+          </div>
+          <div class="topbar">
+            <div class="logo">
+              <div class="logo-l"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="#111"/></svg><span class="logo-atl">ATL</span></div>
+              <div class="logo-r"><span class="logo-vpn">SECURE VPN</span></div>
+            </div>
+            <div class="menu-btn"><svg width="17" height="12" viewBox="0 0 17 12" fill="none"><path d="M1 1H16M1 6H16M5 11H16" stroke="rgba(255,184,0,.35)" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+          </div>
+
+          <div class="content">
+            <div class="page-title-bar">
+              <div>
+                <div class="page-title-main">Паспорт</div>
+                <div class="page-title-sub">Профиль путешественника</div>
+              </div>
+            </div>
+
+            <!-- Passport card -->
+            <div class="passport-card">
+              <div class="passport-top">
+                <div>
+                  <div class="passport-type">Удостоверение · ATL Traveller</div>
+                  <div class="passport-country">Kirill D.</div>
+                </div>
+                <div class="passport-atl">ATL</div>
+              </div>
+              <hr class="passport-divider">
+              <div class="passport-fields">
+                <div class="pp-field">
+                  <div class="pp-label">Устройства</div>
+                  <div class="pp-val">3 / 5</div>
+                </div>
+                <div class="pp-field">
+                  <div class="pp-label">Рейсов</div>
+                  <div class="pp-val">247</div>
+                </div>
+                <div class="pp-field">
+                  <div class="pp-label">Статус</div>
+                  <div class="pp-val" style="color:#00E676">ACTIVE</div>
+                </div>
+                <div class="pp-field">
+                  <div class="pp-label">Страна</div>
+                  <div class="pp-val">🇷🇺 Russia</div>
+                </div>
+                <div class="pp-field">
+                  <div class="pp-label">Данные</div>
+                  <div class="pp-val">∞ безлим</div>
+                </div>
+                <div class="pp-field">
+                  <div class="pp-label">Протокол</div>
+                  <div class="pp-val">WG</div>
+                </div>
+              </div>
+              <div class="passport-mrz">P&lt;ATLATL&lt;SECURE&lt;VPN&lt;TRAVELLER&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+            </div>
+
+            <!-- Visa/Plan -->
+            <div class="visa-section">
+              <div class="sec-lbl">Класс обслуживания</div>
+              <div class="visa-card">
+                <div class="visa-left">
+                  <div class="visa-type-label">Текущая виза</div>
+                  <div class="visa-type">PREMIUM</div>
+                  <div class="visa-exp">Действует до: 22.04.2026</div>
+                </div>
+                <div class="visa-right">
+                  <div class="visa-flights">Маршрутов</div>
+                  <div class="visa-count">47</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="settings-section">
+              <div class="settings-group">
+                <div class="settings-group-label">Настройки рейса</div>
+                <div class="setting-row">
+                  <div class="setting-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7v7c0 5 3.5 9.7 10 11 6.5-1.3 10-6 10-11V7L12 2Z" stroke="rgba(255,184,0,.7)" stroke-width="1.6" stroke-linejoin="round"/></svg></div>
+                  <div class="setting-info">
+                    <div class="setting-title">Kill Switch</div>
+                    <div class="setting-sub">Блокировка при потере связи</div>
+                  </div>
+                  <div class="toggle"></div>
+                </div>
+                <div class="setting-row">
+                  <div class="setting-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="3" stroke="rgba(255,184,0,.7)" stroke-width="1.6"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4M4.2 4.2l2.8 2.8M17 17l2.8 2.8M4.2 19.8L7 17M17 7l2.8-2.8" stroke="rgba(255,184,0,.7)" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+                  <div class="setting-info">
+                    <div class="setting-title">Автоподключение</div>
+                    <div class="setting-sub">При запуске приложения</div>
+                  </div>
+                  <div class="toggle"></div>
+                </div>
+                <div class="setting-row">
+                  <div class="setting-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 22C6.5 22 2 17.5 2 12S6.5 2 12 2s10 4.5 10 10-4.5 10-10 10z" stroke="rgba(255,184,0,.7)" stroke-width="1.6"/><path d="M2 12h20M12 2c-2.8 3-4 6.4-4 10s1.2 7 4 10M12 2c2.8 3 4 6.4 4 10s-1.2 7-4 10" stroke="rgba(255,184,0,.7)" stroke-width="1.4"/></svg></div>
+                  <div class="setting-info">
+                    <div class="setting-title">Протокол</div>
+                    <div class="setting-sub">WireGuard · Авто</div>
+                  </div>
+                  <div class="setting-right">
+                    <span class="setting-val">WG</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 18L15 12L9 6" stroke="rgba(255,184,0,.25)" stroke-width="1.8" stroke-linecap="round"/></svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bot-nav">
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 16v-2l-8-5V3.5A1.5 1.5 0 0012 2a1.5 1.5 0 00-1.5 1.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="rgba(255,184,0,.25)"/></svg><span class="nav-l">Рейсы</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="13" rx="2" stroke="rgba(255,184,0,.25)" stroke-width="1.6"/><path d="M8 21h8M12 16v5" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Терминалы</span></div>
+            <div class="nav-it"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="3,17 7,11 12,14 17,7 21,9" stroke="rgba(255,184,0,.25)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="nav-l">Трафик</span></div>
+            <div class="nav-it on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="4" stroke="#FFB800" stroke-width="1.6"/><path d="M4 20c0-3 3.6-5 8-5s8 2 8 5" stroke="#FFB800" stroke-width="1.6" stroke-linecap="round"/></svg><span class="nav-l">Паспорт</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Design language -->
+  <div class="specs">
+    <div class="spec"><div class="spec-t">Язык интерфейса</div><div class="spec-v">Рейс · Терминал · Boarding · Check-in</div></div>
+    <div class="spec"><div class="spec-t">Typography</div><div class="spec-v">IBM Plex Mono + Space Grotesk</div></div>
+    <div class="spec"><div class="spec-t">Accent</div><div class="spec-v">#FFB800 · Airport Amber</div></div>
+    <div class="spec"><div class="spec-t">Навигация</div><div class="spec-v">Рейсы · Терминалы · Трафик · Паспорт</div></div>
+  </div>
+
+  <!-- ══════════ CONCEPT DESCRIPTION ══════════ -->
+  <div style="width:100%;max-width:1000px;margin-top:20px;">
+
+    <!-- Big concept sign -->
+    <div style="display:flex;align-items:stretch;border-radius:16px;overflow:hidden;border:1px solid rgba(255,184,0,.15);margin-bottom:40px;">
+      <div style="background:#FFB800;padding:32px 36px;display:flex;flex-direction:column;justify-content:center;min-width:220px;">
+        <div style="font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:3px;color:rgba(0,0,0,.4);text-transform:uppercase;margin-bottom:6px;">Концепция</div>
+        <div style="font-family:var(--disp);font-size:42px;font-weight:800;color:#111;letter-spacing:-2px;line-height:1;">ATL</div>
+        <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:rgba(0,0,0,.5);margin-top:4px;">The World's Hub</div>
+      </div>
+      <div style="flex:1;background:#0D0B02;padding:32px 36px;border-left:1px solid rgba(255,184,0,.1);">
+        <div style="font-family:var(--disp);font-size:20px;font-weight:700;color:var(--text);letter-spacing:-.3px;margin-bottom:12px;">Hartsfield-Jackson Atlanta — самый загруженный аэропорт в мире</div>
+        <div style="font-family:var(--mono);font-size:13px;color:rgba(255,248,224,.45);line-height:1.8;">
+          Atlanta VPN назван в честь города, через который проходит больше всего рейсов на планете. Идея проста: <span style="color:var(--amber);">VPN — это ваш личный аэропорт-хаб</span>, через который проходит весь ваш трафик, прежде чем попасть в интернет. Безопасно. Анонимно. Быстро.
+        </div>
+      </div>
+    </div>
+
+    <!-- Metaphor table -->
+    <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">// Система метафор</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px;">
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.1);border-radius:16px;padding:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-10px;right:-10px;font-family:var(--disp);font-size:70px;font-weight:800;color:rgba(255,184,0,.03);line-height:1;">✈</div>
+        <div style="font-family:var(--disp);font-size:28px;font-weight:800;color:var(--amber);margin-bottom:8px;">Рейс</div>
+        <div style="font-size:10px;color:rgba(255,248,224,.5);line-height:1.7;">Каждое VPN-подключение — это рейс. Имеет номер (ATL-2205), пункт назначения и статус.</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,184,0,.08);font-size:9px;letter-spacing:1px;color:var(--muted);">= ПОДКЛЮЧЕНИЕ</div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.1);border-radius:16px;padding:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-10px;right:-10px;font-family:var(--disp);font-size:70px;font-weight:800;color:rgba(255,184,0,.03);line-height:1;">A</div>
+        <div style="font-family:var(--disp);font-size:28px;font-weight:800;color:var(--amber);margin-bottom:8px;">Терминал</div>
+        <div style="font-size:10px;color:rgba(255,248,224,.5);line-height:1.7;">Серверы сгруппированы по терминалам: A — Европа, B — Америка, C — Азия.</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,184,0,.08);font-size:9px;letter-spacing:1px;color:var(--muted);">= РЕГИОН / СЕРВЕР</div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.1);border-radius:16px;padding:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-10px;right:-10px;font-family:var(--disp);font-size:70px;font-weight:800;color:rgba(255,184,0,.03);line-height:1;">🛂</div>
+        <div style="font-family:var(--disp);font-size:28px;font-weight:800;color:var(--amber);margin-bottom:8px;">Паспорт</div>
+        <div style="font-size:10px;color:rgba(255,248,224,.5);line-height:1.7;">Профиль пользователя оформлен как паспорт с MRZ-строкой, визой и классом обслуживания.</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,184,0,.08);font-size:9px;letter-spacing:1px;color:var(--muted);">= ПРОФИЛЬ</div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.1);border-radius:16px;padding:20px;position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-10px;right:-10px;font-family:var(--disp);font-size:70px;font-weight:800;color:rgba(255,184,0,.03);line-height:1;">📋</div>
+        <div style="font-family:var(--disp);font-size:28px;font-weight:800;color:var(--amber);margin-bottom:8px;">Посадочный</div>
+        <div style="font-size:10px;color:rgba(255,248,224,.5);line-height:1.7;">Активное соединение показано в виде посадочного талона ATL → AMS с классом, гейтом и шифрованием.</div>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,184,0,.08);font-size:9px;letter-spacing:1px;color:var(--muted);">= АКТИВНЫЙ СЕРВЕР</div>
+      </div>
+
+    </div>
+
+    <!-- Status language -->
+    <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">// Язык статусов</div>
+    <div style="display:flex;gap:10px;margin-bottom:40px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:10px;background:#0D0B02;border:1px solid rgba(0,230,118,.15);border-radius:12px;padding:12px 18px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:#00E676;box-shadow:0 0 8px #00E676;"></div>
+        <div><div style="font-family:var(--disp);font-size:13px;font-weight:700;color:#00E676;">BOARDING</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Подключено · защищён</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:#0D0B02;border:1px solid rgba(255,184,0,.15);border-radius:12px;padding:12px 18px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--amber);"></div>
+        <div><div style="font-family:var(--disp);font-size:13px;font-weight:700;color:var(--amber);">CHECK IN</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Требуется подключение</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:#0D0B02;border:1px solid rgba(255,59,92,.15);border-radius:12px;padding:12px 18px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--red);"></div>
+        <div><div style="font-family:var(--disp);font-size:13px;font-weight:700;color:var(--red);">GROUNDED</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Не подключено · не защищён</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:#0D0B02;border:1px solid rgba(255,184,0,.1);border-radius:12px;padding:12px 18px;">
+        <div style="width:8px;height:8px;border-radius:50%;background:rgba(255,248,224,.2);"></div>
+        <div><div style="font-family:var(--disp);font-size:13px;font-weight:700;color:rgba(255,248,224,.4);">ON TIME</div><div style="font-size:10px;color:var(--muted);margin-top:2px;">Стабильное соединение</div></div>
+      </div>
+    </div>
+
+    <!-- Design decisions -->
+    <div style="font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">// Дизайн-решения</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:40px;">
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.08);border-radius:16px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:3px;height:20px;background:var(--amber);border-radius:2px;"></div>
+          <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text);">Цвет: Airport Amber</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,248,224,.4);line-height:1.8;margin-bottom:16px;">Все VPN-приложения используют холодный синий. Мы взяли тёплый amber — цвет табло аэропорта, цвет взлётных огней. Уникально в категории.</div>
+        <div style="display:flex;gap:8px;">
+          <div style="width:28px;height:28px;border-radius:8px;background:#FFB800;"></div>
+          <div style="width:28px;height:28px;border-radius:8px;background:#FFD84D;"></div>
+          <div style="width:28px;height:28px;border-radius:8px;background:#00E676;"></div>
+          <div style="width:28px;height:28px;border-radius:8px;background:#FF3B5C;"></div>
+          <div style="width:28px;height:28px;border-radius:8px;background:#060500;border:1px solid rgba(255,184,0,.2);"></div>
+        </div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.08);border-radius:16px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:3px;height:20px;background:var(--amber);border-radius:2px;"></div>
+          <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text);">Шрифты</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,248,224,.4);line-height:1.8;margin-bottom:12px;">Два шрифта с чёткой ролью: IBM Plex Mono — для технических данных (пинг, IP, коды рейсов). Space Grotesk — для заголовков и акцентов.</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--amber);margin-bottom:4px;">ATL-2205 · 12ms · AES-256</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.3px;">AMSTERDAM</div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.08);border-radius:16px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:3px;height:20px;background:var(--amber);border-radius:2px;"></div>
+          <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text);">Табло отправлений</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,248,224,.4);line-height:1.8;">Главный экран построен вокруг departure board — именно так пользователь видит своё соединение: как рейс с пунктом назначения, временем в пути и статусом.</div>
+      </div>
+
+      <div style="background:#0D0B02;border:1px solid rgba(255,184,0,.08);border-radius:16px;padding:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+          <div style="width:3px;height:20px;background:var(--amber);border-radius:2px;"></div>
+          <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--text);">Посадочный талон</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,248,224,.4);line-height:1.8;">Активный сервер показан как boarding pass с кодами IATA (ATL → AMS), классом PREMIUM, гейтом и шифрованием — вместо скучной карточки с флагом.</div>
+      </div>
+
+    </div>
+
+    <!-- Footer sign -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:24px;background:#0D0B02;border:1px solid rgba(255,184,0,.08);border-radius:16px;">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;">UI/UX REDESIGN CONTEST</div>
+      <div style="width:4px;height:4px;border-radius:50%;background:rgba(255,184,0,.3);"></div>
+      <div style="font-family:var(--disp);font-size:12px;font-weight:700;color:var(--amber);letter-spacing:1px;">ATLANTA VPN · ATL HUB CONCEPT</div>
+      <div style="width:4px;height:4px;border-radius:50%;background:rgba(255,184,0,.3);"></div>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:1px;">2025 · 5 SCREENS</div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>

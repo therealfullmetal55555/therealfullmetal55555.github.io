@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FARES KOREA — Rich Content V2</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --crimson:  #A8173A;
+  --crimson2: #C41E48;
+  --gold:     #C9A227;
+  --gold-lt:  #E8C84A;
+  --cream:    #FDF6EC;
+  --dark:     #1A0A12;
+  --dark2:    #2D1320;
+  --white:    #FFFFFF;
+  --gray:     #F5F0F2;
+  --text:     #3A1A26;
+  --muted:    #7A5560;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #fff;
+  color: var(--text);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ══ HERO ══ */
+.hero {
+  background: var(--dark);
+  min-height: 500px;
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    repeating-linear-gradient(-45deg, transparent, transparent 60px,
+      rgba(201,162,39,0.03) 60px, rgba(201,162,39,0.03) 61px);
+}
+.hero-glow {
+  position: absolute;
+  top: 50%; right: 200px;
+  transform: translateY(-50%);
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,23,58,0.45) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-left {
+  padding: 64px 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+.hero-brand {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 28px;
+}
+.hero-brand-line { width: 28px; height: 1px; background: var(--gold); }
+.hero-brand-text {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 3px; color: var(--gold);
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 50px; font-weight: 600;
+  color: var(--white); line-height: 1.1;
+  margin-bottom: 10px;
+}
+.hero h1 em { font-style: italic; color: var(--gold-lt); }
+.hero-desc {
+  font-size: 12.5px; color: rgba(255,255,255,0.5);
+  font-weight: 500; line-height: 1.7;
+  max-width: 280px; margin-bottom: 36px;
+}
+.hero-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-tag {
+  border: 1px solid rgba(201,162,39,0.35);
+  color: rgba(255,255,255,0.75);
+  font-size: 10.5px; font-weight: 600;
+  padding: 6px 14px; border-radius: 20px; letter-spacing: 0.2px;
+}
+
+/* CSS capsule illustration */
+.hero-right {
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+}
+.capsule-scene {
+  position: relative;
+  width: 280px; height: 340px;
+}
+.capsule {
+  position: absolute;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #C41E48 0%, #7B0030 60%, #4A001E 100%);
+  box-shadow: 0 8px 32px rgba(168,23,58,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.capsule::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 50%;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 100%);
+  border-radius: 50px 0 0 50px;
+}
+.cap-1 { width: 110px; height: 40px; top: 30px; left: 80px; transform: rotate(-20deg); }
+.cap-2 { width: 120px; height: 40px; top: 90px; left: 40px; transform: rotate(10deg);
+  background: linear-gradient(135deg, #A8173A 0%, #6B0028 60%, #3A0015 100%); }
+.cap-3 { width: 115px; height: 40px; top: 80px; right: 20px; transform: rotate(-35deg);
+  background: linear-gradient(135deg, #D4224E 0%, #9B1038 60%, #5C001F 100%); }
+.cap-4 { width: 108px; height: 40px; top: 160px; left: 60px; transform: rotate(15deg); }
+.cap-5 { width: 118px; height: 40px; top: 155px; right: 10px; transform: rotate(-10deg);
+  background: linear-gradient(135deg, #B8193F 0%, #780034 60%, #420018 100%); }
+.cap-6 { width: 112px; height: 40px; top: 230px; left: 90px; transform: rotate(-25deg); }
+.cap-7 { width: 105px; height: 40px; top: 240px; left: 30px; transform: rotate(30deg);
+  background: linear-gradient(135deg, #C41E48 0%, #8A1535 60%, #4E0020 100%); }
+.cap-8 { width: 120px; height: 40px; top: 290px; left: 70px; transform: rotate(-5deg); }
+.capsule-shine {
+  position: absolute;
+  top: 50px; right: 30px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,162,39,0.25) 0%, transparent 70%);
+}
+
+/* ══ GOLD STATS BAR ══ */
+.stats-bar {
+  background: var(--gold);
+  display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.sb-item {
+  padding: 22px 16px; text-align: center;
+  border-right: 1px solid rgba(255,255,255,0.3);
+}
+.sb-item:last-child { border-right: none; }
+.sb-num { font-size: 30px; font-weight: 900; color: var(--dark); line-height: 1; }
+.sb-num sup { font-size: 15px; }
+.sb-label { font-size: 9.5px; font-weight: 700; color: rgba(26,10,18,0.65);
+  text-transform: uppercase; letter-spacing: 0.8px; line-height: 1.4; margin-top: 4px; }
+
+/* ══ SECTION TITLES ══ */
+.sec-title { text-align: center; padding: 60px 40px 40px; }
+.eyebrow {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 14px;
+}
+.eyebrow-line { width: 22px; height: 1px; background: var(--gold); }
+.eyebrow-text { font-size: 9.5px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--gold); }
+.sec-title h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px; font-weight: 600; color: var(--dark); line-height: 1.2;
+}
+.sec-title h2 span { color: var(--crimson); }
+.sec-title p { font-size: 13px; color: var(--muted); margin-top: 10px;
+  font-weight: 500; line-height: 1.6; }
+
+/* ══ INGREDIENTS ══ */
+.ingredients { background: var(--cream); padding: 0 32px 60px; }
+.ing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.ing-card {
+  background: var(--white); border-radius: 16px; padding: 28px 22px;
+  border: 1px solid rgba(168,23,58,0.07); position: relative; overflow: hidden;
+}
+.ing-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold));
+}
+.ing-icon {
+  width: 50px; height: 50px;
+  background: linear-gradient(135deg, rgba(168,23,58,0.07), rgba(201,162,39,0.07));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.ing-card h3 { font-size: 13.5px; font-weight: 700; color: var(--dark); margin-bottom: 8px; line-height: 1.3; }
+.ing-card p { font-size: 11.5px; color: var(--muted); line-height: 1.75; font-weight: 500; }
+.ing-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+.ing-tag { background: rgba(168,23,58,0.07); color: var(--crimson);
+  font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 10px; }
+
+/* ══ BENEFITS (CSS visual left panel) ══ */
+.benefits-section { background: var(--white); padding: 0 0 60px; }
+.benefits-inner { display: grid; grid-template-columns: 360px 1fr; align-items: stretch; }
+.benefits-visual {
+  background: linear-gradient(160deg, var(--dark2) 0%, #3D0A1E 50%, #1A0A12 100%);
+  position: relative; overflow: hidden;
+  min-height: 520px;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px 36px;
+}
+.bv-bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(201,162,39,0.15);
+}
+.bv-bg-circle:nth-child(1) { width: 300px; height: 300px; top: -80px; right: -80px; }
+.bv-bg-circle:nth-child(2) { width: 200px; height: 200px; top: 40px; right: 0; }
+.bv-bg-circle:nth-child(3) { width: 400px; height: 400px; bottom: -150px; left: -100px;
+  border-color: rgba(168,23,58,0.2); }
+.bv-glow {
+  position: absolute; top: 30%; left: 30%;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,23,58,0.35) 0%, transparent 70%);
+}
+.bv-label {
+  position: relative; z-index: 2;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.bv-headline {
+  position: relative; z-index: 2;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px; font-weight: 600;
+  color: white; line-height: 1.15;
+  margin-bottom: 20px;
+}
+.bv-headline em { font-style: italic; color: var(--gold-lt); }
+.bv-stats { position: relative; z-index: 2; display: flex; gap: 20px; }
+.bv-stat { display: flex; flex-direction: column; gap: 2px; }
+.bv-stat strong { font-size: 28px; font-weight: 900; color: var(--gold); line-height: 1; }
+.bv-stat span { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.5);
+  text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.3; }
+/* floating capsule on visual */
+.bv-capsule-wrap {
+  position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+  z-index: 1;
+}
+.bv-cap {
+  width: 90px; height: 32px; border-radius: 50px;
+  background: linear-gradient(135deg, #C41E48, #7B0030);
+  box-shadow: 0 6px 24px rgba(168,23,58,0.5);
+  position: absolute;
+}
+.bv-cap:nth-child(1) { top: 0; left: 0; transform: rotate(-15deg); }
+.bv-cap:nth-child(2) { top: 44px; left: -30px; transform: rotate(20deg);
+  background: linear-gradient(135deg,#A8173A,#6B0028); width: 80px; }
+.bv-cap:nth-child(3) { top: 44px; left: 50px; transform: rotate(-30deg);
+  background: linear-gradient(135deg,#D4224E,#9B1038); width: 85px; }
+.bv-cap:nth-child(4) { top: 86px; left: 10px; transform: rotate(5deg); width: 95px; }
+
+.benefits-list {
+  padding: 50px 36px;
+  display: flex; flex-direction: column; justify-content: center; gap: 0;
+}
+.bl-item {
+  display: flex; gap: 16px; align-items: flex-start;
+  padding: 22px 0; border-bottom: 1px solid rgba(168,23,58,0.07);
+}
+.bl-item:last-child { border-bottom: none; }
+.bl-icon {
+  width: 42px; min-width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--crimson), var(--crimson2));
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+}
+.bl-text h3 { font-size: 13.5px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.bl-text h3 mark { background: none; color: var(--crimson); }
+.bl-text p { font-size: 11.5px; color: var(--muted); line-height: 1.65; font-weight: 500; }
+
+/* ══ FOR WHOM ══ */
+.for-whom {
+  background: var(--dark); padding: 60px 32px;
+  position: relative; overflow: hidden;
+}
+.fw-deco {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,23,58,0.2) 0%, transparent 70%);
+}
+.fw-deco-1 { width: 400px; height: 400px; top: -150px; right: -100px; }
+.fw-deco-2 { width: 250px; height: 250px; bottom: -80px; left: -60px; }
+.fw-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px;
+}
+.fw-card {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px; padding: 32px 22px; position: relative; overflow: hidden;
+}
+.fw-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold));
+}
+.fw-age { font-size: 36px; font-weight: 900; color: var(--gold); line-height: 1; margin-bottom: 4px; }
+.fw-age span { font-size: 15px; font-weight: 600; }
+.fw-card h3 { font-size: 12.5px; font-weight: 700; color: rgba(255,255,255,0.9);
+  margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.fw-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.fw-list li {
+  font-size: 11.5px; color: rgba(255,255,255,0.55); font-weight: 500;
+  padding-left: 14px; position: relative; line-height: 1.4;
+}
+.fw-list li::before {
+  content: ''; position: absolute; left: 0; top: 6px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+}
+
+/* ══ HOW TO TAKE ══ */
+.how-to { background: var(--cream); padding: 60px 40px; }
+.ht-steps {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  position: relative; margin-bottom: 36px;
+}
+.ht-steps::before {
+  content: ''; position: absolute;
+  top: 29px; left: 13%; right: 13%; height: 1px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold), var(--crimson));
+}
+.ht-step { display: flex; flex-direction: column; align-items: center;
+  text-align: center; padding: 0 10px; position: relative; z-index: 1; }
+.ht-circle {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--white); border: 1.5px solid var(--crimson);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px; position: relative;
+}
+.ht-circle-num {
+  position: absolute; top: -8px; right: -8px;
+  width: 22px; height: 22px; background: var(--gold); border-radius: 50%;
+  font-size: 10px; font-weight: 800; color: var(--dark);
+  display: flex; align-items: center; justify-content: center;
+}
+.ht-step h4 { font-size: 12.5px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+.ht-step p { font-size: 11px; color: var(--muted); font-weight: 500; line-height: 1.5; }
+.ht-results { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.ht-result {
+  background: var(--white); border-radius: 16px; padding: 22px 20px;
+  display: flex; align-items: center; gap: 16px;
+  border: 1px solid rgba(168,23,58,0.09);
+}
+.ht-result-num { font-size: 36px; font-weight: 900; color: var(--crimson); line-height: 1; white-space: nowrap; }
+.ht-result-num span { font-size: 14px; }
+.ht-result-text { font-size: 11.5px; color: var(--muted); font-weight: 600; line-height: 1.4; }
+
+/* ══ SHOWCASE (CSS visual right panel) ══ */
+.showcase {
+  background: var(--white);
+  display: grid; grid-template-columns: 1fr 1fr; min-height: 400px;
+}
+.showcase-visual {
+  background: var(--dark);
+  position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 400px;
+}
+.sv-glow1 {
+  position: absolute; top: -60px; left: -60px;
+  width: 280px; height: 280px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(168,23,58,0.4) 0%, transparent 70%);
+}
+.sv-glow2 {
+  position: absolute; bottom: -40px; right: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(201,162,39,0.2) 0%, transparent 70%);
+}
+.sv-ring {
+  position: absolute; border-radius: 50%;
+  border: 1px solid rgba(201,162,39,0.12);
+}
+.sv-ring-1 { width: 260px; height: 260px; }
+.sv-ring-2 { width: 340px; height: 340px; }
+.sv-ring-3 { width: 420px; height: 420px; }
+.sv-content { position: relative; z-index: 2; text-align: center; }
+.sv-number {
+  font-size: 90px; font-weight: 900; line-height: 0.9;
+  background: linear-gradient(135deg, var(--crimson2), var(--gold));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.sv-number-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-top: 8px;
+}
+.sv-divider { width: 40px; height: 1px; background: var(--gold); margin: 16px auto; }
+.sv-sub { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); }
+.showcase-content {
+  background: linear-gradient(150deg, var(--crimson) 0%, var(--dark2) 100%);
+  padding: 50px 38px;
+  display: flex; flex-direction: column; justify-content: center;
+  color: white;
+}
+.showcase-content .eyebrow { justify-content: flex-start; margin-bottom: 18px; }
+.showcase-content h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 600; line-height: 1.2;
+  margin-bottom: 14px; color: white;
+}
+.showcase-content h2 em { font-style: italic; color: var(--gold-lt); }
+.showcase-content p {
+  font-size: 12.5px; color: rgba(255,255,255,0.65);
+  line-height: 1.7; font-weight: 500; margin-bottom: 24px;
+}
+.sc-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.sc-list li {
+  font-size: 12.5px; color: rgba(255,255,255,0.85);
+  font-weight: 600; display: flex; align-items: center; gap: 10px;
+}
+.sc-check {
+  width: 20px; height: 20px; min-width: 20px;
+  background: var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ══ FAQ ══ */
+.faq-section { background: var(--cream); padding: 60px 40px; }
+.faq-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.faq-item {
+  background: white; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(168,23,58,0.07);
+}
+.faq-q { padding: 18px 22px; display: flex; align-items: center; gap: 14px; }
+.faq-q-icon {
+  width: 28px; min-width: 28px; height: 28px;
+  background: linear-gradient(135deg, var(--crimson), var(--crimson2));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.faq-q-text { font-size: 13.5px; font-weight: 700; color: var(--dark); }
+.faq-a { padding: 0 22px 18px 64px; font-size: 12.5px; color: var(--muted);
+  line-height: 1.7; font-weight: 500; }
+
+/* ══ FOOTER ══ */
+.footer-banner {
+  background: var(--dark);
+  padding: 46px 40px;
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 36px;
+  border-top: 2px solid var(--gold);
+}
+.fb-left h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px; font-weight: 600; color: white; margin-bottom: 8px;
+}
+.fb-left h2 span { color: var(--gold-lt); font-style: italic; }
+.fb-left p { font-size: 11.5px; color: rgba(255,255,255,0.4);
+  font-weight: 500; line-height: 1.6; max-width: 400px; }
+.fb-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.fb-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,162,39,0.25); border-radius: 8px;
+  padding: 9px 14px; white-space: nowrap;
+}
+.fb-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.fb-badge-text { font-size: 10.5px; font-weight: 700; color: rgba(255,255,255,0.75); letter-spacing: 0.5px; }
+.fb-disclaimer { font-size: 9.5px; color: rgba(255,255,255,0.25);
+  font-weight: 500; text-align: right; margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-left">
+    <div class="hero-brand">
+      <div class="hero-brand-line"></div>
+      <div class="hero-brand-text">Fares Korea · 왕별젖영양교감</div>
+      <div class="hero-brand-line"></div>
+    </div>
+    <h1>Женское<br>здоровье<br>и <em>красота</em><br>в каждой<br>капсуле</h1>
+    <p class="hero-desc">7 природных компонентов корейской медицины — для гормонального баланса, молодости кожи и энергии</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Маточное молочко</span>
+      <span class="hero-tag">Овечья плацента</span>
+      <span class="hero-tag">Гиалуроновая к-та</span>
+      <span class="hero-tag">Мака перуанская</span>
+      <span class="hero-tag">Соевые изофлавоны</span>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="capsule-scene">
+      <div class="capsule cap-1"></div>
+      <div class="capsule cap-2"></div>
+      <div class="capsule cap-3"></div>
+      <div class="capsule cap-4"></div>
+      <div class="capsule cap-5"></div>
+      <div class="capsule cap-6"></div>
+      <div class="capsule cap-7"></div>
+      <div class="capsule cap-8"></div>
+      <div class="capsule-shine"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STATS BAR ══ -->
+<div class="stats-bar">
+  <div class="sb-item">
+    <div class="sb-num">7<sup>+</sup></div>
+    <div class="sb-label">Активных<br>компонентов</div>
+  </div>
+  <div class="sb-item">
+    <div class="sb-num">96</div>
+    <div class="sb-label">Капсул<br>в упаковке</div>
+  </div>
+  <div class="sb-item">
+    <div class="sb-num">50<sup>%</sup></div>
+    <div class="sb-label">Снижение<br>симптомов ПМС</div>
+  </div>
+  <div class="sb-item">
+    <div class="sb-num">7</div>
+    <div class="sb-label">Дней до<br>первых результатов</div>
+  </div>
+</div>
+
+<!-- ══ INGREDIENTS ══ -->
+<div class="sec-title" style="background:var(--cream)">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">Состав</div><div class="eyebrow-line"></div></div>
+  <h2>7 компонентов — <span>7 результатов</span></h2>
+  <p>Каждый ингредиент отобран за клинически подтверждённое действие на женский организм</p>
+</div>
+<section class="ingredients">
+  <div class="ing-grid">
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <ellipse cx="13" cy="15" rx="6" ry="8" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M6 12c-2-.8-2.5-3-1.5-4.5" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M20 12c2-.8 2.5-3 1.5-4.5" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M10 8c0-1.8 6-1.8 6 0" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="10" cy="17" r=".9" fill="#A8173A"/>
+          <circle cx="16" cy="17" r=".9" fill="#A8173A"/>
+          <circle cx="13" cy="20" r=".9" fill="#A8173A"/>
+        </svg>
+      </div>
+      <h3>Маточное молочко</h3>
+      <p>Нормализует менструальный цикл, снижает ПМС на 50%, поддерживает гормональный баланс без синтетических гормонов.</p>
+      <div class="ing-tags"><span class="ing-tag">ПМС −50%</span><span class="ing-tag">Цикл</span><span class="ing-tag">Гормоны</span></div>
+    </div>
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <circle cx="13" cy="13" r="8" stroke="#A8173A" stroke-width="1.4"/>
+          <circle cx="13" cy="13" r="4" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M13 5v3M13 18v3M5 13h3M18 13h3" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="13" cy="13" r="1.3" fill="#A8173A"/>
+        </svg>
+      </div>
+      <h3>Овечья плацента</h3>
+      <p>Содержит 60+ активных компонентов: аминокислоты, пептиды, факторы роста. Замедляет старение клеток.</p>
+      <div class="ing-tags"><span class="ing-tag">60+ элементов</span><span class="ing-tag">Омоложение</span></div>
+    </div>
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <circle cx="9" cy="10" r="2.5" stroke="#A8173A" stroke-width="1.4"/>
+          <circle cx="17" cy="10" r="2.5" stroke="#A8173A" stroke-width="1.4"/>
+          <circle cx="9" cy="17" r="2.5" stroke="#A8173A" stroke-width="1.4"/>
+          <circle cx="17" cy="17" r="2.5" stroke="#A8173A" stroke-width="1.4"/>
+          <circle cx="13" cy="21" r="2.5" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M13 4v3" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M13 4c0 0-1.5-1.5-3.5-.8" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Экстракт виноградных косточек</h3>
+      <p>Антиоксидант сильнее витамина С в 20 раз. Упругость кожи, профилактика варикоза и венозной недостаточности.</p>
+      <div class="ing-tags"><span class="ing-tag">Антиоксидант</span><span class="ing-tag">Кожа</span><span class="ing-tag">Сосуды</span></div>
+    </div>
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <path d="M13 3c0 0-5 4-5 10s5 10 5 10c0 0 5-4 5-10S13 3 13 3z" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M7 9c0 0 2.5 2 6 2s6-2 6-2" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M6.5 15.5c0 0 3 2 6.5 2s6.5-2 6.5-2" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Мака перуанская</h3>
+      <p>Природный адаптоген. Повышает либидо и физическую выносливость, снижает стресс и усталость.</p>
+      <div class="ing-tags"><span class="ing-tag">Либидо</span><span class="ing-tag">Энергия</span><span class="ing-tag">Антистресс</span></div>
+    </div>
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <path d="M8 6c0 0-5 3-4 9s7 9 9 9" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M18 6c0 0 5 3 4 9s-7 9-9 9" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <ellipse cx="13" cy="11.5" rx="5" ry="6.5" stroke="#C9A227" stroke-width="1.4"/>
+          <path d="M10.5 11.5c.8 1 2.2 1 3 0" stroke="#A8173A" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>Соевые изофлавоны</h3>
+      <p>Фитоэстрогены. Облегчают приливы, защищают костную ткань от остеопороза, поддерживают сердце.</p>
+      <div class="ing-tags"><span class="ing-tag">Климакс</span><span class="ing-tag">Приливы</span><span class="ing-tag">Кости</span></div>
+    </div>
+    <div class="ing-card">
+      <div class="ing-icon">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <path d="M13 4c0 0-7 6.5-7 12a7 7 0 0014 0C20 10.5 13 4 13 4z" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M9.5 16c0 0 1 3 3.5 3" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="13" cy="11" r=".9" fill="#A8173A"/>
+        </svg>
+      </div>
+      <h3>Гиалуроновая кислота + Витамины</h3>
+      <p>Гиалуронка удерживает влагу в коже и поддерживает суставы. Витамины усиливают биодоступность формулы.</p>
+      <div class="ing-tags"><span class="ing-tag">Увлажнение</span><span class="ing-tag">Суставы</span><span class="ing-tag">Витамины</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ BENEFITS ══ -->
+<div class="sec-title">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">Действие</div><div class="eyebrow-line"></div></div>
+  <h2>Комплексный <span>результат</span></h2>
+</div>
+<section class="benefits-section">
+  <div class="benefits-inner">
+    <div class="benefits-visual">
+      <div class="bv-bg-circle"></div>
+      <div class="bv-bg-circle"></div>
+      <div class="bv-bg-circle"></div>
+      <div class="bv-glow"></div>
+      <div class="bv-capsule-wrap">
+        <div class="bv-cap"></div>
+        <div class="bv-cap"></div>
+        <div class="bv-cap"></div>
+        <div class="bv-cap"></div>
+      </div>
+      <div class="bv-label">FARES KOREA</div>
+      <div class="bv-headline">Двойное<br>действие —<br><em>красота<br>и здоровье</em></div>
+      <div class="bv-stats">
+        <div class="bv-stat"><strong>50%</strong><span>снижение<br>симптомов ПМС</span></div>
+        <div class="bv-stat"><strong>60+</strong><span>активных<br>веществ в плаценте</span></div>
+      </div>
+    </div>
+    <div class="benefits-list">
+      <div class="bl-item">
+        <div class="bl-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3c-3 0-5.5 2.5-4.5 6l4.5 7 4.5-7C15.5 5.5 13 3 10 3z" stroke="white" stroke-width="1.4" fill="none"/>
+            <path d="M7.5 8h5M10 6.5v4" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="bl-text">
+          <h3>ПМС снижается на <mark>50%</mark></h3>
+          <p>Маточное молочко снижает болезненность, перепады настроения и отёчность. Результат клинически подтверждён.</p>
+        </div>
+      </div>
+      <div class="bl-item">
+        <div class="bl-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="6.5" stroke="white" stroke-width="1.4"/>
+            <path d="M10 7v3l2.5 1.5" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="bl-text">
+          <h3><mark>Гормональный баланс</mark> без синтетики</h3>
+          <p>Восстанавливает баланс эндокринной системы естественным путём — без побочных эффектов ЗГТ.</p>
+        </div>
+      </div>
+      <div class="bl-item">
+        <div class="bl-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 13c.8-3.5 6-7 6-7s5.2 3.5 6 7c.5 2-1 3.5-3 3.5S15.5 15.5 10 15.5 6.5 17 4.5 17 3.5 15 4 13z" stroke="white" stroke-width="1.4" fill="none"/>
+            <path d="M7.5 10c.8 1 2 1 3 0s2.2-1 3 0" stroke="#C9A227" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="bl-text">
+          <h3>Контроль <mark>климакса и приливов</mark></h3>
+          <p>Соевые изофлавоны снижают частоту приливов, улучшают сон и эмоциональный фон в период менопаузы.</p>
+        </div>
+      </div>
+      <div class="bl-item">
+        <div class="bl-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2l1.5 4.5h4.5L12.5 9l1.5 4.5L10 11l-4 2.5 1.5-4.5L4 6.5h4.5z" stroke="white" stroke-width="1.4" fill="none" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="bl-text">
+          <h3><mark>Молодость кожи</mark> и антивозрастной эффект</h3>
+          <p>Плацента + гиалуронка + экстракт косточек: упругость, ровный тон, замедление старения изнутри.</p>
+        </div>
+      </div>
+      <div class="bl-item">
+        <div class="bl-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v3M10 14v3M3 10h3M14 10h3" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+            <circle cx="10" cy="10" r="3.5" stroke="#C9A227" stroke-width="1.4"/>
+            <circle cx="10" cy="10" r="1.3" fill="white"/>
+          </svg>
+        </div>
+        <div class="bl-text">
+          <h3>Энергия, <mark>либидо и выносливость</mark></h3>
+          <p>Мака перуанская повышает тонус, снижает хроническую усталость и помогает справляться со стрессом.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOR WHOM ══ -->
+<section class="for-whom">
+  <div class="fw-deco fw-deco-1"></div>
+  <div class="fw-deco fw-deco-2"></div>
+  <div class="sec-title" style="background:transparent;padding:0 0 0">
+    <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text" style="color:var(--gold)">Для кого</div><div class="eyebrow-line"></div></div>
+    <h2 style="color:white;font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:600">Комплекс для женщин <span style="color:var(--gold-lt);font-style:italic">на всех этапах</span></h2>
+  </div>
+  <div class="fw-grid">
+    <div class="fw-card">
+      <div class="fw-age">25–35<span> лет</span></div>
+      <h3>Молодость и тонус</h3>
+      <ul class="fw-list">
+        <li>ПМС, нерегулярный цикл</li>
+        <li>Хронический стресс, усталость</li>
+        <li>Тусклая кожа, потеря упругости</li>
+        <li>Снижение либидо</li>
+        <li>Планирование беременности</li>
+      </ul>
+    </div>
+    <div class="fw-card">
+      <div class="fw-age">35–50<span> лет</span></div>
+      <h3>Гормональный баланс</h3>
+      <ul class="fw-list">
+        <li>Гормональные колебания</li>
+        <li>Первые признаки менопаузы</li>
+        <li>Ухудшение состояния кожи</li>
+        <li>Перепады настроения</li>
+        <li>Набор веса без причины</li>
+      </ul>
+    </div>
+    <div class="fw-card">
+      <div class="fw-age">50+<span> лет</span></div>
+      <h3>Климакс и менопауза</h3>
+      <ul class="fw-list">
+        <li>Приливы и ночная потливость</li>
+        <li>Хрупкость костей</li>
+        <li>Сердечно-сосудистые риски</li>
+        <li>Нарушения сна</li>
+        <li>Мягкая альтернатива ЗГТ</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══ HOW TO TAKE ══ -->
+<div class="sec-title" style="background:var(--cream)">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">Применение</div><div class="eyebrow-line"></div></div>
+  <h2>Простая <span>схема приёма</span></h2>
+</div>
+<section class="how-to">
+  <div class="ht-steps">
+    <div class="ht-step">
+      <div class="ht-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="8" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M12 8v4l3 1.5" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M6.5 6l2 1.5" stroke="#C9A227" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <div class="ht-circle-num">1</div>
+      </div>
+      <h4>Утро</h4>
+      <p>2 капсулы<br>с завтраком</p>
+    </div>
+    <div class="ht-step">
+      <div class="ht-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="9.5" r="4.5" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M6.5 20c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M12 5V3M17.5 6.5l1.5-1.5M6.5 6.5 5 5" stroke="#C9A227" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <div class="ht-circle-num">2</div>
+      </div>
+      <h4>Обед / Вечер</h4>
+      <p>2 капсулы<br>во время еды</p>
+    </div>
+    <div class="ht-step">
+      <div class="ht-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="4" y="3" width="16" height="18" rx="3" stroke="#A8173A" stroke-width="1.4"/>
+          <path d="M9 3V1M15 3V1" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M4 9h16" stroke="#C9A227" stroke-width="1.2"/>
+          <path d="M8 14h8M8 17.5h5" stroke="#A8173A" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+        <div class="ht-circle-num">3</div>
+      </div>
+      <h4>Курс</h4>
+      <p>32–48 дней<br>1–2 упаковки</p>
+    </div>
+    <div class="ht-step">
+      <div class="ht-circle">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 4c-4.4 0-8 3.6-8 8s3.6 8 8 8 8-3.6 8-8" stroke="#A8173A" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M16.5 4h3.5v3.5" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M20 4l-5 5" stroke="#C9A227" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+        <div class="ht-circle-num">4</div>
+      </div>
+      <h4>Повтор</h4>
+      <p>Перерыв 2 нед.<br>Повторить курс</p>
+    </div>
+  </div>
+  <div class="ht-results">
+    <div class="ht-result">
+      <div class="ht-result-num">7<span> дн.</span></div>
+      <div class="ht-result-text">Первые изменения: энергия, сон, настроение</div>
+    </div>
+    <div class="ht-result">
+      <div class="ht-result-num">3–4<span> нед.</span></div>
+      <div class="ht-result-text">Видимый эффект для кожи и гормонального фона</div>
+    </div>
+    <div class="ht-result">
+      <div class="ht-result-num">96<span> кап.</span></div>
+      <div class="ht-result-text">Полный курс без доплат в одной упаковке</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SHOWCASE ══ -->
+<section class="showcase">
+  <div class="showcase-visual">
+    <div class="sv-glow1"></div>
+    <div class="sv-glow2"></div>
+    <div class="sv-ring sv-ring-1"></div>
+    <div class="sv-ring sv-ring-2"></div>
+    <div class="sv-ring sv-ring-3"></div>
+    <div class="sv-content">
+      <div class="sv-number">ISO</div>
+      <div class="sv-number-label">Сертификат</div>
+      <div class="sv-divider"></div>
+      <div class="sv-sub">22000 · Корея</div>
+    </div>
+  </div>
+  <div class="showcase-content">
+    <div class="eyebrow">
+      <div class="eyebrow-line" style="background:var(--gold)"></div>
+      <div class="eyebrow-text" style="color:var(--gold)">Качество</div>
+    </div>
+    <h2>Корейская<br><em>формула</em><br>качества</h2>
+    <p>Производится на сертифицированном предприятии с международным стандартом ISO 22000 — гарантия чистоты состава и точности дозировок.</p>
+    <ul class="sc-list">
+      <li><div class="sc-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#1A0A12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Сертификат ISO 22000</li>
+      <li><div class="sc-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#1A0A12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>96 капсул — полный курс</li>
+      <li><div class="sc-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#1A0A12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Только природные компоненты</li>
+      <li><div class="sc-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#1A0A12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Без синтетических гормонов</li>
+      <li><div class="sc-check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="#1A0A12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Эффект от 7 дней приёма</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ══ FAQ ══ -->
+<div class="sec-title" style="background:var(--cream)">
+  <div class="eyebrow"><div class="eyebrow-line"></div><div class="eyebrow-text">Вопросы</div><div class="eyebrow-line"></div></div>
+  <h2>Частые <span>вопросы</span></h2>
+</div>
+<section class="faq-section">
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q"><div class="faq-q-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5C4 1.5 2.8 3 3 5h1.8C4.7 3.9 5.2 3.4 6 3.4s1.4.5 1.4 1.4c0 .9-1 1.5-1.4 2.5H7.8C8.2 6.5 9.2 5.8 9.2 4.5c0-1.7-1.3-3-3.2-3zM5.5 10.5a.75.75 0 101.5 0 .75.75 0 00-1.5 0z" fill="white"/></svg></div><div class="faq-q-text">Можно ли принимать при климаксе?</div></div>
+      <div class="faq-a">Да, комплекс специально разработан в том числе для периода менопаузы. Соевые изофлавоны и маточное молочко снижают приливы, стабилизируют настроение и защищают костную ткань.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><div class="faq-q-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5C4 1.5 2.8 3 3 5h1.8C4.7 3.9 5.2 3.4 6 3.4s1.4.5 1.4 1.4c0 .9-1 1.5-1.4 2.5H7.8C8.2 6.5 9.2 5.8 9.2 4.5c0-1.7-1.3-3-3.2-3zM5.5 10.5a.75.75 0 101.5 0 .75.75 0 00-1.5 0z" fill="white"/></svg></div><div class="faq-q-text">Когда ждать первых результатов?</div></div>
+      <div class="faq-a">Первые изменения (уровень энергии, качество сна, настроение) заметны уже через 7 дней. Видимый эффект для кожи и гормонального фона — через 3–4 недели регулярного приёма.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><div class="faq-q-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5C4 1.5 2.8 3 3 5h1.8C4.7 3.9 5.2 3.4 6 3.4s1.4.5 1.4 1.4c0 .9-1 1.5-1.4 2.5H7.8C8.2 6.5 9.2 5.8 9.2 4.5c0-1.7-1.3-3-3.2-3zM5.5 10.5a.75.75 0 101.5 0 .75.75 0 00-1.5 0z" fill="white"/></svg></div><div class="faq-q-text">Есть ли противопоказания?</div></div>
+      <div class="faq-a">Индивидуальная непереносимость компонентов, беременность, период кормления грудью. Перед приёмом рекомендуется проконсультироваться с врачом.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><div class="faq-q-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5C4 1.5 2.8 3 3 5h1.8C4.7 3.9 5.2 3.4 6 3.4s1.4.5 1.4 1.4c0 .9-1 1.5-1.4 2.5H7.8C8.2 6.5 9.2 5.8 9.2 4.5c0-1.7-1.3-3-3.2-3zM5.5 10.5a.75.75 0 101.5 0 .75.75 0 00-1.5 0z" fill="white"/></svg></div><div class="faq-q-text">Сколько упаковок нужно на курс?</div></div>
+      <div class="faq-a">Одна упаковка (96 капсул) при схеме 2+2 рассчитана на 24 дня. Для полного курса рекомендуется 2 упаковки (48 дней). Перерыв между курсами — 2 недели.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><div class="faq-q-icon"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1.5C4 1.5 2.8 3 3 5h1.8C4.7 3.9 5.2 3.4 6 3.4s1.4.5 1.4 1.4c0 .9-1 1.5-1.4 2.5H7.8C8.2 6.5 9.2 5.8 9.2 4.5c0-1.7-1.3-3-3.2-3zM5.5 10.5a.75.75 0 101.5 0 .75.75 0 00-1.5 0z" fill="white"/></svg></div><div class="faq-q-text">Можно ли совмещать с другими препаратами?</div></div>
+      <div class="faq-a">Как правило совместимо. При приёме гормональных средств или антикоагулянтов — обязательна консультация с врачом перед началом приёма.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<section class="footer-banner">
+  <div class="fb-left">
+    <h2>FARES <span>KOREA</span></h2>
+    <p>Биологически активная добавка к пище. Не является лекарственным средством. Перед применением рекомендуется проконсультироваться с врачом. Хранить при t° до +25°C, беречь от детей.</p>
+  </div>
+  <div class="fb-right">
+    <div class="fb-badge"><div class="fb-badge-dot"></div><div class="fb-badge-text">96 КАПСУЛ · ПОЛНЫЙ КУРС</div></div>
+    <div class="fb-badge"><div class="fb-badge-dot"></div><div class="fb-badge-text">ISO 22000 · КОРЕЯ</div></div>
+    <div class="fb-badge"><div class="fb-badge-dot"></div><div class="fb-badge-text">7 ПРИРОДНЫХ КОМПОНЕНТОВ</div></div>
+    <div class="fb-disclaimer">БАД. Не является лекарством.</div>
+  </div>
+</section>
+
+</body>
+</html>

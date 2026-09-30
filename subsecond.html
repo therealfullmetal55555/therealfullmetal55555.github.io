@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubSecond — Predictive Voice Streaming & Barge-In Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #FAFAF9;
+      --panel: #FFFFFF;
+      --panel-hover: #F5F5F4;
+      --text: #171717;
+      --text-muted: #737373;
+      --text-subtle: #A3A3A3;
+      --border: rgba(0, 0, 0, 0.08);
+      --border-focus: #4F46E5;
+      --accent: #4F46E5;
+      --accent-light: #EEF2FF;
+      --success: #059669;
+      --warning: #D97706;
+      --danger: #DC2626;
+
+      --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-ui);
+      line-height: 1.5;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top Navigation Header */
+    header {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .brand {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .brand h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+    .brand span {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 13px;
+    }
+    .header-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .header-links a:hover {
+      color: var(--text);
+    }
+
+    /* Main Workspace Layout */
+    .workspace {
+      display: grid;
+      grid-template-columns: 360px 1fr 380px;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Sidebars */
+    .sidebar-left, .sidebar-right {
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .sidebar-left {
+      border-right: 1px solid var(--border);
+      padding: 24px;
+      gap: 24px;
+    }
+    .sidebar-right {
+      border-left: 1px solid var(--border);
+      padding: 24px;
+      gap: 20px;
+    }
+
+    /* Center Visualizer */
+    .center-stage {
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+      padding: 24px;
+      gap: 20px;
+      overflow-y: auto;
+    }
+
+    /* Section Headings */
+    .section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    /* Inputs & Form Controls */
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    input[type="text"] {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font-ui);
+      font-size: 13px;
+      padding: 10px 12px;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    input[type="text"]:focus {
+      border-color: var(--border-focus);
+    }
+
+    button.btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      font-family: var(--font-ui);
+      font-weight: 500;
+      font-size: 13px;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    button.btn-primary:hover {
+      opacity: 0.92;
+    }
+
+    /* Preset Chips */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+    .chip:hover {
+      color: var(--text);
+      border-color: var(--text-muted);
+    }
+
+    /* Barge-In Big Action Trigger */
+    .barge-in-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 12px;
+    }
+    .btn-barge {
+      background: #DC2626;
+      color: #fff;
+      border: none;
+      font-family: var(--font-ui);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 14px 28px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 2px 8px rgba(220, 38, 38, 0.15);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+    .btn-barge:hover { opacity: 0.95; }
+    .btn-barge:active { transform: scale(0.98); }
+    .barge-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .barge-metric {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: #DC2626;
+    }
+
+    /* Metrics Strip */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .metric-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+    }
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+    .metric-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Audio Visualizer Card */
+    .visualizer-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .visualizer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .canvas-box {
+      width: 100%;
+      height: 120px;
+      background: #FAFAF9;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Speculative Decision Tree Card */
+    .tree-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .tree-branch {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .tree-branch.active {
+      border-left: 3px solid var(--accent);
+      background: #EEF2FF;
+    }
+    .branch-left {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .branch-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .branch-text {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .branch-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: #E0E7FF;
+      color: var(--accent);
+    }
+
+    /* Waterfall Table */
+    .waterfall-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .waterfall-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      padding: 6px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .waterfall-row:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      padding-top: 10px;
+    }
+    .waterfall-bar-container {
+      flex: 1;
+      max-width: 160px;
+      height: 6px;
+      background: #E5E7EB;
+      border-radius: 3px;
+      margin: 0 16px;
+      overflow: hidden;
+    }
+    .waterfall-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 3px;
+    }
+    .waterfall-val {
+      font-family: var(--font-mono);
+      font-variant-numeric: tabular-nums;
+      font-size: 12px;
+      color: var(--text);
+    }
+
+    /* Turn History */
+    .turns-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .turn-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .turn-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-family: var(--font-mono);
+    }
+    .turn-text {
+      font-size: 12px;
+      color: var(--text);
+    }
+    .tag-hit { color: var(--success); font-weight: 600; }
+    .tag-miss { color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <h1>SubSecond</h1>
+      <span>Predictive Voice Streaming Engine & Zero-Buffer Barge-In</span>
+    </div>
+    <div class="header-links">
+      <a href="https://github.com/therealfullmetal55555/subsecond" target="_blank">GitHub Repository ↗</a>
+      <a href="https://therealfullmetal55555.github.io" target="_blank">Portfolio ↗</a>
+    </div>
+  </header>
+
+  <!-- Workspace Grid -->
+  <div class="workspace">
+
+    <!-- Left Controls -->
+    <div class="sidebar-left">
+      <div>
+        <div class="section-title">Streaming Speech Simulator</div>
+        <div class="input-group">
+          <input type="text" id="transcriptInput" placeholder="Speak phrase to stream..." value="where is my order status" autocomplete="off" spellcheck="false">
+          <button class="btn-primary" id="btnSimulateTurn">Simulate Voice Turn</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-title">Conversational Archetype Presets</div>
+        <div class="chips">
+          <div class="chip" data-q="where is my order status">Order Tracking (Hit)</div>
+          <div class="chip" data-q="can i return this opened keyboard">Return Policy (Hit)</div>
+          <div class="chip" data-q="prod is down server 500 error">Critical Outage (Hit)</div>
+          <div class="chip" data-q="what is the weather in tokyo">General Query (Miss)</div>
+        </div>
+      </div>
+
+      <!-- Barge-in Trigger Box -->
+      <div>
+        <div class="section-title">Immediate Interruption</div>
+        <div class="barge-in-box">
+          <button class="btn-barge" id="btnBargeIn">INTERRUPT (BARGE-IN)</button>
+          <div class="barge-hint">Press <kbd style="background:#E5E7EB; padding:2px 6px; border-radius:3px; font-family:var(--font-mono)">Spacebar</kbd> anytime during speech</div>
+          <div class="barge-metric" id="bargeMetric">Cutoff latency: -- ms</div>
+        </div>
+      </div>
+
+      <!-- Telemetry Strip -->
+      <div>
+        <div class="section-title">Real-Time Performance</div>
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-val" id="metricE2E">235 ms</div>
+            <div class="metric-lbl">Total E2E Latency</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="metricTTFT">85 ms</div>
+            <div class="metric-lbl">Speculative TTFT</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="metricHitRate">75.0%</div>
+            <div class="metric-lbl">Speculative Hit Rate</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-val" id="metricCutoff">&lt; 0.1 ms</div>
+            <div class="metric-lbl">Barge-in Execution</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Stage: Oscilloscope & Decision Tree -->
+    <div class="center-stage">
+
+      <!-- Oscilloscope -->
+      <div class="visualizer-card">
+        <div class="visualizer-header">
+          <div class="section-title" style="margin:0;">Real-Time Audio Spectrum (Web Audio DSP)</div>
+          <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);" id="audioStatus">IDLE</div>
+        </div>
+        <div class="canvas-box">
+          <canvas id="scopeCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Speculative Branch Decision Tree -->
+      <div class="tree-card">
+        <div class="section-title" style="margin:0;">Speculative Decision Tree & Prefetch Pool</div>
+        <div id="branchTree" style="display:flex; flex-direction:column; gap:8px;">
+          <!-- Dynamically populated branches -->
+        </div>
+      </div>
+
+      <!-- Waterfall Latency Breakdown -->
+      <div class="waterfall-card">
+        <div class="section-title" style="margin:0;">Conversational Turn Latency Waterfall</div>
+        
+        <div class="waterfall-row">
+          <span>1. VAD Voice Endpointing</span>
+          <div class="waterfall-bar-container"><div class="waterfall-bar" style="width: 15%"></div></div>
+          <span class="waterfall-val" id="wfVad">35 ms</span>
+        </div>
+        <div class="waterfall-row">
+          <span>2. Streaming Interim STT</span>
+          <div class="waterfall-bar-container"><div class="waterfall-bar" style="width: 23%"></div></div>
+          <span class="waterfall-val" id="wfStt">55 ms</span>
+        </div>
+        <div class="waterfall-row">
+          <span>3. Speculative Branch TTFT</span>
+          <div class="waterfall-bar-container"><div class="waterfall-bar" style="width: 36%"></div></div>
+          <span class="waterfall-val" id="wfTtft">85 ms</span>
+        </div>
+        <div class="waterfall-row">
+          <span>4. Audio Buffer Synthesis</span>
+          <div class="waterfall-bar-container"><div class="waterfall-bar" style="width: 19%"></div></div>
+          <span class="waterfall-val" id="wfTts">45 ms</span>
+        </div>
+        <div class="waterfall-row">
+          <span>5. Output Buffer Jitter Margin</span>
+          <div class="waterfall-bar-container"><div class="waterfall-bar" style="width: 7%"></div></div>
+          <span class="waterfall-val" id="wfBuf">15 ms</span>
+        </div>
+        <div class="waterfall-row">
+          <span style="color:var(--accent);">TOTAL SUBSECOND ROUNDTRIP</span>
+          <div></div>
+          <span class="waterfall-val" style="color:var(--accent); font-weight:700;" id="wfTotal">235 ms</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Turn History Log -->
+    <div class="sidebar-right">
+      <div class="section-title">Turn History & Telemetry Log</div>
+      <div class="turns-list" id="turnsList">
+        <!-- Dynamically populated -->
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // --- AUDIO STREAMER & DSP ---
+    class AudioStreamer {
+      constructor() {
+        this.ctx = null;
+        this.gain = null;
+        this.analyser = null;
+        this.source = null;
+        this.isPlaying = false;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioCtx();
+          this.gain = this.ctx.createGain();
+          this.analyser = this.ctx.createAnalyser();
+          this.analyser.fftSize = 256;
+          this.gain.connect(this.analyser);
+          this.analyser.connect(this.ctx.destination);
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      }
+      playFormantVoice(durationSec = 2.0, onEnd = null) {
+        this.init();
+        this.cancelBargeIn();
+        const sr = this.ctx.sampleRate;
+        const numSamples = Math.floor(sr * durationSec);
+        const buf = this.ctx.createBuffer(1, numSamples, sr);
+        const data = buf.getChannelData(0);
+        let phase = 0;
+        for (let i = 0; i < numSamples; i++) {
+          const t = i / sr;
+          const f0 = 135 + Math.sin(t * 6) * 12;
+          phase += (2 * Math.PI * f0) / sr;
+          const glottal = (phase % (2 * Math.PI)) / (2 * Math.PI) - 0.5;
+          const f1 = Math.sin(2 * Math.PI * 650 * t);
+          const f2 = Math.sin(2 * Math.PI * 1550 * t) * 0.45;
+          data[i] = glottal * (f1 + f2) * 0.3 * Math.min(1, t * 15) * Math.min(1, (durationSec - t) * 12);
+        }
+        const src = this.ctx.createBufferSource();
+        src.buffer = buf;
+        const now = this.ctx.currentTime;
+        this.gain.gain.cancelScheduledValues(now);
+        this.gain.gain.setValueAtTime(0.7, now);
+        src.connect(this.gain);
+        src.start(now);
+        this.source = src;
+        this.isPlaying = true;
+        src.onended = () => {
+          this.isPlaying = false;
+          if (onEnd) onEnd();
+        };
+      }
+      cancelBargeIn() {
+        if (!this.isPlaying || !this.source) return 0;
+        const t0 = performance.now();
+        if (this.ctx && this.gain) {
+          const now = this.ctx.currentTime;
+          this.gain.gain.cancelScheduledValues(now);
+          this.gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.015);
+          try { this.source.stop(now + 0.015); } catch(e) {}
+        }
+        const elapsed = Number((performance.now() - t0).toFixed(3));
+        this.isPlaying = false;
+        this.source = null;
+        return elapsed;
+      }
+    }
+
+    // --- SPECULATIVE ENGINE ---
+    const TREES = [
+      { prefix: /^(where is my order|order status|track)/i, intent: 'ORDER_TRACKING', conf: 0.92, lead: 'Checking your tracking status in logistics database right now.' },
+      { prefix: /^(can i return|return policy|refund)/i, intent: 'RETURNS_REFUND', conf: 0.88, lead: 'You can return any item within 30 days of delivery using our portal.' },
+      { prefix: /^(prod is down|database down|server 500)/i, intent: 'CRITICAL_INCIDENT', conf: 0.96, lead: 'Alerting on-call engineering leads and opening an emergency incident bridge.' },
+      { prefix: /^(what is your tech stack|how does subsecond work)/i, intent: 'TECH_ARCHITECTURE', conf: 0.94, lead: 'SubSecond combines zero-buffer VAD with speculative prefetching to drop TTFT.' }
+    ];
+
+    const streamer = new AudioStreamer();
+    const transcriptInput = document.getElementById('transcriptInput');
+    const btnSimulateTurn = document.getElementById('btnSimulateTurn');
+    const btnBargeIn = document.getElementById('btnBargeIn');
+    const bargeMetric = document.getElementById('bargeMetric');
+    const branchTree = document.getElementById('branchTree');
+    const turnsList = document.getElementById('turnsList');
+    const audioStatus = document.getElementById('audioStatus');
+    const scopeCanvas = document.getElementById('scopeCanvas');
+    const scopeCtx = scopeCanvas.getContext('2d');
+
+    // Render Static Tree Branches
+    function renderBranches(activeIntent = null) {
+      branchTree.innerHTML = '';
+      TREES.forEach(tree => {
+        const isActive = tree.intent === activeIntent;
+        const div = document.createElement('div');
+        div.className = `tree-branch ${isActive ? 'active' : ''}`;
+        div.innerHTML = `
+          <div class="branch-left">
+            <span class="branch-name">${tree.intent}</span>
+            <span class="branch-text">${tree.lead}</span>
+          </div>
+          <span class="branch-badge">${(tree.conf * 100).toFixed(0)}% Conf</span>
+        `;
+        branchTree.appendChild(div);
+      });
+    }
+
+    renderBranches();
+
+    // Turn Simulation
+    let history = [];
+    function runTurn() {
+      const text = transcriptInput.value.trim().toLowerCase();
+      if (!text) return;
+
+      const matched = TREES.find(t => t.prefix.test(text));
+      const isHit = !!matched;
+      const ttft = isHit ? 85 : 580;
+      const total = isHit ? 235 : 1070;
+
+      renderBranches(isHit ? matched.intent : null);
+
+      audioStatus.textContent = 'PLAYING VOICE STREAM';
+      audioStatus.style.color = '#059669';
+
+      streamer.playFormantVoice(2.5, () => {
+        audioStatus.textContent = 'IDLE';
+        audioStatus.style.color = 'var(--text-muted)';
+      });
+
+      // Update Waterfall Values
+      document.getElementById('wfTtft').textContent = `${ttft} ms`;
+      document.getElementById('wfTotal').textContent = `${total} ms`;
+      document.getElementById('metricE2E').textContent = `${total} ms`;
+      document.getElementById('metricTTFT').textContent = `${ttft} ms`;
+
+      history.unshift({ text, isHit, intent: isHit ? matched.intent : 'GENERIC_FALLBACK', total });
+      renderHistory();
+    }
+
+    function renderHistory() {
+      turnsList.innerHTML = '';
+      const hits = history.filter(h => h.isHit).length;
+      document.getElementById('metricHitRate').textContent = `${((hits / history.length) * 100).toFixed(1)}%`;
+
+      history.slice(0, 10).forEach((h, idx) => {
+        const div = document.createElement('div');
+        div.className = 'turn-item';
+        div.innerHTML = `
+          <div class="turn-header">
+            <span class="${h.isHit ? 'tag-hit' : 'tag-miss'}">${h.isHit ? 'SPECULATIVE HIT' : 'COLD FALLBACK'}</span>
+            <span>${h.total} ms</span>
+          </div>
+          <div class="turn-text">"${h.text}"</div>
+        `;
+        turnsList.appendChild(div);
+      });
+    }
+
+    // Barge-In Action
+    function executeBargeIn() {
+      const ms = streamer.cancelBargeIn();
+      bargeMetric.textContent = `Cutoff latency: ${ms.toFixed(3)} ms (15ms anti-pop ramp)`;
+      audioStatus.textContent = 'INTERRUPTED (BARGED-IN)';
+      audioStatus.style.color = '#DC2626';
+      document.getElementById('metricCutoff').textContent = `${ms.toFixed(2)} ms`;
+      setTimeout(() => {
+        if (!streamer.isPlaying) {
+          audioStatus.textContent = 'IDLE';
+          audioStatus.style.color = 'var(--text-muted)';
+        }
+      }, 1500);
+    }
+
+    btnBargeIn.addEventListener('click', executeBargeIn);
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
+        e.preventDefault();
+        executeBargeIn();
+      }
+    });
+
+    btnSimulateTurn.addEventListener('click', runTurn);
+    transcriptInput.addEventListener('keydown', e => { if (e.key === 'Enter') runTurn(); });
+
+    document.querySelectorAll('.chip').forEach(c => {
+      c.addEventListener('click', () => {
+        transcriptInput.value = c.dataset.q;
+        runTurn();
+      });
+    });
+
+    // Oscilloscope Animation Loop
+    function resizeCanvas() {
+      const rect = scopeCanvas.parentElement.getBoundingClientRect();
+      scopeCanvas.width = rect.width * window.devicePixelRatio;
+      scopeCanvas.height = rect.height * window.devicePixelRatio;
+      scopeCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function drawScope() {
+      requestAnimationFrame(drawScope);
+      const w = scopeCanvas.width / window.devicePixelRatio;
+      const h = scopeCanvas.height / window.devicePixelRatio;
+      scopeCtx.clearRect(0, 0, w, h);
+
+      scopeCtx.strokeStyle = '#4F46E5';
+      scopeCtx.lineWidth = 2;
+      scopeCtx.beginPath();
+
+      if (streamer.isPlaying && streamer.analyser) {
+        const data = new Uint8Array(streamer.analyser.frequencyBinCount);
+        streamer.analyser.getByteTimeDomainData(data);
+        const sliceWidth = w / data.length;
+        let x = 0;
+        for (let i = 0; i < data.length; i++) {
+          const v = data[i] / 128.0;
+          const y = (v * h) / 2;
+          if (i === 0) scopeCtx.moveTo(x, y);
+          else scopeCtx.lineTo(x, y);
+          x += sliceWidth;
+        }
+      } else {
+        scopeCtx.moveTo(0, h / 2);
+        scopeCtx.lineTo(w, h / 2);
+      }
+      scopeCtx.stroke();
+    }
+    drawScope();
+  </script>
+</body>
+</html>

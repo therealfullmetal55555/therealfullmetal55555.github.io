@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web Design — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); color: var(--void-text); overflow-x: hidden; }
+
+/* ── Hero ──────────────────────────────────────────────────── */
+.wd-hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.vgrid {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  pointer-events: none;
+  z-index: 0;
+}
+.vgrid-col { border-right: 1px solid oklch(9% 0.003 60); }
+.vgrid-col:last-child { border-right: none; }
+
+.hero-top {
+  padding-top: 140px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-back {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(32% 0.003 60);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-back::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 1px;
+  background: oklch(24% 0.003 60);
+}
+.hero-back:hover { color: oklch(60% 0.003 60); }
+
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.hero-meta span {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: oklch(28% 0.003 60);
+  white-space: nowrap;
+}
+
+.hero-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  padding: 40px 0;
+}
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(68px, 13vw, 172px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  color: var(--void-text);
+}
+
+.title-wrap { overflow: hidden; }
+.title-line {
+  display: block;
+  transform: translateY(110%);
+  animation: lineUp 0.85s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+.title-wrap:nth-child(1) .title-line { animation-delay: 0.05s; }
+.title-wrap:nth-child(2) .title-line {
+  animation-delay: 0.15s;
+  margin-left: clamp(48px, 9vw, 148px);
+  color: oklch(36% 0.003 60);
+}
+.title-wrap:nth-child(3) .title-line {
+  animation-delay: 0.25s;
+  margin-left: clamp(96px, 18vw, 296px);
+}
+
+@keyframes lineUp {
+  to { transform: translateY(0); }
+}
+
+.hero-bottom {
+  padding-bottom: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 40px;
+  position: relative;
+  z-index: 2;
+  animation: fadeUp 1s cubic-bezier(0.22,1,0.36,1) 0.45s both;
+}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.hero-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: oklch(46% 0.003 60);
+  line-height: 1.9;
+  max-width: 38ch;
+}
+
+.hero-num {
+  font-family: var(--f-head);
+  font-size: clamp(72px, 11vw, 140px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  color: oklch(12% 0.004 60);
+  flex-shrink: 0;
+}
+
+/* ── Marquee ───────────────────────────────────────────────── */
+.marquee-wrap {
+  border-top: 1px solid var(--void-border);
+  border-bottom: 1px solid var(--void-border);
+  padding: 18px 0;
+  overflow: hidden;
+  position: relative;
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: mq 36s linear infinite;
+}
+.marquee-track:hover { animation-play-state: paused; }
+@keyframes mq {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.mq-item {
+  font-family: var(--f-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: oklch(26% 0.003 60);
+  padding: 0 44px;
+  white-space: nowrap;
+  transition: color 0.2s;
+}
+.mq-item:hover { color: oklch(52% 0.003 60); }
+.mq-dot { color: oklch(18% 0.003 60); font-size: 5px; vertical-align: middle; margin-right: -36px; }
+
+/* ── Sections shared ───────────────────────────────────────── */
+.sec {
+  padding: 104px 48px;
+  border-bottom: 1px solid var(--void-border);
+}
+.sec-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: oklch(26% 0.003 60);
+  margin-bottom: 72px;
+}
+
+/* ── Principles ────────────────────────────────────────────── */
+.principle {
+  display: grid;
+  grid-template-columns: clamp(96px, 14vw, 180px) 1fr clamp(100px, 14vw, 160px);
+  gap: 0 48px;
+  align-items: start;
+  padding: 52px 0;
+  border-top: 1px solid oklch(10% 0.003 60);
+  transition: border-color 0.4s;
+}
+.principle:hover { border-top-color: oklch(20% 0.003 60); }
+
+.p-num {
+  font-family: var(--f-head);
+  font-size: clamp(88px, 15vw, 188px);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.82;
+  color: oklch(10% 0.004 60);
+  transition: color 0.45s var(--ease);
+}
+.principle:hover .p-num { color: oklch(17% 0.004 60); }
+
+.p-body h2 {
+  font-family: var(--f-head);
+  font-size: clamp(26px, 3.8vw, 50px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--void-text);
+  margin-bottom: 22px;
+}
+.p-body p {
+  font-size: 14px;
+  font-weight: 300;
+  color: oklch(50% 0.003 60);
+  line-height: 1.9;
+  max-width: 46ch;
+}
+
+.p-aside {
+  text-align: right;
+  padding-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+}
+.p-tag {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: oklch(22% 0.003 60);
+  border: 1px solid oklch(13% 0.003 60);
+  padding: 4px 10px;
+  display: inline-block;
+  transition: color 0.3s, border-color 0.3s;
+}
+.principle:hover .p-tag { color: oklch(36% 0.003 60); border-color: oklch(20% 0.003 60); }
+
+/* ── Technique rows ────────────────────────────────────────── */
+.tech-row {
+  display: grid;
+  grid-template-columns: 44px clamp(140px, 22vw, 280px) 1fr 200px;
+  gap: 0 40px;
+  align-items: center;
+  padding: 36px 48px;
+  border-top: 1px solid oklch(10% 0.003 60);
+  transition: background 0.25s;
+  overflow: hidden;
+}
+.tech-row:last-of-type { border-bottom: 1px solid oklch(10% 0.003 60); }
+.tech-row:hover { background: oklch(6.5% 0.004 60); }
+
+.tr-n {
+  font-family: var(--f-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: oklch(25% 0.003 60);
+}
+.tr-name {
+  font-family: var(--f-head);
+  font-size: clamp(19px, 2.4vw, 30px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--void-text);
+}
+.tr-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: oklch(42% 0.003 60);
+  line-height: 1.7;
+  max-width: 42ch;
+}
+.tr-demo {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+/* Demo 1 — marquee */
+.d-mq { width: 100%; overflow: hidden; }
+.d-mq-inner {
+  display: flex;
+  animation: mq 5s linear infinite;
+  width: max-content;
+  animation-play-state: paused;
+}
+.tech-row:hover .d-mq-inner { animation-play-state: running; }
+.d-mq span {
+  font-family: var(--f-head);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: oklch(28% 0.003 60);
+  padding-right: 24px;
+  white-space: nowrap;
+}
+.tech-row:hover .d-mq span { color: oklch(44% 0.003 60); }
+
+/* Demo 2 — line reveal arrow */
+.d-arrow {
+  font-size: 20px;
+  color: oklch(28% 0.003 60);
+  transform: translateX(18px) translateY(4px);
+  opacity: 0;
+  transition: transform 0.55s cubic-bezier(0.22,1,0.36,1), opacity 0.4s;
+}
+.tech-row:hover .d-arrow { transform: none; opacity: 1; color: oklch(50% 0.003 60); }
+
+/* Demo 3 — blend sweep */
+.d-blend {
+  position: relative;
+  font-family: var(--f-head);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: oklch(24% 0.003 60);
+  white-space: nowrap;
+}
+.d-blend::after {
+  content: attr(data-t);
+  position: absolute;
+  inset: 0;
+  color: var(--void-text);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.55s cubic-bezier(0.22,1,0.36,1);
+}
+.tech-row:hover .d-blend::after { clip-path: inset(0 0% 0 0); }
+
+/* Demo 4 — parallax count */
+.d-para {
+  font-family: var(--f-head);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: oklch(24% 0.003 60);
+  white-space: nowrap;
+  transition: color 0.3s;
+}
+.tech-row:hover .d-para { color: oklch(48% 0.003 60); }
+
+/* Demo 5 — scramble mono */
+.d-scr {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: oklch(52% 0.20 155);
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 200px;
+}
+
+/* Demo 6 — clip wipe */
+.d-clip {
+  font-family: var(--f-head);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--void-text);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 0.65s cubic-bezier(0.22,1,0.36,1);
+  white-space: nowrap;
+}
+.tech-row:hover .d-clip { clip-path: inset(0 0% 0 0); }
+
+/* ── Type specimen ─────────────────────────────────────────── */
+.ts-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 36px 0;
+  border-bottom: 1px solid oklch(10% 0.003 60);
+}
+.ts-row:first-of-type { border-top: 1px solid oklch(10% 0.003 60); }
+.ts-sample {
+  font-family: var(--f-head);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ts-xl  { font-size: clamp(56px, 10vw, 140px); color: var(--void-text); }
+.ts-lg  { font-size: clamp(40px, 7.5vw, 96px);  color: oklch(32% 0.003 60); }
+.ts-md  { font-size: clamp(28px, 5vw, 68px);    color: var(--void-text); }
+.ts-sm  { font-size: clamp(18px, 3vw, 44px); font-weight: 500; font-family: var(--f-body); letter-spacing: -0.01em; color: oklch(56% 0.003 60); }
+.ts-xs  { font-size: clamp(13px, 1.8vw, 22px); font-weight: 300; font-family: var(--f-body); letter-spacing: 0; line-height: 1.6; color: oklch(44% 0.003 60); }
+
+.ts-meta { text-align: right; flex-shrink: 0; }
+.ts-meta-f { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(24% 0.003 60); margin-bottom: 4px; }
+.ts-meta-s { font-family: 'SF Mono', monospace; font-size: 11px; color: oklch(30% 0.003 60); }
+
+/* ── Tools ─────────────────────────────────────────────────── */
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid oklch(10% 0.003 60);
+}
+.t-item {
+  padding: 32px 28px;
+  border-right: 1px solid oklch(10% 0.003 60);
+  border-bottom: 1px solid oklch(10% 0.003 60);
+  transition: background 0.25s;
+}
+.t-item:nth-child(4n)        { border-right: none; }
+.t-item:nth-last-child(-n+4) { border-bottom: none; }
+.t-item:hover { background: oklch(8% 0.004 60); }
+
+.t-n { font-family: var(--f-head); font-size: 16px; font-weight: 700; letter-spacing: -0.02em; color: var(--void-text); margin-bottom: 8px; }
+.t-r { font-size: 12px; font-weight: 300; color: oklch(36% 0.003 60); line-height: 1.6; }
+
+.tools-end {
+  margin-top: 80px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+.tools-cta {
+  font-family: var(--f-head);
+  font-size: clamp(32px, 5.5vw, 76px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: oklch(15% 0.004 60);
+  max-width: 12ch;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 1060px) {
+  .tools-grid { grid-template-columns: repeat(2, 1fr); }
+  .t-item:nth-child(4n) { border-right: 1px solid oklch(10% 0.003 60); }
+  .t-item:nth-child(2n) { border-right: none; }
+  .t-item:nth-last-child(-n+4) { border-bottom: 1px solid oklch(10% 0.003 60); }
+  .t-item:nth-last-child(-n+2) { border-bottom: none; }
+}
+@media (max-width: 900px) {
+  .wd-hero { padding: 0 24px; }
+  .sec { padding: 80px 24px; }
+  .tech-row { padding-left: 24px; padding-right: 24px; }
+  .principle { grid-template-columns: clamp(72px, 18vw, 130px) 1fr; }
+  .p-aside { display: none; }
+  .tech-row { grid-template-columns: 36px 1fr; }
+  .tr-desc, .tr-demo { display: none; }
+}
+@media (max-width: 640px) {
+  .vgrid-col:nth-child(n+4) { display: none; }
+  .ts-row { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .ts-meta { text-align: left; }
+  .hero-bottom { flex-direction: column-reverse; gap: 20px; }
+  .hero-num { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="site-nav">
+    <a href="projects.html" class="active">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section class="wd-hero">
+    <div class="vgrid" aria-hidden="true">
+      <div class="vgrid-col"></div>
+      <div class="vgrid-col"></div>
+      <div class="vgrid-col"></div>
+      <div class="vgrid-col"></div>
+      <div class="vgrid-col"></div>
+    </div>
+
+    <div class="hero-top">
+      <a href="projects.html" class="hero-back">Проекты</a>
+      <div class="hero-meta">
+        <span>Веб-дизайн</span>
+        <span>2026</span>
+      </div>
+    </div>
+
+    <div class="hero-center">
+      <h1 class="hero-title">
+        <div class="title-wrap"><span class="title-line">Дизайн</span></div>
+        <div class="title-wrap"><span class="title-line">который</span></div>
+        <div class="title-wrap"><span class="title-line">работает</span></div>
+      </h1>
+    </div>
+
+    <div class="hero-bottom">
+      <p class="hero-desc">
+        Интерфейсы, которые реагируют на каждое действие. Каждый раздел ниже — это техника в действии.
+      </p>
+      <div class="hero-num">06</div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span class="mq-item"><span class="mq-dot">◆</span> Типографика</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> CSS Анимации</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Scroll Design</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Motion</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Layout</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Microinteractions</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Blend Modes</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Clip-path</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Типографика</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> CSS Анимации</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Scroll Design</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Motion</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Layout</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Microinteractions</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Blend Modes</span>
+      <span class="mq-item"><span class="mq-dot">◆</span> Clip-path</span>
+    </div>
+  </div>
+
+  <!-- PRINCIPLES -->
+  <section class="sec">
+    <div class="sec-label reveal">Принципы</div>
+
+    <div class="principle reveal">
+      <div class="p-num">01</div>
+      <div class="p-body">
+        <h2>Форма следует движению</h2>
+        <p>Статичный интерфейс — мёртвый интерфейс. Каждый переход, каждый ховер должен нести смысл: что кликабельно, что важно, что изменилось.</p>
+      </div>
+      <div class="p-aside">
+        <span class="p-tag">Motion</span>
+        <span class="p-tag">UX</span>
+      </div>
+    </div>
+
+    <div class="principle reveal">
+      <div class="p-num">02</div>
+      <div class="p-body">
+        <h2>Типографика — это UI</h2>
+        <p>Когда шрифт выбран верно, иконки не нужны. Иерархия строится размером, весом, интерлиньяжем. Слово само становится элементом интерфейса.</p>
+      </div>
+      <div class="p-aside">
+        <span class="p-tag">Сyne 800</span>
+        <span class="p-tag">DM Sans 300</span>
+      </div>
+    </div>
+
+    <div class="principle reveal">
+      <div class="p-num">03</div>
+      <div class="p-body">
+        <h2>Пространство работает</h2>
+        <p>Белое пространство — не пустота, это дыхание. Ассиметричная сетка создаёт напряжение и ведёт взгляд. Одинаковые отступы везде — монотонность, а не чистота.</p>
+      </div>
+      <div class="p-aside">
+        <span class="p-tag">Grid</span>
+        <span class="p-tag">Rhythm</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNIQUES -->
+  <section class="sec" style="padding-left:0;padding-right:0;">
+    <div class="sec-label reveal" style="padding: 0 48px;">Техники — наведите</div>
+
+    <div class="tech-row reveal">
+      <span class="tr-n">01</span>
+      <span class="tr-name">CSS Marquee</span>
+      <p class="tr-desc">Бесконечная лента через @keyframes и translateX. Без JavaScript, без зависимостей.</p>
+      <div class="tr-demo">
+        <div class="d-mq">
+          <div class="d-mq-inner">
+            <span>Marquee</span><span>Loop</span><span>Scroll</span>
+            <span>Marquee</span><span>Loop</span><span>Scroll</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tech-row reveal">
+      <span class="tr-n">02</span>
+      <span class="tr-name">Line Reveal</span>
+      <p class="tr-desc">Строки вылетают снизу при появлении в viewport. overflow: hidden + translateY.</p>
+      <div class="tr-demo">
+        <span class="d-arrow">↗</span>
+      </div>
+    </div>
+
+    <div class="tech-row reveal">
+      <span class="tr-n">03</span>
+      <span class="tr-name">Blend Sweep</span>
+      <p class="tr-desc">Clip-path wipe открывает инвертированный слой текста. mix-blend-mode: difference.</p>
+      <div class="tr-demo">
+        <span class="d-blend" data-t="BLEND">BLEND</span>
+      </div>
+    </div>
+
+    <div class="tech-row reveal" id="rowParallax">
+      <span class="tr-n">04</span>
+      <span class="tr-name">3D Parallax</span>
+      <p class="tr-desc">CSS perspective + rotateX/Y через mousemove. Глубина без тяжёлых библиотек.</p>
+      <div class="tr-demo">
+        <span class="d-para" id="dPara">HOVER</span>
+      </div>
+    </div>
+
+    <div class="tech-row reveal" id="rowScramble">
+      <span class="tr-n">05</span>
+      <span class="tr-name">Text Scramble</span>
+      <p class="tr-desc">Символы меняются на случайные и раскрываются по одному. Чистый JS.</p>
+      <div class="tr-demo">
+        <span class="d-scr" id="dScramble">ЦЫГАНОВ</span>
+      </div>
+    </div>
+
+    <div class="tech-row reveal">
+      <span class="tr-n">06</span>
+      <span class="tr-name">Clip Wipe</span>
+      <p class="tr-desc">Текст открывается горизонтальным вайпом через clip-path: inset(). Кинематографично.</p>
+      <div class="tr-demo">
+        <span class="d-clip">REVEAL</span>
+      </div>
+    </div>
+
+    <a href="cinematic.html" class="tech-row reveal" style="text-decoration:none;">
+      <span class="tr-n">07</span>
+      <span class="tr-name">Liquid Glass</span>
+      <p class="tr-desc">Видео-фон с ручным rAF кросс-фейдом + жидкое стекло через CSS mask. Live demo →</p>
+      <div class="tr-demo">
+        <span class="d-arrow" style="opacity:1;transform:none;color:oklch(36% 0.003 60);">↗</span>
+      </div>
+    </a>
+  </section>
+
+  <!-- TYPE SPECIMEN -->
+  <section class="sec">
+    <div class="sec-label reveal">Типографика</div>
+
+    <div class="ts-row reveal">
+      <span class="ts-sample ts-xl">Кк</span>
+      <div class="ts-meta">
+        <span class="ts-meta-f">Syne</span>
+        <span class="ts-meta-s">800 · clamp(56–140px)</span>
+      </div>
+    </div>
+    <div class="ts-row reveal">
+      <span class="ts-sample ts-lg" style="overflow:hidden;text-overflow:ellipsis;">Кирилл&nbsp;Цыганов</span>
+      <div class="ts-meta">
+        <span class="ts-meta-f">Syne</span>
+        <span class="ts-meta-s">800 · clamp(40–96px)</span>
+      </div>
+    </div>
+    <div class="ts-row reveal">
+      <span class="ts-sample ts-md">Web Designer</span>
+      <div class="ts-meta">
+        <span class="ts-meta-f">Syne</span>
+        <span class="ts-meta-s">800 · clamp(28–68px)</span>
+      </div>
+    </div>
+    <div class="ts-row reveal">
+      <span class="ts-sample ts-sm" style="font-family:var(--f-body);font-weight:500;letter-spacing:-0.01em;">Разработка · Маркетинг · Creative</span>
+      <div class="ts-meta">
+        <span class="ts-meta-f">DM Sans</span>
+        <span class="ts-meta-s">500 · clamp(18–44px)</span>
+      </div>
+    </div>
+    <div class="ts-row reveal">
+      <span class="ts-sample ts-xs" style="font-family:var(--f-body);font-weight:300;letter-spacing:0;line-height:1.6;white-space:normal;">Интерфейсы, которые реагируют на каждое действие пользователя.</span>
+      <div class="ts-meta">
+        <span class="ts-meta-f">DM Sans</span>
+        <span class="ts-meta-s">300 · clamp(13–22px)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="sec" style="border-bottom:none;">
+    <div class="sec-label reveal">Инструменты</div>
+
+    <div class="tools-grid">
+      <div class="t-item reveal">
+        <div class="t-n">HTML / CSS</div>
+        <div class="t-r">Вёрстка, кастомные свойства,<br>сложные анимации</div>
+      </div>
+      <div class="t-item reveal d1">
+        <div class="t-n">Vanilla JS</div>
+        <div class="t-r">DOM, события,<br>интерактивность</div>
+      </div>
+      <div class="t-item reveal d2">
+        <div class="t-n">React</div>
+        <div class="t-r">Компоненты, роутинг,<br>state management</div>
+      </div>
+      <div class="t-item reveal d3">
+        <div class="t-n">Three.js</div>
+        <div class="t-r">3D-сцены, WebGL,<br>шейдеры</div>
+      </div>
+      <div class="t-item reveal">
+        <div class="t-n">GSAP</div>
+        <div class="t-r">Сложные таймлайны,<br>ScrollTrigger</div>
+      </div>
+      <div class="t-item reveal d1">
+        <div class="t-n">Figma</div>
+        <div class="t-r">Системы компонентов,<br>прототипирование</div>
+      </div>
+      <div class="t-item reveal d2">
+        <div class="t-n">TouchDesigner</div>
+        <div class="t-r">Генеративная графика,<br>реалтайм визуалы</div>
+      </div>
+      <div class="t-item reveal d3">
+        <div class="t-n">TypeScript</div>
+        <div class="t-r">Типизация,<br>надёжный код</div>
+      </div>
+    </div>
+
+    <div class="tools-end reveal">
+      <div class="tools-cta">Есть задача?</div>
+      <a href="contact.html" class="btn btn--inv">Написать →</a>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <span>© 2026 Кирилл Цыганов</span>
+    <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+  </footer>
+
+</div>
+
+<script>
+/* ─── Scroll reveal ─────────────────────────────────────── */
+(function () {
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+  document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+})();
+
+/* ─── Parallax row ──────────────────────────────────────── */
+(function () {
+  var row  = document.getElementById('rowParallax');
+  var text = document.getElementById('dPara');
+  if (!row || !text) return;
+  row.addEventListener('mousemove', function (e) {
+    var r  = row.getBoundingClientRect();
+    var nx = (e.clientX - r.left) / r.width - 0.5;
+    var ny = (e.clientY - r.top)  / r.height - 0.5;
+    text.style.transform = 'translate(' + (nx * 12) + 'px,' + (ny * 8) + 'px)';
+  });
+  row.addEventListener('mouseleave', function () {
+    text.style.transform = '';
+  });
+})();
+
+/* ─── Smooth text scramble ──────────────────────────────── */
+(function () {
+  var CHARS = 'АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩ0123456789';
+  var el = document.getElementById('dScramble');
+  var row = document.getElementById('rowScramble');
+  var TARGET = 'ЦЫГАНОВ';
+  var timer = null;
+
+  function scramble(target) {
+    clearInterval(timer);
+    var len = target.length;
+    var frames = len * 4;
+    var f = 0;
+    timer = setInterval(function () {
+      var revealed = Math.floor(f / frames * len);
+      var out = '';
+      for (var i = 0; i < len; i++) {
+        if (i < revealed) {
+          out += target[i];
+        } else {
+          out += CHARS[Math.floor(Math.random() * CHARS.length)];
+        }
+      }
+      el.textContent = out;
+      f++;
+      if (f > frames + 4) {
+        clearInterval(timer);
+        el.textContent = target;
+      }
+    }, 55);
+  }
+
+  if (row) {
+    row.addEventListener('mouseenter', function () { scramble(TARGET); });
+    row.addEventListener('mouseleave', function () {
+      clearInterval(timer);
+      el.textContent = TARGET;
+    });
+  }
+})();
+</script>
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

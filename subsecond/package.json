@@ -1,0 +1,38 @@
+{
+  "name": "subsecond-voice",
+  "version": "1.0.0",
+  "description": "Predictive Voice Streaming Engine with <300ms Conversational Latency, Speculative Branch Prefetching & Instant Zero-Buffer Barge-In",
+  "main": "engine/index.js",
+  "bin": {
+    "subsecond": "./cli.js"
+  },
+  "scripts": {
+    "test": "node tests/subsecond.test.js",
+    "demo": "node cli.js demo",
+    "simulate": "node cli.js simulate"
+  },
+  "keywords": [
+    "voice-ai",
+    "realtime-audio",
+    "web-audio-api",
+    "vad",
+    "voice-activity-detection",
+    "barge-in",
+    "speculative-execution",
+    "zero-dependency",
+    "latency-optimization"
+  ],
+  "author": "Kirill Tsyganov <https://t.me/therealfullmetal>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/therealfullmetal55555/subsecond.git"
+  },
+  "bugs": {
+    "url": "https://github.com/therealfullmetal55555/subsecond/issues"
+  },
+  "homepage": "https://github.com/therealfullmetal55555/subsecond#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HYPERCONTEXT // Gemini 2M Monorepo Archaeologist & Context Caching Gateway</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080806;
+  --panel: #0d0f12;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-border-bright: rgba(255, 255, 255, 0.25);
+  --text: #f5f5f5;
+  --text-dim: rgba(255, 255, 255, 0.5);
+  --text-micro: rgba(255, 255, 255, 0.3);
+  --f-head: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  --f-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--f-head);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  user-select: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TOP STATUS BAR */
+.header-bar {
+  background: #080806;
+  border-bottom: 1px solid var(--panel-border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-title {
+  font-family: var(--f-mono);
+  font-weight: 800;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.pulse-sparkle {
+  width: 6px; height: 6px;
+  background: #ffffff;
+  border-radius: 50%;
+  opacity: 0.8;
+}
+.badge {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 2px;
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+}
+.badge.active {
+  border-color: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+.stat-pills {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+.stat-pill {
+  text-align: right;
+  font-family: var(--f-mono);
+}
+.stat-pill .val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+.stat-pill .lbl {
+  font-size: 8px;
+  letter-spacing: 0.12em;
+  color: var(--text-micro);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* MAIN STAGE */
+.main-stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* LEFT: CANVAS VIEWPORT */
+.canvas-wrapper {
+  position: relative;
+  background: #080806;
+  display: flex;
+  flex-direction: column;
+}
+#monorepoCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+}
+#monorepoCanvas:active { cursor: grabbing; }
+
+.canvas-hud {
+  position: absolute;
+  top: 20px;
+  left: 24px;
+  z-index: 5;
+  pointer-events: none;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.hud-legend {
+  position: absolute;
+  bottom: 20px;
+  left: 24px;
+  z-index: 5;
+  display: flex;
+  gap: 16px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(8, 8, 6, 0.9);
+  border: 1px solid var(--panel-border);
+  padding: 8px 14px;
+  border-radius: 2px;
+}
+.legend-item { display: flex; align-items: center; gap: 8px; color: var(--text-dim); }
+.legend-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+/* RIGHT: AUDIT CONSOLE */
+.console-panel {
+  background: #0b0c0e;
+  border-left: 1px solid var(--panel-border);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 5;
+}
+.console-section {
+  padding: 24px;
+  border-bottom: 1px solid var(--panel-border);
+}
+.section-title {
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 2M CONTEXT CAPACITY GAUGE */
+.context-meter-box {
+  background: #080806;
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  padding: 14px;
+  margin-bottom: 16px;
+}
+.meter-top {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  color: var(--text-dim);
+}
+.meter-top span.num { color: #fff; font-weight: 700; }
+.meter-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.meter-fill {
+  width: 8.5%;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* CACHE TOGGLE */
+.cache-switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--panel-border);
+  padding: 12px 14px;
+  border-radius: 2px;
+  margin-bottom: 16px;
+}
+.switch-left {
+  font-family: var(--f-mono);
+  font-size: 11px;
+}
+.switch-left .title { color: #fff; font-weight: 700; letter-spacing: 0.04em; }
+.switch-left .sub { font-size: 9px; color: var(--text-dim); margin-top: 3px; letter-spacing: 0.04em; }
+
+.toggle-btn {
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 6px 12px;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.toggle-btn:hover { opacity: 0.85; }
+.toggle-btn.off {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+}
+
+/* QUERY INPUT */
+.query-box {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.query-input {
+  flex: 1;
+  background: #080806;
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  padding: 10px 14px;
+  color: #fff;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.query-input:focus {
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.btn-query {
+  background: #ffffff;
+  color: #000000;
+  font-family: var(--f-mono);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 0 18px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.btn-query:hover { opacity: 0.85; }
+
+/* PRESET PILLS */
+.preset-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.preset-chip {
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  color: var(--text-dim);
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  padding: 5px 10px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.preset-chip:hover {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+/* RESULTS & REASONING */
+.results-wrapper {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+.reasoning-card {
+  background: #080806;
+  border: 1px solid var(--panel-border);
+  border-radius: 2px;
+  padding: 18px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.7);
+}
+.reasoning-card h3 {
+  font-family: var(--f-head);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.reasoning-card p { margin-bottom: 12px; }
+.reasoning-card code {
+  font-family: var(--f-mono);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: #ffffff;
+}
+.citations-list {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--panel-border);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.citation-pill {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  background: transparent;
+  border: 1px solid var(--panel-border);
+  padding: 4px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.citation-pill:hover { border-color: rgba(255, 255, 255, 0.4); color: #ffffff; }
+
+/* FOOTER BAR */
+.footer-bar {
+  background: #080806;
+  border-top: 1px solid var(--panel-border);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--text-micro);
+}
+.footer-bar a { color: var(--text-dim); text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.2); }
+.footer-bar a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<!-- TOP STATUS BAR -->
+<header class="header-bar">
+  <div class="brand-group">
+    <div class="brand-title">
+      <span class="pulse-sparkle"></span>
+      HYPERCONTEXT // GEMINI 2M
+    </div>
+    <span class="badge active">Gemini 2.0 / 1.5 Pro</span>
+    <span class="badge">Context Caching (-75%)</span>
+    <span class="badge">Blast Radius DAG</span>
+    <span class="badge">Zero Chunking Loss</span>
+  </div>
+  <div class="stat-pills">
+    <div class="stat-pill">
+      <div class="val" id="statTtft">1.15 s</div>
+      <div class="lbl">Time-To-First-Token</div>
+    </div>
+    <div class="stat-pill">
+      <div class="val" id="statTokens">142.5k / 2.0M</div>
+      <div class="lbl">Context Utilization</div>
+    </div>
+    <div class="stat-pill">
+      <div class="val" id="statCost">$0.0053 USD</div>
+      <div class="lbl">Query Cost (Cached)</div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN STAGE -->
+<div class="main-stage">
+
+  <!-- LEFT: MONOREPO SOLAR SYSTEM CANVAS -->
+  <div class="canvas-wrapper">
+    <div class="canvas-hud">
+      <div>VIEWPORT // MULTI-SERVICE MONOREPO GRAPH · TRANSITIVE AST EDGES</div>
+      <div id="hudStatus">CLICK ANY NODE TO SIMULATE BREAKING CHANGE BLAST RADIUS</div>
+    </div>
+    <canvas id="monorepoCanvas"></canvas>
+    <div class="hud-legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#ffffff;"></span> Auth</div>
+      <div class="legend-item"><span class="legend-dot" style="background:rgba(255,255,255,0.7);"></span> Database</div>
+      <div class="legend-item"><span class="legend-dot" style="background:rgba(255,255,255,0.5);"></span> API</div>
+      <div class="legend-item"><span class="legend-dot" style="background:rgba(255,255,255,0.35);"></span> Queue</div>
+      <div class="legend-item"><span class="legend-dot" style="background:rgba(255,255,255,0.2);"></span> Models</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: AUDIT CONSOLE -->
+  <div class="console-panel">
+    
+    <div class="console-section">
+      <div class="section-title">
+        <span>Gemini Context Caching</span>
+        <span id="cacheStateBadge" style="color:#ffffff;">CACHE WARM (ACTIVE)</span>
+      </div>
+
+      <!-- CAPACITY GAUGE -->
+      <div class="context-meter-box">
+        <div class="meter-top">
+          <span>GEMINI 2,000,000 TOKEN CONTEXT</span>
+          <span class="num" id="meterPercent">7.1% INGESTED</span>
+        </div>
+        <div class="meter-track">
+          <div class="meter-fill" id="meterFillBar"></div>
+        </div>
+      </div>
+
+      <!-- CACHE SWITCH -->
+      <div class="cache-switch-row">
+        <div class="switch-left">
+          <div class="title" id="switchTitle">Google Cloud Context Cache: ON</div>
+          <div class="sub" id="switchSub">75% cost discount ($0.0375 / 1M) · 1.1s TTFT</div>
+        </div>
+        <button id="btnToggleCache" class="toggle-btn">ENABLED</button>
+      </div>
+
+      <!-- QUERY BOX -->
+      <div class="query-box">
+        <input type="text" id="queryInput" class="query-input" placeholder="Query entire codebase (e.g. JWT vulnerability)..." value="Where is JWT verified and what are the security risks?">
+        <button id="btnExecute" class="btn-query">AUDIT</button>
+      </div>
+
+      <div class="preset-list">
+        <span class="preset-chip" data-q="Where is JWT verified and what are the security risks?">JWT Security Risks</span>
+        <span class="preset-chip" data-q="Detect raw SQL injection vulnerabilities in custom queries">SQL Injection Audit</span>
+        <span class="preset-chip" data-q="Trace Stripe payment_intent webhook idempotency flow">Stripe Webhook Flow</span>
+        <span class="preset-chip" data-q="Find circular imports and unhandled Promise rejections">Circular Imports</span>
+      </div>
+    </div>
+
+    <!-- REASONING SYNTHESIS OUTPUT -->
+    <div class="results-wrapper">
+      <div class="section-title" style="margin-bottom:12px;">
+        <span>Gemini 2.0 Architectural Synthesis</span>
+      </div>
+      <div id="reasoningContainer" class="reasoning-card"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- FOOTER BAR -->
+<footer class="footer-bar">
+  <span>HYPERCONTEXT // ZERO-CHUNKING 2M-TOKEN MONOREPO ENGINE · GEMINI CONTEXT CACHING</span>
+  <span>DESIGNED FOR ENTERPRISE CODE INTELLIGENCE · <a href="../../projects.html">PORTFOLIO OVERVIEW ↗</a></span>
+</footer>
+
+<!-- INTERACTIVE SCRIPTS -->
+<script>
+// --- MONOREPO NODE REGISTRY ---
+const NODES = [
+  { id: 'src/db/client.ts', cat: 'db', x: 0, y: 0, r: 10, label: 'dbClient' },
+  { id: 'src/models/user.ts', cat: 'model', x: -140, y: -60, r: 7, label: 'User Model' },
+  { id: 'src/auth/jwt.ts', cat: 'auth', x: -220, y: 40, r: 9, label: 'verifyJwt' },
+  { id: 'src/middleware/auth.ts', cat: 'auth', x: -120, y: 120, r: 8, label: 'authMiddleware' },
+  { id: 'src/routes/api/users.ts', cat: 'api', x: -40, y: 190, r: 7, label: 'usersRouter' },
+  { id: 'src/services/billing.ts', cat: 'model', x: 140, y: -70, r: 8, label: 'BillingService' },
+  { id: 'src/webhooks/stripe.ts', cat: 'webhook', x: 230, y: 30, r: 8, label: 'stripeWebhook' },
+  { id: 'src/routes/internal/sync.ts', cat: 'api', x: 100, y: 130, r: 7, label: 'syncTenant' }
+];
+
+const EDGES = [
+  { from: 'src/models/user.ts', to: 'src/db/client.ts' },
+  { from: 'src/auth/jwt.ts', to: 'src/models/user.ts' },
+  { from: 'src/middleware/auth.ts', to: 'src/auth/jwt.ts' },
+  { from: 'src/routes/api/users.ts', to: 'src/middleware/auth.ts' },
+  { from: 'src/services/billing.ts', to: 'src/db/client.ts' },
+  { from: 'src/webhooks/stripe.ts', to: 'src/services/billing.ts' },
+  { from: 'src/routes/internal/sync.ts', to: 'src/db/client.ts' }
+];
+
+const CAT_COLORS = {
+  auth: '#ffffff',
+  db: 'rgba(255, 255, 255, 0.75)',
+  api: 'rgba(255, 255, 255, 0.55)',
+  webhook: 'rgba(255, 255, 255, 0.38)',
+  model: 'rgba(255, 255, 255, 0.22)'
+};
+
+let cacheEnabled = true;
+let highlightedBlastRadius = new Set();
+let shockwaveRadius = 0;
+let shockwaveCenter = null;
+
+// --- CANVAS INITIALIZATION ---
+const canvas = document.getElementById('monorepoCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = canvas.parentElement.clientWidth * window.devicePixelRatio;
+  canvas.height = canvas.parentElement.clientHeight * window.devicePixelRatio;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function draw() {
+  requestAnimationFrame(draw);
+  ctx.save();
+  ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  const w = canvas.width / window.devicePixelRatio;
+  const h = canvas.height / window.devicePixelRatio;
+
+  ctx.fillStyle = '#080806';
+  ctx.fillRect(0, 0, w, h);
+
+  const cx = w / 2;
+  const cy = h / 2;
+
+  // Draw Edges
+  for (const edge of EDGES) {
+    const n1 = NODES.find(n => n.id === edge.from);
+    const n2 = NODES.find(n => n.id === edge.to);
+    if (!n1 || !n2) continue;
+
+    const isBlasted = highlightedBlastRadius.has(edge.from) && highlightedBlastRadius.has(edge.to);
+    ctx.lineWidth = isBlasted ? 1.5 : 0.75;
+    ctx.strokeStyle = isBlasted ? 'rgba(255, 255, 255, 0.85)' : 'rgba(255, 255, 255, 0.1)';
+
+    ctx.beginPath();
+    ctx.moveTo(cx + n1.x, cy + n1.y);
+    ctx.lineTo(cx + n2.x, cy + n2.y);
+    ctx.stroke();
+  }
+
+  // Draw Blast Radius Shockwave (Clean monochrome expansion)
+  if (shockwaveCenter && shockwaveRadius < 350) {
+    shockwaveRadius += 3.5;
+    ctx.beginPath();
+    ctx.arc(cx + shockwaveCenter.x, cy + shockwaveCenter.y, shockwaveRadius, 0, Math.PI * 2);
+    ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0, 0.6 - shockwaveRadius / 350)})`;
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+
+  // Draw Nodes
+  for (const node of NODES) {
+    const screenX = cx + node.x;
+    const screenY = cy + node.y;
+    const isBlasted = highlightedBlastRadius.has(node.id);
+    const color = isBlasted ? '#ffffff' : CAT_COLORS[node.cat];
+
+    ctx.beginPath();
+    ctx.arc(screenX, screenY, isBlasted ? node.r + 2 : node.r, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+
+    // Outer ring
+    ctx.beginPath();
+    ctx.arc(screenX, screenY, node.r + 4, 0, Math.PI * 2);
+    ctx.strokeStyle = isBlasted ? '#ffffff' : 'rgba(255, 255, 255, 0.15)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Label
+    ctx.font = '10px JetBrains Mono';
+    ctx.fillStyle = isBlasted ? '#ffffff' : 'rgba(255, 255, 255, 0.5)';
+    ctx.fillText(node.label, screenX + node.r + 8, screenY + 3);
+  }
+
+  ctx.restore();
+}
+draw();
+
+// --- CLICK TO TRIGGER BLAST RADIUS ---
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const clickX = e.clientX - rect.left - (rect.width / 2);
+  const clickY = e.clientY - rect.top - (rect.height / 2);
+
+  const clicked = NODES.find(n => {
+    const dx = n.x - clickX;
+    const dy = n.y - clickY;
+    return Math.sqrt(dx*dx + dy*dy) < n.r + 10;
+  });
+
+  if (clicked) {
+    triggerBlastRadius(clicked.id);
+  }
+});
+
+function triggerBlastRadius(targetId) {
+  highlightedBlastRadius.clear();
+  highlightedBlastRadius.add(targetId);
+
+  // Traverse callers
+  let added = true;
+  while (added) {
+    added = false;
+    for (const edge of EDGES) {
+      if (highlightedBlastRadius.has(edge.to) && !highlightedBlastRadius.has(edge.from)) {
+        highlightedBlastRadius.add(edge.from);
+        added = true;
+      }
+    }
+  }
+
+  const targetNode = NODES.find(n => n.id === targetId);
+  if (targetNode) {
+    shockwaveCenter = { x: targetNode.x, y: targetNode.y };
+    shockwaveRadius = targetNode.r;
+  }
+
+  document.getElementById('hudStatus').textContent = `BLAST RADIUS TRIGGERED: "${targetId}" MUTATION IMPACTS ${highlightedBlastRadius.size} FILES`;
+}
+
+// --- QUERY & AUDIT SYNTHESIS ---
+function executeQuery() {
+  const query = document.getElementById('queryInput').value.trim();
+  if (!query) return;
+
+  const q = query.toLowerCase();
+
+  const ttft = cacheEnabled ? '1.15 s' : '14.20 s';
+  const cost = cacheEnabled ? '$0.0053 USD' : '$0.0213 USD';
+
+  document.getElementById('statTtft').textContent = ttft;
+  document.getElementById('statCost').textContent = cost;
+
+  let title = 'Architectural Synthesis';
+  let body = '';
+  let citations = [];
+
+  if (q.includes('jwt') || q.includes('token') || q.includes('auth')) {
+    title = 'Architectural Analysis: Authentication & JWT Verification';
+    body = `
+      <p>Based on continuous 2M-token codebase synthesis across all microservices:</p>
+      <p><b>1. Token Flow:</b> Generated in <code>src/auth/jwt.ts</code> using RS256 algorithm with rotating Vault keys.</p>
+      <p><b>2. Middleware Verification:</b> <code>src/middleware/auth.ts#L42</code> intercepts all requests to <code>/api/v1/*</code>. Returns HTTP 401 <code>ERR_TOKEN_EXPIRED</code> on token timeout.</p>
+      <p><b>3. Critical Vulnerability:</b> In <code>src/routes/internal/sync.ts#L18</code>, the internal webhook endpoint bypasses JWT validation when <code>x-internal-secret</code> is set, using loose equality check susceptible to timing attacks.</p>
+      <p><b>Recommendation:</b> Enforce <code>crypto.timingSafeEqual()</code> and unify under central session guard.</p>
+    `;
+    citations = ['src/auth/jwt.ts#L24-58', 'src/middleware/auth.ts#L42-89', 'src/routes/internal/sync.ts#L18-35'];
+    triggerBlastRadius('src/auth/jwt.ts');
+  } else if (q.includes('sql') || q.includes('database') || q.includes('injection')) {
+    title = 'Security Audit: SQL Injection & Query Parameterization';
+    body = `
+      <p>Audit across all database models and ORM repositories:</p>
+      <p><b>Safe Patterns:</b> 94% of database access uses parameterized Prisma queries via <code>src/db/client.ts</code>.</p>
+      <p><b>Critical Risk:</b> <code>src/services/billing.ts#L84</code> dynamically interpolates tenant schema IDs into raw SQL without escaping.</p>
+      <p><b>Blast Radius:</b> Modifying <code>src/db/client.ts</code> cascades to 7 downstream services including billing webhooks and customer user routers.</p>
+    `;
+    citations = ['src/db/client.ts#L12-40', 'src/services/billing.ts#L84-110'];
+    triggerBlastRadius('src/db/client.ts');
+  } else {
+    title = 'Stripe Webhook Idempotency & Queue Flow';
+    body = `
+      <p>Tracing <code>payment_intent.succeeded</code> across monorepo boundaries:</p>
+      <p><b>Ingress:</b> <code>src/webhooks/stripe.ts</code> verifies raw buffer signature via <code>STRIPE_WEBHOOK_SECRET</code>.</p>
+      <p><b>Idempotency:</b> Checks Redis key <code>stripe:event:{id}</code> with 24-hour expiration.</p>
+      <p><b>Mutation:</b> <code>src/services/billing.ts</code> executes serializable transaction to activate user subscriptions.</p>
+    `;
+    citations = ['src/webhooks/stripe.ts#L31-75', 'src/services/billing.ts#L52-114'];
+    triggerBlastRadius('src/webhooks/stripe.ts');
+  }
+
+  const container = document.getElementById('reasoningContainer');
+  container.innerHTML = `
+    <h3>${title}</h3>
+    ${body}
+    <div class="citations-list">
+      ${citations.map(c => `<span class="citation-pill" onclick="triggerBlastRadius('${c.split('#')[0]}')">🔗 ${c}</span>`).join('')}
+    </div>
+  `;
+}
+
+// --- EVENT HANDLERS ---
+document.getElementById('btnExecute').addEventListener('click', executeQuery);
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') executeQuery();
+});
+
+document.querySelectorAll('.preset-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.getElementById('queryInput').value = chip.dataset.q;
+    executeQuery();
+  });
+});
+
+document.getElementById('btnToggleCache').addEventListener('click', () => {
+  cacheEnabled = !cacheEnabled;
+  const btn = document.getElementById('btnToggleCache');
+  const badge = document.getElementById('cacheStateBadge');
+  const title = document.getElementById('switchTitle');
+  const sub = document.getElementById('switchSub');
+
+  if (cacheEnabled) {
+    btn.textContent = 'ENABLED';
+    btn.className = 'toggle-btn';
+    badge.textContent = 'CACHE WARM (ACTIVE)';
+    badge.style.color = '#ffffff';
+    title.textContent = 'Google Cloud Context Cache: ON';
+    sub.textContent = '75% cost discount ($0.0375 / 1M) · 1.1s TTFT';
+  } else {
+    btn.textContent = 'DISABLED';
+    btn.className = 'toggle-btn off';
+    badge.textContent = 'UNCACHED COLD DISPATCH';
+    badge.style.color = 'rgba(255, 255, 255, 0.4)';
+    title.textContent = 'Google Cloud Context Cache: OFF';
+    sub.textContent = 'Full standard rate ($0.150 / 1M) · 14.2s latency';
+  }
+
+  executeQuery();
+});
+
+// Run initial audit on load
+executeQuery();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакт — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); }
+
+.contact-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 130px;
+}
+
+.contact-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 40px 48px 80px;
+}
+
+.contact-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: oklch(28% 0.003 60);
+  margin-bottom: 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.contact-label::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: oklch(18% 0.003 60);
+}
+
+.contact-heading {
+  font-family: var(--f-head);
+  font-size: clamp(44px, 8vw, 100px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.92;
+  color: var(--void-text);
+  margin-bottom: 64px;
+}
+
+/* ── Rows ─────────────────────────────────── */
+.contact-rows {
+  border-top: 1px solid var(--void-border);
+  max-width: 580px;
+}
+
+.contact-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 0;
+  border-bottom: 1px solid var(--void-border);
+  text-decoration: none;
+  color: var(--void-text);
+  gap: 20px;
+  transition: padding-left 0.3s var(--ease);
+  position: relative;
+}
+.contact-row::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 1px;
+  background: var(--void-text);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.28s var(--ease);
+}
+.contact-row:hover { padding-left: 16px; }
+.contact-row:hover::before { transform: scaleY(1); }
+
+.row-type {
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(32% 0.003 60);
+  min-width: 72px;
+  flex-shrink: 0;
+}
+
+.row-val {
+  font-family: var(--f-head);
+  font-size: clamp(16px, 2.2vw, 24px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  flex: 1;
+  transition: opacity 0.2s;
+}
+
+.row-arrow {
+  font-size: 16px;
+  color: oklch(28% 0.003 60);
+  flex-shrink: 0;
+  transition: transform 0.28s var(--ease), color 0.2s;
+}
+.contact-row:hover .row-arrow {
+  transform: translate(4px, -4px);
+  color: var(--void-text);
+}
+
+/* ── Footer ───────────────────────────────── */
+.contact-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  border-top: 1px solid var(--void-border);
+  color: oklch(24% 0.003 60);
+  font-size: 9px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+}
+.contact-footer a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.contact-footer a:hover { color: oklch(44% 0.003 60); }
+
+@media (max-width: 768px) {
+  .contact-main { padding: 32px 24px 60px; }
+  .contact-footer { padding: 16px 24px; flex-direction: column; gap: 6px; text-align: center; }
+  .contact-heading { margin-bottom: 44px; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="site-nav">
+    <a href="projects.html">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html" class="active">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+<div class="contact-page">
+
+  <main class="contact-main">
+    <div class="contact-label reveal">Контакт</div>
+    <h1 class="contact-heading reveal d1">Обсудим<br>проект?</h1>
+
+    <div class="contact-rows">
+      <a class="contact-row reveal d2" href="mailto:millyrock2900 [at] gmail.com">
+        <span class="row-type">Email</span>
+        <span class="row-val">millyrock2900 [at] gmail.com</span>
+        <span class="row-arrow">↗</span>
+      </a>
+      <a class="contact-row reveal d3" href="https://t.me/therealfullmetal" target="_blank" rel="noopener">
+        <span class="row-type">Telegram</span>
+        <span class="row-val">@therealfullmetal</span>
+        <span class="row-arrow">↗</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="contact-footer">
+    <span>© 2026 Кирилл Цыганов</span>
+    <a href="projects.html">Проекты →</a>
+  </footer>
+
+</div>
+</div>
+
+<script>
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: 0.06 }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

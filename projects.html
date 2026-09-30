@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Проекты — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); color: var(--void-text); }
+
+.projects-page {
+  min-height: 100svh;
+  padding: 0 48px 96px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Page head ──────────────────────────────── */
+.page-head {
+  padding-top: 140px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid var(--void-border);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 0;
+}
+
+.page-head h1 {
+  font-family: var(--f-head);
+  font-size: clamp(48px, 9vw, 108px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+
+.page-head-sub {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--void-muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+}
+
+/* ── Project rows ────────────────────────────── */
+.project-list { flex: 1; }
+
+.project-row {
+  display: grid;
+  grid-template-columns: 52px 1fr 220px auto;
+  align-items: center;
+  gap: 0 28px;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--void-border);
+  text-decoration: none;
+  color: var(--void-text);
+  transition: opacity 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.project-row.no-link { cursor: default; }
+.project-row:not(.no-link):hover .proj-name { opacity: 0.45; }
+.project-row:not(.no-link):hover .proj-arrow { transform: translate(3px, -3px); }
+
+.proj-num {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--void-muted);
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+}
+
+.proj-body {}
+
+.proj-name {
+  font-family: var(--f-head);
+  font-size: clamp(24px, 4vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin-bottom: 8px;
+  transition: opacity 0.2s;
+}
+
+.proj-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--void-muted);
+  line-height: 1.6;
+  max-width: 44ch;
+}
+
+.proj-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.proj-tag {
+  font-family: var(--f-mono);
+  font-size: 8px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(36% 0.003 60);
+  border: 1px solid oklch(18% 0.003 60);
+  padding: 3px 9px;
+}
+
+.proj-arrow {
+  font-size: 16px;
+  color: var(--void-muted);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease), color 0.2s;
+}
+.project-row:not(.no-link):hover .proj-arrow { color: var(--void-text); }
+
+/* TD sub-works */
+.td-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 16px;
+}
+.td-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-top: 1px solid oklch(14% 0.003 60);
+  gap: 16px;
+}
+.td-name {
+  font-family: var(--f-head);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.td-note {
+  font-size: 11px;
+  font-weight: 300;
+  color: oklch(40% 0.003 60);
+  text-align: right;
+  flex-shrink: 0;
+}
+
+@media (max-width: 860px) {
+  .projects-page { padding: 0 24px 72px; }
+  .page-head { padding-top: 120px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .project-row { grid-template-columns: 40px 1fr auto; gap: 0 16px; }
+  .proj-tags { display: none; }
+}
+@media (max-width: 540px) {
+  .proj-desc { display: none; }
+  .td-note { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header site-header--light">
+  <a href="index.html" class="logo">
+    <span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span>
+  </a>
+  <nav class="site-nav">
+    <a href="projects.html" class="active">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+<div class="projects-page">
+
+  <div class="page-head">
+    <h1 class="reveal">Проекты</h1>
+    <p class="page-head-sub reveal d1">13 работ</p>
+  </div>
+
+  <div class="project-list">
+
+    <!-- Fares Korea -->
+    <a class="project-row reveal" href="fares-korea.html">
+      <span class="proj-num">01</span>
+      <div class="proj-body">
+        <div class="proj-name">Fares Korea</div>
+        <p class="proj-desc">Вывод корейских нутрицевтиков на российские маркетплейсы. Сайт, визуал, SEO, 5 площадок.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Маркетинг</span>
+        <span class="proj-tag">Movi Group</span>
+        <span class="proj-tag">WB · OZON · KIT</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Telegram Spy Bot -->
+    <a class="project-row reveal d1" href="phantom.html">
+      <span class="proj-num">02</span>
+      <div class="proj-body">
+        <div class="proj-name">Telegram Spy Bot</div>
+        <p class="proj-desc">Реалтайм-мониторинг Telegram через MTProto. Перехватывает удалённое до того, как оно исчезло.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Python</span>
+        <span class="proj-tag">Telethon</span>
+        <span class="proj-tag">MTProto</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Web Design -->
+    <a class="project-row reveal d2" href="webdesign.html">
+      <span class="proj-num">03</span>
+      <div class="proj-body">
+        <div class="proj-name">Web Design</div>
+        <p class="proj-desc">Демонстрация техник: кинетическая типографика, CSS-анимации, parallax, scramble, blend-mode.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">CSS</span>
+        <span class="proj-tag">Vanilla JS</span>
+        <span class="proj-tag">Motion</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Analytics Pipeline -->
+    <a class="project-row reveal d3" href="analytics.html">
+      <span class="proj-num">04</span>
+      <div class="proj-body">
+        <div class="proj-name">Analytics Pipeline</div>
+        <p class="proj-desc">AmoCRM → Python pipeline → Streamlit дашборд. Воронка, менеджеры, тепловая карта, Telegram-отчёты. Мультиклиентский.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Python</span>
+        <span class="proj-tag">Streamlit</span>
+        <span class="proj-tag">AmoCRM API</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- TouchDesigner -->
+    <div class="project-row no-link reveal d4">
+      <span class="proj-num">05</span>
+      <div class="proj-body">
+        <div class="proj-name">Visual Studies</div>
+        <p class="proj-desc">Генеративное искусство и аудиореактивные визуалы в TouchDesigner.</p>
+        <div class="td-rows">
+          <div class="td-row">
+            <span class="td-name">Bon Iver</span>
+            <span class="td-note">Аудиореактивная геометрия</span>
+          </div>
+          <div class="td-row">
+            <span class="td-name">ASCII</span>
+            <span class="td-note">Конвертация видеопотока</span>
+          </div>
+          <div class="td-row">
+            <span class="td-name">Night Vision</span>
+            <span class="td-note">Процедурный ПНВ-эффект</span>
+          </div>
+          <div class="td-row">
+            <span class="td-name">Bloom Particles</span>
+            <span class="td-note">Генеративная физика частиц</span>
+          </div>
+          <div class="td-row">
+            <span class="td-name">Blob Tracking</span>
+            <span class="td-note">CV-трекинг, реакция на движение</span>
+          </div>
+        </div>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">TouchDesigner</span>
+        <span class="proj-tag">Generative</span>
+        <span class="proj-tag">Real-time</span>
+      </div>
+      <span class="proj-arrow" style="opacity:0.2;">—</span>
+    </div>
+
+    <!-- Industrial Lo-Fi Panel -->
+    <a class="project-row reveal d5" href="panels.html">
+      <span class="proj-num">06</span>
+      <div class="proj-body">
+        <div class="proj-name">Industrial Lo-Fi Panel</div>
+        <p class="proj-desc">Кастомная панель Photoshop: 10 деструктивных FX-пресетов + параметрический Tri-X модуль. ExtendScript, ActionManager API, PS 27 modal workaround.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">ExtendScript</span>
+        <span class="proj-tag">Photoshop</span>
+        <span class="proj-tag">CEP</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Motion Toolkit AE/PR -->
+    <a class="project-row reveal d6" href="panels-video.html">
+      <span class="proj-num">07</span>
+      <div class="proj-body">
+        <div class="proj-name">Motion Toolkit</div>
+        <p class="proj-desc">ScriptUI панель для After Effects: 9 FX-инструментов. Отдельно — MCP-сервер для Premiere Pro с 27 категориями инструментов, AI управляет таймлайном напрямую.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">After Effects</span>
+        <span class="proj-tag">ExtendScript</span>
+        <span class="proj-tag">Premiere Pro</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- OperatorFlow -->
+    <a class="project-row reveal d7" href="operatorflow.html">
+      <span class="proj-num">08</span>
+      <div class="proj-body">
+        <div class="proj-name">OperatorFlow</div>
+        <p class="proj-desc">Визуальный конструктор автоматизаций с реальным DAG-интерпретатором. Ветвления, параллельные циклы, защита от циклов, 0 зависимостей.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">DAG Engine</span>
+        <span class="proj-tag">JavaScript</span>
+        <span class="proj-tag">Vitest</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Swarm Operator -->
+    <a class="project-row reveal d8" href="swarm-operator.html">
+      <span class="proj-num">09</span>
+      <div class="proj-body">
+        <div class="proj-name">SWARM // OPERATOR</div>
+        <p class="proj-desc">Командный центр автономных AI-агентов. Динамическая декомпозиция задач, шина событий, кросс-ревью и телеметрия в реальном времени.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Multi-Agent</span>
+        <span class="proj-tag">Event Bus</span>
+        <span class="proj-tag">Telemetry</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Agent Firewall -->
+    <a class="project-row reveal d9" href="agent-firewall.html">
+      <span class="proj-num">10</span>
+      <div class="proj-body">
+        <div class="proj-name">AGENT // FIREWALL</div>
+        <p class="proj-desc">Семантический AST-файрвол шелл-команд автономных AI-агентов. Перехват эксфильтрации секретов, IMDS, root wipe, безопасный dry-run и SHA-256 аттестации.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">DevSecOps</span>
+        <span class="proj-tag">AST Lexer</span>
+        <span class="proj-tag">SHA-256</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- SubSecond -->
+    <a class="project-row reveal d10" href="subsecond.html">
+      <span class="proj-num">11</span>
+      <div class="proj-body">
+        <div class="proj-name">SUBSECOND</div>
+        <p class="proj-desc">Движок предиктивного голосового стриминга (<300 мс SLA). Спекулятивная генерация, VAD с pre-roll кольцевым буфером и мгновенный barge-in без щелчков.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Realtime Voice</span>
+        <span class="proj-tag">Web Audio</span>
+        <span class="proj-tag">Speculative</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- Synapse -->
+    <a class="project-row reveal d11" href="synapse.html">
+      <span class="proj-num">12</span>
+      <div class="proj-body">
+        <div class="proj-name">SYNAPSE</div>
+        <p class="proj-desc">In-memory векторная база данных и HNSW граф-индексатор (<0.6 мс P50). Гибридный RRF поиск (вектор + BM25), квантование SQ8 (4x) и temporal decay для памяти AI-агентов.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Vector DB</span>
+        <span class="proj-tag">HNSW Graph</span>
+        <span class="proj-tag">SQ8 Quant</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+    <!-- HyperContext -->
+    <a class="project-row reveal d12" href="hypercontext.html">
+      <span class="proj-num">13</span>
+      <div class="proj-body">
+        <div class="proj-name">HYPERCONTEXT</div>
+        <p class="proj-desc">2M-токенный археолог монорепозиториев на Gemini 2.0 / 1.5 Pro. Контекстный кэшинг Google Cloud (-75% цены, 1.15с TTFT), AST blast radius и zero-chunking анализ.</p>
+      </div>
+      <div class="proj-tags">
+        <span class="proj-tag">Gemini 2.0 API</span>
+        <span class="proj-tag">Context Cache</span>
+        <span class="proj-tag">2M Tokens</span>
+      </div>
+      <span class="proj-arrow">↗</span>
+    </a>
+
+  </div>
+
+</div>
+
+<footer class="site-footer" style="border-top-color: var(--void-border);">
+  <span>© 2026 Кирилл Цыганов</span>
+  <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+</footer>
+</div>
+
+<script>
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: 0.04, rootMargin: '0px 0px -20px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

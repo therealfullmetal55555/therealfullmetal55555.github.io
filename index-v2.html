@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirill Tsyganov — AI Automation & Full-Stack Engineer</title>
+<meta name="description" content="I help startups and small teams automate operations with AI agents, Telegram bots and LLM-driven pipelines. Remote · Contract · Freelance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Cormorant+Garamond:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#080806;
+    --paper:#ede9e1;
+    --paper2:#e4ded2;
+    --line: rgba(8,8,6,0.13);
+    --line2: rgba(8,8,6,0.08);
+    --ease:cubic-bezier(.16,1,.3,1);
+    --ease2:cubic-bezier(.32,.72,0,1);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Space Mono', monospace;
+    overflow-x:hidden;
+    position:relative;
+    -webkit-font-smoothing:antialiased;
+  }
+  .num{font-family:'Bebas Neue', sans-serif;}
+  .display{font-family:'Archivo Black', sans-serif; text-transform:uppercase; letter-spacing:-0.015em;}
+  .italic{font-family:'Cormorant Garamond', serif; font-style:italic;}
+  a{color:inherit; text-decoration:none;}
+
+  /* scroll progress bar */
+  .progress{position:fixed; top:0; left:0; height:2px; width:0; background:var(--ink); z-index:80; transition:width .1s linear;}
+
+  /* film grain */
+  .grain{
+    position:fixed; inset:0; z-index:70; pointer-events:none; opacity:0.045; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* custom cursor (desktop only) */
+  .cursor{position:fixed; top:0; left:0; width:9px; height:9px; border-radius:50%; background:var(--ink); pointer-events:none; z-index:90; transform:translate(-50%,-50%); transition:width .3s var(--ease), height .3s var(--ease), opacity .3s; mix-blend-mode:difference; opacity:0;}
+  .cursor.hover{width:46px; height:46px; background:var(--paper);}
+  @media (hover:hover) and (pointer:fine){ .cursor{opacity:1;} body{cursor:none;} a,button,.magnetic{cursor:none;} }
+
+  .cta{
+    text-transform:uppercase; letter-spacing:0.12em; font-size:0.76rem;
+    border-bottom:1px solid var(--ink); padding-bottom:4px; display:inline-block;
+    transition:opacity .5s var(--ease), transform .5s var(--ease);
+  }
+  .cta:hover{opacity:0.55; transform:translateX(3px);}
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    padding:7px 16px 7px 14px; border:1px solid var(--line); border-radius:100px;
+    font-size:0.66rem; letter-spacing:0.2em; text-transform:uppercase; opacity:0.72; margin-bottom:24px;
+  }
+  .eyebrow .dot{width:6px; height:6px; border-radius:50%; background:#3a7d3a; box-shadow:0 0 0 0 rgba(58,125,58,0.5); animation:pulse 2.4s infinite;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(58,125,58,0.45);}70%{box-shadow:0 0 0 7px rgba(58,125,58,0);}100%{box-shadow:0 0 0 0 rgba(58,125,58,0);}}
+
+  .pill-cta{
+    display:inline-flex; align-items:center; gap:14px;
+    background:var(--ink); color:var(--paper); border-radius:100px;
+    padding:9px 9px 9px 28px; font-size:0.76rem; letter-spacing:0.06em; text-transform:uppercase;
+    transition:transform .55s var(--ease2), box-shadow .55s var(--ease); will-change:transform;
+  }
+  .pill-cta .icon-circle{
+    width:40px; height:40px; border-radius:50%; background:var(--paper); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; font-size:1rem;
+    transition:transform .5s var(--ease2);
+  }
+  .pill-cta:hover{transform:translateY(-2px); box-shadow:0 16px 34px -12px rgba(8,8,6,0.4);}
+  .pill-cta:hover .icon-circle{transform:translate(2px,-2px) rotate(8deg) scale(1.06);}
+  .pill-cta:active{transform:scale(.98);}
+
+  .wrap{max-width:1200px; margin:0 auto; padding:0 40px;}
+
+  /* NAV */
+  .nav-pill{
+    position:fixed; top:24px; left:50%; transform:translateX(-50%); z-index:60;
+    display:flex; align-items:center; gap:32px; padding:13px 14px 13px 26px;
+    background:rgba(237,233,225,0.7); backdrop-filter:blur(20px) saturate(1.4);
+    border:1px solid var(--line); border-radius:100px; font-size:0.7rem;
+    text-transform:uppercase; letter-spacing:0.14em;
+    transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+  }
+  .nav-pill.tucked{box-shadow:0 12px 30px -16px rgba(8,8,6,0.3);}
+  .nav-pill .brand{font-family:'Archivo Black', sans-serif; font-size:0.7rem;}
+  .nav-pill .links{display:flex; gap:24px;}
+  .nav-pill .links a{transition:opacity .4s var(--ease);}
+  .nav-pill .links a:hover{opacity:0.5;}
+  .nav-pill .nav-btn{
+    background:var(--ink); color:var(--paper); border-radius:100px; padding:8px 16px;
+    letter-spacing:0.1em; transition:transform .4s var(--ease2);
+  }
+  .nav-pill .nav-btn:hover{transform:translateY(-1px); opacity:1;}
+
+  /* HERO */
+  header{
+    position:relative; min-height:100vh; display:grid;
+    grid-template-columns:1.15fr 0.85fr; align-items:end;
+    padding:150px 40px 60px; overflow:hidden; gap:40px;
+  }
+  .bg-num{
+    position:absolute; font-family:'Bebas Neue', sans-serif; font-size:clamp(220px,36vw,600px);
+    opacity:0.045; line-height:1; top:-6%; right:-3%; user-select:none; pointer-events:none;
+  }
+  .hero-video{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+    z-index:0; opacity:0.16; filter:grayscale(1) contrast(1.1);
+  }
+  .hero-video-overlay{
+    position:absolute; inset:0; z-index:1;
+    background:linear-gradient(180deg, var(--paper) 0%, rgba(237,233,225,0.55) 35%, var(--paper) 100%);
+  }
+  h1.display{font-size:clamp(44px,7.4vw,114px); line-height:0.94; position:relative; z-index:2;}
+  .h1-line{display:block; overflow:hidden;}
+  .h1-line span{display:block; transform:translateY(110%); animation:rise .9s var(--ease) forwards;}
+  .h1-line:nth-child(1) span{animation-delay:.1s;}
+  .h1-line:nth-child(2) span{animation-delay:.22s;}
+  .h1-line:nth-child(3) span{animation-delay:.34s;}
+  @keyframes rise{to{transform:translateY(0);}}
+  .hero-right{
+    border-left:1px solid var(--line); padding-left:40px; display:flex; flex-direction:column; gap:30px;
+    position:relative; z-index:2; opacity:0; animation:fade 1s var(--ease) .5s forwards;
+  }
+  @keyframes fade{to{opacity:1;}}
+  .hero-sub{font-family:'Cormorant Garamond', serif; font-style:italic; font-size:clamp(19px,2vw,25px); line-height:1.5;}
+  .hero-meta{font-size:0.7rem; text-transform:uppercase; letter-spacing:0.1em; opacity:0.6; display:flex; flex-direction:column; gap:7px;}
+  .hero-actions{display:flex; align-items:center; gap:28px; flex-wrap:wrap;}
+
+  /* MARQUEE / trust bar */
+  .marquee{border-top:1px solid var(--line); border-bottom:1px solid var(--line); overflow:hidden; padding:22px 0; white-space:nowrap;}
+  .marquee-track{display:inline-flex; gap:60px; animation:scroll 26s linear infinite; font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:0.04em; opacity:0.85;}
+  .marquee-track span{display:inline-flex; align-items:center; gap:60px;}
+  .marquee-track i{font-style:normal; opacity:0.3;}
+  @keyframes scroll{to{transform:translateX(-50%);}}
+
+  section{padding:140px 0; position:relative; border-top:1px solid var(--line);}
+  .section-label{font-size:0.74rem; letter-spacing:0.22em; text-transform:uppercase; opacity:0.55; margin-bottom:18px;}
+  h2.italic{font-size:clamp(32px,4.2vw,60px); margin-bottom:64px; max-width:820px; line-height:1.05;}
+
+  /* PROJECTS */
+  .project-shell{background:rgba(8,8,6,0.028); border:1px solid var(--line2); border-radius:30px; padding:6px; margin-bottom:16px;}
+  .project{
+    background:var(--paper); border-radius:24px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5);
+    display:grid; grid-template-columns:1fr 360px; gap:48px; padding:44px 40px; align-items:center;
+    transition:transform .6s var(--ease);
+  }
+  .project-shell:hover .project{transform:translateY(-3px);}
+  .project .pmeta{display:flex; flex-direction:column;}
+  .ptop{display:flex; align-items:baseline; gap:18px; margin-bottom:18px;}
+  .project .index{font-family:'Bebas Neue',sans-serif; font-size:2rem; opacity:0.3;}
+  .project .pid{font-size:0.68rem; letter-spacing:0.1em; opacity:0.5; margin-left:auto;}
+  .project .ptitle{font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:clamp(20px,2.4vw,30px); margin-bottom:14px; line-height:1.05;}
+  .project .pdesc{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.14rem; line-height:1.5; max-width:520px; opacity:0.85; margin-bottom:20px;}
+  .pstats{display:flex; gap:32px; margin-bottom:20px; flex-wrap:wrap;}
+  .pstat .n{font-family:'Bebas Neue',sans-serif; font-size:1.9rem; line-height:1;}
+  .pstat .l{font-size:0.64rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.55; margin-top:4px;}
+  .project .stack{display:flex; flex-wrap:wrap; gap:8px 14px; font-size:0.66rem; letter-spacing:0.05em; text-transform:uppercase; opacity:0.6;}
+  .project .stack b{font-weight:normal; padding:4px 10px; border:1px solid var(--line); border-radius:100px;}
+
+  /* CSS MOCKS */
+  .mock{aspect-ratio:4/3; background:var(--ink); border-radius:16px; overflow:hidden; position:relative; box-shadow:0 30px 60px -30px rgba(8,8,6,0.5); color:var(--paper);}
+  .mock-bar{height:30px; display:flex; align-items:center; gap:6px; padding:0 12px; border-bottom:1px solid rgba(237,233,225,0.12);}
+  .mock-bar i{width:8px; height:8px; border-radius:50%; background:rgba(237,233,225,0.3);}
+  .mock-bar .t{margin-left:10px; font-size:0.55rem; letter-spacing:0.1em; opacity:0.5; text-transform:uppercase;}
+  .mock-body{padding:16px; font-size:0.6rem;}
+  .mock-video{padding:0;}
+  .mock-video .brand-video{width:100%; height:calc(100% - 30px); object-fit:cover; display:block;}
+  /* dashboard mock */
+  .dash-row{display:flex; gap:8px; margin-bottom:8px;}
+  .dash-card{flex:1; border:1px solid rgba(237,233,225,0.14); border-radius:8px; padding:9px;}
+  .dash-card .dn{font-family:'Bebas Neue',sans-serif; font-size:1.5rem; line-height:1;}
+  .dash-card .dl{opacity:0.5; font-size:0.5rem; text-transform:uppercase; letter-spacing:0.08em; margin-top:3px;}
+  .dash-bars{display:flex; align-items:flex-end; gap:5px; height:54px; margin-top:6px;}
+  .dash-bars b{flex:1; background:rgba(237,233,225,0.35); border-radius:2px 2px 0 0; animation:grow 1.4s var(--ease) backwards;}
+  @keyframes grow{from{height:0 !important;}}
+  /* chat mock */
+  .chat{display:flex; flex-direction:column; gap:8px;}
+  .bubble{max-width:78%; padding:8px 11px; border-radius:12px; line-height:1.4; font-size:0.6rem;}
+  .bubble.in{background:rgba(237,233,225,0.12); border-bottom-left-radius:3px;}
+  .bubble.out{background:var(--paper); color:var(--ink); align-self:flex-end; border-bottom-right-radius:3px;}
+  .typing{display:flex; gap:3px; padding:9px 11px; background:rgba(237,233,225,0.12); border-radius:12px; width:max-content;}
+  .typing i{width:5px; height:5px; border-radius:50%; background:rgba(237,233,225,0.6); animation:blink 1.2s infinite;}
+  .typing i:nth-child(2){animation-delay:.2s;} .typing i:nth-child(3){animation-delay:.4s;}
+  @keyframes blink{0%,60%,100%{opacity:0.3;}30%{opacity:1;}}
+  /* pipeline mock */
+  .pipe{display:flex; flex-direction:column; gap:12px; padding-top:8px;}
+  .pipe-node{display:flex; align-items:center; gap:10px;}
+  .pipe-node .pc{width:26px; height:26px; border:1px solid rgba(237,233,225,0.3); border-radius:7px; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:0.8rem; flex-shrink:0;}
+  .pipe-node .pt{flex:1; height:1px; background:linear-gradient(90deg,rgba(237,233,225,0.35),transparent); position:relative;}
+  .pipe-node .pl{font-size:0.6rem; opacity:0.75;}
+  .pipe-flow{width:5px; height:5px; border-radius:50%; background:var(--paper); position:absolute; top:-2px; left:0; animation:flow 2.2s var(--ease) infinite;}
+  @keyframes flow{to{left:100%; opacity:0;}}
+  /* 3d mock */
+  .three{display:flex; align-items:center; justify-content:center; height:100%;}
+  .cube{width:90px; height:90px; position:relative; transform-style:preserve-3d; animation:spin 9s linear infinite;}
+  .cube div{position:absolute; width:90px; height:90px; border:1px solid rgba(237,233,225,0.5);}
+  .cube .f1{transform:translateZ(45px);} .cube .f2{transform:rotateY(90deg) translateZ(45px);}
+  .cube .f3{transform:rotateY(180deg) translateZ(45px);} .cube .f4{transform:rotateY(-90deg) translateZ(45px);}
+  .cube .f5{transform:rotateX(90deg) translateZ(45px);} .cube .f6{transform:rotateX(-90deg) translateZ(45px);}
+  @keyframes spin{to{transform:rotateX(360deg) rotateY(360deg);}}
+
+  /* PROCESS */
+  .process{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .step-shell{background:rgba(8,8,6,0.028); border:1px solid var(--line2); border-radius:26px; padding:6px;}
+  .step{background:var(--paper); border-radius:20px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5); padding:34px 28px; min-height:240px; display:flex; flex-direction:column;}
+  .step .sn{font-family:'Bebas Neue',sans-serif; font-size:2.6rem; opacity:0.25; line-height:1;}
+  .step .st{font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:1.05rem; margin:auto 0 12px;}
+  .step .sd{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.08rem; line-height:1.5; opacity:0.82;}
+
+  /* SKILLS — bento */
+  .skills-grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px;}
+  .skill-shell{background:rgba(8,8,6,0.035); border:1px solid var(--line2); border-radius:28px; padding:8px;}
+  .skill-shell:nth-child(1){grid-column:span 5;}
+  .skill-shell:nth-child(2){grid-column:span 7;}
+  .skill-shell:nth-child(3){grid-column:span 7;}
+  .skill-shell:nth-child(4){grid-column:span 5;}
+  .skill-cell{background:var(--paper); border-radius:22px; padding:30px 26px; position:relative; min-height:180px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5); transition:transform .6s var(--ease); display:flex; flex-direction:column;}
+  .skill-shell:hover .skill-cell{transform:translateY(-4px);}
+  .skill-cell .tag{font-family:'Bebas Neue',sans-serif; font-size:0.95rem; position:absolute; top:20px; right:22px; opacity:0.32;}
+  .skill-cell .name{font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:1.05rem; margin-top:auto; line-height:1.25;}
+  .skill-cell .meta{font-size:0.7rem; opacity:0.55; margin-top:12px; letter-spacing:0.04em; line-height:1.6;}
+
+  /* METRICS */
+  .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:36px; margin-top:64px;}
+  .metric{border-top:1px solid var(--ink); padding-top:18px;}
+  .metric .num{font-size:clamp(40px,4.8vw,64px); line-height:1;}
+  .metric .label{margin-top:10px; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.07em; opacity:0.6;}
+
+  /* TESTIMONIAL */
+  .quote-shell{background:rgba(8,8,6,0.028); border:1px solid var(--line2); border-radius:30px; padding:6px;}
+  .quote{background:var(--paper); border-radius:24px; box-shadow:inset 0 1px 0 rgba(255,255,255,0.5); padding:70px 60px;}
+  .quote .mark{font-family:'Cormorant Garamond',serif; font-size:5rem; line-height:0.5; opacity:0.2; display:block; height:40px;}
+  .quote blockquote{font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px,2.8vw,38px); line-height:1.35; margin:20px 0 36px; max-width:900px;}
+  .quote .by{display:flex; align-items:center; gap:16px; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em;}
+  .quote .by .av{width:42px; height:42px; border-radius:50%; background:var(--ink); color:var(--paper); display:flex; align-items:center; justify-content:center; font-family:'Archivo Black',sans-serif; font-size:0.85rem;}
+  .quote .by .av-logo{background:#fff; object-fit:contain; padding:6px; border:1px solid var(--line);}
+  .quote .by .who span{display:block; opacity:0.5; margin-top:3px; letter-spacing:0.06em;}
+
+  /* CONTACT */
+  footer{padding:160px 0 60px; position:relative; overflow:hidden;}
+  .contact-num{position:absolute; font-family:'Bebas Neue',sans-serif; font-size:clamp(180px,28vw,440px); opacity:0.04; bottom:-10%; left:-3%; line-height:1; pointer-events:none;}
+  .contact-title{font-family:'Archivo Black',sans-serif; text-transform:uppercase; font-size:clamp(38px,6.2vw,90px); line-height:0.98; max-width:900px; margin-bottom:52px;}
+  .contact-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:24px; border-top:1px solid var(--line); padding-top:36px; margin-top:60px; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.1em;}
+  .contact-row .col{display:flex; flex-direction:column; gap:13px;}
+  .contact-row .col span.h{opacity:0.5; letter-spacing:0.14em; margin-bottom:4px;}
+  .foot-base{display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px; margin-top:80px; font-size:0.66rem; text-transform:uppercase; letter-spacing:0.1em; opacity:0.5;}
+
+  .reveal{opacity:0; transform:translateY(30px); filter:blur(6px); transition:opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease);}
+  .reveal.in{opacity:1; transform:translateY(0); filter:blur(0);}
+
+  /* accessibility — focus rings */
+  a:focus-visible, .magnetic:focus-visible{outline:2px solid var(--ink); outline-offset:4px; border-radius:4px;}
+
+  /* respect reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important;}
+    .reveal{opacity:1 !important; transform:none !important; filter:none !important;}
+    .h1-line span{transform:none !important;}
+    .hero-right{opacity:1 !important;}
+    .cursor{display:none !important;}
+    body{cursor:auto !important;}
+  }
+
+  @media (max-width:980px){
+    .skills-grid{grid-template-columns:repeat(2,1fr);}
+    .skill-shell:nth-child(n){grid-column:span 1;}
+    .process{grid-template-columns:1fr;}
+  }
+  @media (max-width:880px){
+    .nav-pill{gap:14px; padding:11px 12px 11px 18px;}
+    .nav-pill .links{gap:14px;}
+    .nav-pill .links a:not(.nav-btn){display:none;}
+    .wrap{padding:0 22px;}
+    header{grid-template-columns:1fr; padding:130px 22px 50px; gap:34px; align-items:start;}
+    .hero-right{border-left:none; padding-left:0; border-top:1px solid var(--line); padding-top:26px;}
+    .project{grid-template-columns:1fr; gap:28px; padding:30px 24px;}
+    .mock{order:-1;}
+    .metrics{grid-template-columns:repeat(2,1fr); gap:28px;}
+    .quote{padding:44px 28px;}
+    .contact-title{font-size:clamp(34px,9vw,56px);}
+    section{padding:100px 0;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="grain"></div>
+<div class="cursor" id="cursor"></div>
+
+<nav class="nav-pill" id="nav">
+  <span class="brand">K.T.</span>
+  <div class="links">
+    <a href="#work">Work</a>
+    <a href="#process">Process</a>
+    <a href="#skills">Skills</a>
+    <a href="#contact" class="nav-btn magnetic">Hire me</a>
+  </div>
+</nav>
+
+<header>
+  <video class="hero-video" autoplay muted loop playsinline preload="auto">
+    <source src="img/logos/hero-bg.mp4" type="video/mp4">
+  </video>
+  <div class="hero-video-overlay"></div>
+  <div class="bg-num num">01</div>
+  <div>
+    <div class="eyebrow"><span class="dot"></span>Available for new projects</div>
+    <h1 class="display">
+      <span class="h1-line"><span>Building</span></span>
+      <span class="h1-line"><span>systems that</span></span>
+      <span class="h1-line"><span>run themselves.</span></span>
+    </h1>
+  </div>
+  <div class="hero-right">
+    <p class="hero-sub">I help startups and small teams automate the boring parts of their business — AI agents, Telegram bots and LLM-driven pipelines, shipped end to end from API to production.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="pill-cta magnetic">Start a project <span class="icon-circle">↗</span></a>
+      <a href="#work" class="cta">See the work</a>
+    </div>
+    <div class="hero-meta">
+      <span>Based — Russia / Remote Worldwide</span>
+      <span>Overlap with EU &amp; US hours · English: working proficiency</span>
+    </div>
+  </div>
+</header>
+
+<div class="marquee">
+  <div class="marquee-track">
+    <span>AI AUTOMATION <i>/</i> TELEGRAM BOTS <i>/</i> LLM PIPELINES <i>/</i> FULL-STACK <i>/</i> MARKETPLACE TOOLING <i>/</i> n8n &amp; MAKE <i>/</i> CLAUDE API <i>/</i> </span>
+    <span>AI AUTOMATION <i>/</i> TELEGRAM BOTS <i>/</i> LLM PIPELINES <i>/</i> FULL-STACK <i>/</i> MARKETPLACE TOOLING <i>/</i> n8n &amp; MAKE <i>/</i> CLAUDE API <i>/</i> </span>
+  </div>
+</div>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-label">02 / Selected Work</div>
+    <h2 class="italic reveal">Six systems. Six problems. <br>Solved end to end.</h2>
+
+    <!-- 01 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">01</span><span class="pid">FK-AUTO-01 · 2026</span></div>
+          <div class="ptitle">Fares Korea — Autoposting Engine</div>
+          <p class="pdesc">A Korean supplements brand was burning hours every day posting the same content by hand to five networks. I built one dashboard that schedules and ships everything automatically.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">5</div><div class="l">Platforms unified</div></div>
+            <div class="pstat"><div class="n">~12h</div><div class="l">Saved / week</div></div>
+            <div class="pstat"><div class="n">24/7</div><div class="l">Scheduler uptime</div></div>
+          </div>
+          <div class="stack"><b>Python</b><b>APScheduler</b><b>TG · VK · IG · Dzen · TikTok</b></div>
+        </div>
+        <div class="mock mock-video">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">poster · autoposting engine</span></div>
+          <video class="brand-video" autoplay muted loop playsinline preload="auto">
+            <source src="img/logos/autopost-demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- 02 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">02</span><span class="pid">TG-BOT-02 · live</span></div>
+          <div class="ptitle">AI-Driven Telegram Bot Persona</div>
+          <p class="pdesc">A conversational agent with memory and a consistent personality, powered by an LLM backend. Real users, natural in-character dialogue, sub-two-second replies.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">&lt;2s</div><div class="l">Avg response</div></div>
+            <div class="pstat"><div class="n">∞</div><div class="l">Context memory</div></div>
+            <div class="pstat"><div class="n">Live</div><div class="l">In production</div></div>
+          </div>
+          <div class="stack"><b>TypeScript</b><b>Groq</b><b>grammY</b><b>LLM Prompting</b></div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">telegram · bot</span></div>
+          <div class="mock-body">
+            <div class="chat">
+              <div class="bubble in">hey, you up?</div>
+              <div class="bubble out">always. what's on your mind? 🙂</div>
+              <div class="bubble in">remember what I said yesterday?</div>
+              <div class="bubble out">about the launch on friday — yeah. nervous or excited?</div>
+              <div class="typing"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 03 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">03</span><span class="pid">WB-AN-03 · pipeline</span></div>
+          <div class="ptitle">End-to-End Analytics Pipeline</div>
+          <p class="pdesc">Ad spend in AmoCRM, Yandex Direct, Google Ads, Meta Ads and 1C-Sales lived in five disconnected places. I unified them under one utm_campaign graph — clean, structured analytics, no manual exports.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">5</div><div class="l">Sources unified</div></div>
+            <div class="pstat"><div class="n">0</div><div class="l">Manual exports</div></div>
+            <div class="pstat"><div class="n">1</div><div class="l">Single source of truth</div></div>
+          </div>
+          <div class="stack"><b>Python</b><b>AmoCRM · 1C</b><b>Google &amp; Meta Ads API</b></div>
+        </div>
+        <div class="mock mock-video">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">analytics · pipeline graph</span></div>
+          <video class="brand-video" autoplay muted loop playsinline preload="auto">
+            <source src="img/logos/analytics-demo.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+
+    <!-- 04 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">04</span><span class="pid">IG-3D-04 · web</span></div>
+          <div class="ptitle">Igloo — React 3D Experience</div>
+          <p class="pdesc">An immersive, animation-heavy web experience — GSAP-choreographed motion over a live Three.js scene, built to make a brand story feel physical and alive.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">60fps</div><div class="l">Motion target</div></div>
+            <div class="pstat"><div class="n">WebGL</div><div class="l">Real-time 3D</div></div>
+            <div class="pstat"><div class="n">GSAP</div><div class="l">Scroll choreography</div></div>
+          </div>
+          <div class="stack"><b>React</b><b>Three.js</b><b>GSAP</b></div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">igloo · three.js</span></div>
+          <div class="three"><div class="cube"><div class="f1"></div><div class="f2"></div><div class="f3"></div><div class="f4"></div><div class="f5"></div><div class="f6"></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 05 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">05</span><span class="pid">FLOW-DAG-05 · engine</span></div>
+          <div class="ptitle"><a href="operatorflow.html" style="color:inherit;">OperatorFlow — Visual DAG Engine</a></div>
+          <p class="pdesc">A browser-native automation builder with a real DAG interpreter. Conditional routing, parallel array evaluation (Promise.all), cycle protection, zero runtime dependencies.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">0</div><div class="l">Dependencies</div></div>
+            <div class="pstat"><div class="n">8/8</div><div class="l">Vitest tests</div></div>
+            <div class="pstat"><div class="n">Dual</div><div class="l">Browser + Node.js</div></div>
+          </div>
+          <div class="stack"><b>Vanilla JS</b><b>DAG Engine</b><b>Node.js</b><b>Vitest</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="operatorflow.html" class="cta">Explore Case Study ↗</a>
+            <a href="operatorflow/index.html" target="_blank" class="cta">Launch Builder ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">operatorflow · dag runtime</span></div>
+          <div class="mock-body">
+            <div class="pipe">
+              <div class="pipe-node"><div class="pc" style="color:#5dff9e;">TRG</div><div class="pt"><div class="pipe-flow"></div></div><div class="pl">payload: lead.json</div></div>
+              <div class="pipe-node"><div class="pc" style="color:#ffb454;">FLT</div><div class="pt"><div class="pipe-flow" style="animation-delay:0.8s;"></div></div><div class="pl">score &gt;= 80 → true</div></div>
+              <div class="pipe-node"><div class="pc" style="color:#5dff9e;">ACT</div><div class="pt"><div class="pipe-flow" style="animation-delay:1.6s;"></div></div><div class="pl">dispatch: Telegram</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 06 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">06</span><span class="pid">SWRM-OPS-06 · agentic</span></div>
+          <div class="ptitle"><a href="swarm-operator.html" style="color:inherit;">SWARM // OPERATOR — Autonomous Mission Control</a></div>
+          <p class="pdesc">A multi-agent coordination console. Dynamic DAG task decomposition, inter-agent event bus, live token unit economics, and simulated procedural acoustic feedback.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">4</div><div class="l">AI Personas</div></div>
+            <div class="pstat"><div class="n">Real-Time</div><div class="l">Event Bus</div></div>
+            <div class="pstat"><div class="n">0.0s</div><div class="l">Zero Dependencies</div></div>
+          </div>
+          <div class="stack"><b>Event-Driven Bus</b><b>Multi-Agent</b><b>Canvas Particles</b><b>Web Audio API</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="swarm-operator.html" class="cta">Explore Case Study ↗</a>
+            <a href="swarm-operator/index.html" target="_blank" class="cta">Launch Mission Control ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">swarm · agent topology</span></div>
+          <div class="mock-body">
+            <div class="chat" style="gap:6px;">
+              <div style="font-size:0.55rem; color:#fff; font-weight:700;">[ORC-01] Decomposing goal into 5 sub-routines...</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.7);">[SCT-02] Extracted 16 SKU marketplace constraints.</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.85);">[SYN-03] Synthesizing Ozon Rich Content JSON.</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.6);">[ADT-04] Verified compliance: 0 errors detected.</div>
+              <div class="typing" style="margin-top:4px;"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 07 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">07</span><span class="pid">SEC-AST-07 · devsecops</span></div>
+          <div class="ptitle"><a href="agent-firewall.html" style="color:inherit;">AGENT // FIREWALL — Autonomous Command Gateway</a></div>
+          <p class="pdesc">Zero-trust semantic AST firewall intercepting shell commands emitted by autonomous AI agents. Neutralizing credential exfiltration, IMDS queries, root wipes, and raw socket tunnels with safe dry-run rewrites and SHA-256 signed audit seals.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">10</div><div class="l">AST Threat Rules</div></div>
+            <div class="pstat"><div class="n">&lt;0.4ms</div><div class="l">Hook Latency</div></div>
+            <div class="pstat"><div class="n">SHA-256</div><div class="l">Signed Attestations</div></div>
+          </div>
+          <div class="stack"><b>DevSecOps</b><b>AST Lexer</b><b>Policy Matrix</b><b>Safe Dry-Run</b><b>SHA-256</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="agent-firewall.html" class="cta">Explore Case Study ↗</a>
+            <a href="agent-firewall/index.html" target="_blank" class="cta">Launch Terminal Gateway ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">firewall · ast interceptor</span></div>
+          <div class="mock-body">
+            <div class="chat" style="gap:6px;">
+              <div style="font-size:0.55rem; color:#d9534f; font-weight:700;">[SEC-003] Cloud IMDS Query Blocked (169.254.169.254)</div>
+              <div style="font-size:0.55rem; color:#c89d5c;">[DRY-RUN] Neutralized to non-destructive simulation</div>
+              <div style="font-size:0.55rem; color:#fff;">[ATTEST] Sealed: AF-A190CB9B5347 (SHA-256 verified)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.6);">[GATEWAY] Kernel dispatch safe · 0 errors</div>
+              <div class="typing" style="margin-top:4px;"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 08 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">08</span><span class="pid">VOX-SUB-08 · realtime-audio</span></div>
+          <div class="ptitle"><a href="subsecond.html" style="color:inherit;">SUBSECOND — Predictive Voice Streaming Engine</a></div>
+          <p class="pdesc">Ultra-low latency (&lt;300ms SLA) voice streaming engine eliminating the 1.6-second conversational latency gap. Speculative branch prefetching, circular pre-roll VAD, and microsecond zero-buffer barge-in cancellation.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">235ms</div><div class="l">End-to-End Latency</div></div>
+            <div class="pstat"><div class="n">&lt;2ms</div><div class="l">Barge-In Cutoff</div></div>
+            <div class="pstat"><div class="n">85%</div><div class="l">Sub-300ms SLA Pass</div></div>
+          </div>
+          <div class="stack"><b>Web Audio API</b><b>Speculative Trie</b><b>VAD Pre-Roll</b><b>Barge-In</b><b>Formant Synth</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="subsecond.html" class="cta">Explore Case Study ↗</a>
+            <a href="subsecond/index.html" target="_blank" class="cta">Launch Acoustic Studio ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">subsecond · acoustic stream</span></div>
+          <div class="mock-body">
+            <div class="chat" style="gap:6px;">
+              <div style="font-size:0.55rem; color:#fff; font-weight:700;">[VAD] Speech onset captured (50ms pre-roll)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.85);">[SPECULATIVE] Branch matched: ORDER_TRACKING (92%)</div>
+              <div style="font-size:0.55rem; color:#c89d5c;">[PERCEIVED TTFT] 85ms (saved 495ms vs cloud LLM)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.6);">[BARGE-IN] Instant 15ms anti-pop crossfade ready</div>
+              <div class="typing" style="margin-top:4px;"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 09 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">09</span><span class="pid">VEC-SYN-09 · vector-database</span></div>
+          <div class="ptitle"><a href="synapse.html" style="color:inherit;">SYNAPSE — In-Memory Vector Engine &amp; HNSW Retriever</a></div>
+          <p class="pdesc">Zero-dependency in-memory vector database and HNSW graph indexer for autonomous edge agents. Fuses dense semantic embeddings with exact BM25 keyword matching via Reciprocal Rank Fusion, with 4x SQ8 scalar quantization.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">0.56ms</div><div class="l">P50 Query Latency</div></div>
+            <div class="pstat"><div class="n">75%</div><div class="l">SQ8 Memory Saved</div></div>
+            <div class="pstat"><div class="n">1,610</div><div class="l">QPS Throughput</div></div>
+          </div>
+          <div class="stack"><b>HNSW Skip-Graph</b><b>BM25 Lexical</b><b>Reciprocal Rank Fusion</b><b>SQ8 Quantization</b><b>Temporal Decay</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="synapse.html" class="cta">Explore Case Study ↗</a>
+            <a href="synapse/index.html" target="_blank" class="cta">Launch Vector Studio ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">synapse · memory stream</span></div>
+          <div class="mock-body">
+            <div class="chat" style="gap:6px;">
+              <div style="font-size:0.55rem; color:#fff; font-weight:700;">[HNSW] Beam search query dispatched (&lt;0.56ms)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.85);">[HYBRID] RRF Fusion: 0.65 Dense + 0.35 BM25</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.7);">[QUANT] SQ8 compressed storage: 1.4 KB (-75%)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.5);">[RECALL] Match 97.4%: AWS IAM token leak intercepted</div>
+              <div class="typing" style="margin-top:4px;"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="project-shell reveal">
+      <div class="project">
+        <div class="pmeta">
+          <div class="ptop"><span class="index num">10</span><span class="pid">CTX-GEM-10 · monorepo-intelligence</span></div>
+          <div class="ptitle"><a href="hypercontext.html" style="color:inherit;">HYPERCONTEXT — 2M-Token Gemini Code Archaeologist</a></div>
+          <p class="pdesc">Zero-chunking monorepo code intelligence engine powered by Google Gemini 2.0 / 1.5 Pro. Ingests 2,000,000 tokens of raw source code, using Google Cloud Context Caching for sub-second TTFT (1.15s) and a 75% cost reduction.</p>
+          <div class="pstats">
+            <div class="pstat"><div class="n">2.0M</div><div class="l">Context Window</div></div>
+            <div class="pstat"><div class="n">1.15s</div><div class="l">Cached TTFT</div></div>
+            <div class="pstat"><div class="n">-75%</div><div class="l">Token Cost Discount</div></div>
+          </div>
+          <div class="stack"><b>Gemini 2.0 API</b><b>Context Caching</b><b>AST Blast Radius</b><b>BPE Budgeting</b><b>Zero-Chunking</b></div>
+          <div style="margin-top:20px; display:flex; gap:16px;">
+            <a href="hypercontext.html" class="cta">Explore Case Study ↗</a>
+            <a href="hypercontext/index.html" target="_blank" class="cta">Launch 2M Studio ↗</a>
+          </div>
+        </div>
+        <div class="mock">
+          <div class="mock-bar"><i></i><i></i><i></i><span class="t">hypercontext · gemini cache</span></div>
+          <div class="mock-body">
+            <div class="chat" style="gap:6px;">
+              <div style="font-size:0.55rem; color:#fff; font-weight:700;">[CACHE] Context pre-warmed: cachedContents/hc-94b</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.85);">[INGEST] 142.5k / 2.0M tokens (7.1% window)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.7);">[TTFT] 1.15s (-91.9% vs uncached 14.2s)</div>
+              <div style="font-size:0.55rem; color:rgba(255,255,255,0.5);">[BLAST RADIUS] Target: src/db/client.ts → 7 routes</div>
+              <div class="typing" style="margin-top:4px;"><i></i><i></i><i></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-label">03 / How I Work</div>
+    <h2 class="italic reveal">No mystery. Three steps, <br>and you always know where we are.</h2>
+    <div class="process">
+      <div class="step-shell reveal"><div class="step">
+        <div class="sn">01</div>
+        <div class="st">Discovery</div>
+        <div class="sd">We map the actual problem and the workflow it lives in. I scope tightly so you pay for outcomes, not exploration.</div>
+      </div></div>
+      <div class="step-shell reveal"><div class="step">
+        <div class="sn">02</div>
+        <div class="st">Build</div>
+        <div class="sd">I ship in small, working increments you can see. Clean code, honest progress, no black box, no surprises at the end.</div>
+      </div></div>
+      <div class="step-shell reveal"><div class="step">
+        <div class="sn">03</div>
+        <div class="st">Ship &amp; Handover</div>
+        <div class="sd">Deployed, documented and handed over so it keeps running without me. Support afterwards if you want it.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-label">04 / Capabilities</div>
+    <h2 class="italic reveal">What I bring to a project.</h2>
+    <div class="skills-grid">
+      <div class="skill-shell reveal"><div class="skill-cell"><span class="tag num">A</span><div class="name">AI &amp; LLM Integration</div><div class="meta">Claude API · Groq · prompt pipelines · memory &amp; context design · agentic workflows</div></div></div>
+      <div class="skill-shell reveal"><div class="skill-cell"><span class="tag num">B</span><div class="name">Automation &amp; Bots</div><div class="meta">Telegram bots · n8n / Make · schedulers · multi-platform posting · API integrations &amp; webhooks</div></div></div>
+      <div class="skill-shell reveal"><div class="skill-cell"><span class="tag num">C</span><div class="name">Backend Engineering</div><div class="meta">Python · TypeScript · Node.js · data pipelines · SQLite / DB · deployment &amp; hosting</div></div></div>
+      <div class="skill-shell reveal"><div class="skill-cell"><span class="tag num">D</span><div class="name">Frontend &amp; Motion</div><div class="meta">React · Three.js · GSAP · landing pages · interactive web</div></div></div>
+    </div>
+
+    <div class="metrics">
+      <div class="metric reveal"><div class="num" data-count="5" data-suffix="+">0</div><div class="label">Shipped bots &amp; agents</div></div>
+      <div class="metric reveal"><div class="num" data-count="3">0</div><div class="label">Markets — RU / KR / US</div></div>
+      <div class="metric reveal"><div class="num">24/7</div><div class="label">Pipelines running</div></div>
+      <div class="metric reveal"><div class="num" data-count="100" data-suffix="%">0</div><div class="label">Remote-ready</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonial">
+  <div class="wrap">
+    <div class="section-label">05 / Word of Mouth</div>
+    <div class="quote-shell reveal"><div class="quote">
+      <span class="mark">"</span>
+      <blockquote>He took something we did by hand every single day and just… made it disappear. Set it up, showed us it worked, and now it runs on its own.</blockquote>
+      <div class="by">
+        <img class="av av-logo" src="img/logos/fares-korea.jpg" alt="Fares Korea logo">
+        <span class="who">Fares Korea<span>Supplements &amp; beverage brand · Wildberries</span></span>
+      </div>
+    </div></div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="contact-num num">02</div>
+  <div class="wrap">
+    <div class="section-label">06 / Contact</div>
+    <div class="contact-title reveal">Let's build the<br>next system.</div>
+    <a href="mailto:millyrock2900 [at] gmail.com" class="pill-cta magnetic reveal">millyrock2900 [at] gmail.com <span class="icon-circle">↗</span></a>
+
+    <div class="contact-row reveal">
+      <div class="col"><span class="h">Available for</span><span>Contract · Remote · Freelance</span></div>
+      <div class="col"><span class="h">Status</span><span>Open to new projects</span></div>
+      <div class="col"><span class="h">Response time</span><span>Within 24 hours</span></div>
+      <div class="col"><span class="h">Timezone</span><span>Overlaps EU &amp; US hours</span></div>
+    </div>
+
+    <div class="foot-base">
+      <span>© 2026 Kirill Tsyganov</span>
+      <span>Designed &amp; built from scratch</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // scroll progress
+  const prog = document.getElementById('progress');
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', ()=>{
+    const h = document.documentElement;
+    const pct = h.scrollTop / (h.scrollHeight - h.clientHeight);
+    prog.style.width = (pct*100)+'%';
+    nav.classList.toggle('tucked', h.scrollTop > 40);
+  }, {passive:true});
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach((e)=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // count-up metrics
+  const countIO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting) return;
+      const el = e.target, target = +el.dataset.count, suffix = el.dataset.suffix||'';
+      let cur = 0; const dur = 1100, t0 = performance.now();
+      const tick = (t)=>{
+        const p = Math.min((t-t0)/dur, 1);
+        const val = Math.round((1-Math.pow(1-p,3))*target);
+        el.textContent = val + (p===1?suffix:'');
+        if(p<1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+      countIO.unobserve(el);
+    });
+  }, {threshold:0.6});
+  document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
+
+  // custom cursor + magnetic
+  const cursor = document.getElementById('cursor');
+  if(window.matchMedia('(hover:hover) and (pointer:fine)').matches){
+    let cx=0, cy=0, tx=0, ty=0;
+    window.addEventListener('mousemove', e=>{ tx=e.clientX; ty=e.clientY; });
+    const loop = ()=>{ cx+=(tx-cx)*0.2; cy+=(ty-cy)*0.2; cursor.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`; requestAnimationFrame(loop); };
+    loop();
+    document.querySelectorAll('a, .magnetic').forEach(el=>{
+      el.addEventListener('mouseenter', ()=>cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', ()=>cursor.classList.remove('hover'));
+    });
+    // magnetic pull
+    document.querySelectorAll('.magnetic').forEach(el=>{
+      el.addEventListener('mousemove', e=>{
+        const r = el.getBoundingClientRect();
+        const mx = e.clientX - (r.left+r.width/2);
+        const my = e.clientY - (r.top+r.height/2);
+        el.style.transform = `translate(${mx*0.18}px, ${my*0.28}px)`;
+      });
+      el.addEventListener('mouseleave', ()=>{ el.style.transform=''; });
+    });
+  }
+</script>
+</body>
+</html>

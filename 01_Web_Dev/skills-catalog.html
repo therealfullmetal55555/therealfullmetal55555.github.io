@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Skills Catalog</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #1e1e2e;
+    --accent: #7c3aed;
+    --accent2: #a855f7;
+    --accent-glow: rgba(124,58,237,0.15);
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --tag: #1e1e2e;
+    --green: #10b981;
+    --blue: #3b82f6;
+    --orange: #f59e0b;
+    --pink: #ec4899;
+    --cyan: #06b6d4;
+    --red: #ef4444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a0a2e 50%, #0a1628 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 32px 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: 10%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-inner { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+  }
+  .logo-text { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-text span { color: var(--accent2); }
+  h1 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, #a855f7 60%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 16px;
+    margin-bottom: 28px;
+  }
+  .subtitle code {
+    background: var(--accent-glow);
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 6px;
+    padding: 2px 8px;
+    color: var(--accent2);
+    font-family: 'SF Mono', monospace;
+    font-size: 13px;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--accent2); }
+  .stat-label { font-size: 13px; color: var(--muted); }
+
+  /* Search + Filters */
+  .controls {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 32px 16px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .search-wrap {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+  input[type="search"] {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-size: 15px;
+    padding: 12px 16px 12px 42px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  input[type="search"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-glow);
+  }
+  input[type="search"]::placeholder { color: var(--muted); }
+
+  /* Category tabs */
+  .tabs {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 24px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tab {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { border-color: var(--accent); color: var(--text); }
+  .tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(124,58,237,0.3);
+  }
+  .tab .count {
+    background: rgba(255,255,255,0.15);
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 1px 5px;
+  }
+  .tab.active .count { background: rgba(0,0,0,0.2); }
+
+  /* Grid */
+  .grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 32px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    transition: all .25s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--card-accent, transparent);
+    transition: opacity .3s;
+    opacity: 0;
+  }
+  .card:hover {
+    border-color: rgba(124,58,237,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3), 0 0 0 1px rgba(124,58,237,0.1);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 2px;
+  }
+  .card-cat {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.55;
+    margin-bottom: 14px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-cmd {
+    background: #0d0d14;
+    border: 1px solid #1a1a2a;
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    transition: border-color .2s;
+  }
+  .card-cmd:hover { border-color: var(--accent); }
+  .cmd-text {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--accent2);
+    flex: 1;
+  }
+  .copy-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 13px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all .15s;
+  }
+  .copy-btn:hover { background: var(--accent-glow); color: var(--accent2); }
+  .copy-btn.copied { color: var(--green); }
+
+  .card-hidden { display: none; }
+
+  /* Category colors */
+  .cat-marketing { --card-accent: linear-gradient(90deg, #ec4899, #a855f7); }
+  .cat-cro { --card-accent: linear-gradient(90deg, #f59e0b, #ef4444); }
+  .cat-design { --card-accent: linear-gradient(90deg, #06b6d4, #3b82f6); }
+  .cat-engineering { --card-accent: linear-gradient(90deg, #10b981, #06b6d4); }
+  .cat-docs { --card-accent: linear-gradient(90deg, #3b82f6, #6366f1); }
+  .cat-sales { --card-accent: linear-gradient(90deg, #10b981, #f59e0b); }
+  .cat-business { --card-accent: linear-gradient(90deg, #7c3aed, #ec4899); }
+  .cat-lifestyle { --card-accent: linear-gradient(90deg, #f59e0b, #10b981); }
+  .cat-seo { --card-accent: linear-gradient(90deg, #06b6d4, #10b981); }
+
+  .icon-marketing { background: rgba(236,72,153,0.12); }
+  .icon-cro { background: rgba(245,158,11,0.12); }
+  .icon-design { background: rgba(6,182,212,0.12); }
+  .icon-engineering { background: rgba(16,185,129,0.12); }
+  .icon-docs { background: rgba(59,130,246,0.12); }
+  .icon-sales { background: rgba(16,185,129,0.12); }
+  .icon-business { background: rgba(124,58,237,0.12); }
+  .icon-lifestyle { background: rgba(245,158,11,0.12); }
+  .icon-seo { background: rgba(6,182,212,0.12); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-marketing { background: rgba(236,72,153,0.15); color: #f9a8d4; }
+  .badge-cro { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .badge-design { background: rgba(6,182,212,0.15); color: #67e8f9; }
+  .badge-engineering { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .badge-docs { background: rgba(59,130,246,0.15); color: #93c5fd; }
+  .badge-sales { background: rgba(16,185,129,0.15); color: #6ee7b7; }
+  .badge-business { background: rgba(124,58,237,0.15); color: #c4b5fd; }
+  .badge-lifestyle { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .badge-seo { background: rgba(6,182,212,0.15); color: #67e8f9; }
+
+  .no-results {
+    grid-column: 1/-1;
+    text-align: center;
+    color: var(--muted);
+    padding: 60px 0;
+    font-size: 16px;
+  }
+
+  /* Section headers */
+  .section-header {
+    grid-column: 1/-1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0 4px;
+    margin-top: 8px;
+  }
+  .section-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .section-line { flex: 1; height: 1px; background: var(--border); }
+
+  @media (max-width: 640px) {
+    .header, .controls, .tabs, .grid { padding-left: 16px; padding-right: 16px; }
+    .grid { grid-template-columns: 1fr; }
+    .stats { gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text">Claude <span>Skills</span> Catalog</div>
+    </div>
+    <h1>130 Skills & Commands</h1>
+    <p class="subtitle">Вызывай любой скилл командой <code>/skill-name</code> прямо в чате Claude Code</p>
+    <div class="stats">
+      <div class="stat"><span class="stat-num">130</span><span class="stat-label">всего скиллов</span></div>
+      <div class="stat"><span class="stat-num">9</span><span class="stat-label">категорий</span></div>
+      <div class="stat"><span class="stat-num">/</span><span class="stat-label">префикс команды</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="search" id="search" placeholder="Поиск скилла или команды..." oninput="filterCards()">
+  </div>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" onclick="setTab('all', this)">Все <span class="count" id="cnt-all">130</span></div>
+  <div class="tab" onclick="setTab('marketing', this)">📣 Маркетинг <span class="count" id="cnt-marketing"></span></div>
+  <div class="tab" onclick="setTab('cro', this)">🎯 CRO <span class="count" id="cnt-cro"></span></div>
+  <div class="tab" onclick="setTab('seo', this)">🔍 SEO <span class="count" id="cnt-seo"></span></div>
+  <div class="tab" onclick="setTab('sales', this)">💰 Продажи <span class="count" id="cnt-sales"></span></div>
+  <div class="tab" onclick="setTab('design', this)">🎨 Дизайн & UI <span class="count" id="cnt-design"></span></div>
+  <div class="tab" onclick="setTab('engineering', this)">⚙️ Инжиниринг <span class="count" id="cnt-engineering"></span></div>
+  <div class="tab" onclick="setTab('docs', this)">📄 Документы <span class="count" id="cnt-docs"></span></div>
+  <div class="tab" onclick="setTab('business', this)">📊 Бизнес <span class="count" id="cnt-business"></span></div>
+  <div class="tab" onclick="setTab('lifestyle', this)">🛒 Задачи <span class="count" id="cnt-lifestyle"></span></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script>
+const skills = [
+  // ═══ MARKETING ═══
+  { name: "market", cmd: "/market", cat: "marketing", icon: "📣", title: "Marketing Suite", desc: "AI Marketing Suite — главный оркестратор всех маркетинговых инструментов" },
+  { name: "market-audit", cmd: "/market-audit", cat: "marketing", icon: "🔎", title: "Marketing Audit", desc: "Маркетинговый аудит — параллельный анализ всех каналов и точек роста" },
+  { name: "market-copy", cmd: "/market-copy", cat: "marketing", icon: "✍️", title: "Copywriting Analysis", desc: "Анализ и генерация маркетинговых текстов для любых страниц" },
+  { name: "market-ads", cmd: "/market-ads", cat: "marketing", icon: "📢", title: "Ad Creative & Copy", desc: "Генерация рекламных креативов и текстов для всех платформ" },
+  { name: "market-emails", cmd: "/market-emails", cat: "marketing", icon: "📧", title: "Email Sequences", desc: "Создание email-последовательностей и drip-кампаний" },
+  { name: "market-social", cmd: "/market-social", cat: "marketing", icon: "📱", title: "Social Media Calendar", desc: "Контент-календарь и генерация постов для соцсетей" },
+  { name: "market-brand", cmd: "/market-brand", cat: "marketing", icon: "🏷️", title: "Brand Voice", desc: "Анализ и создание гайдлайнов бренда и tone of voice" },
+  { name: "market-launch", cmd: "/market-launch", cat: "marketing", icon: "🚀", title: "Product Launch", desc: "Плейбук запуска продукта или фичи — полный план" },
+  { name: "market-proposal", cmd: "/market-proposal", cat: "marketing", icon: "📋", title: "Client Proposal", desc: "Генерация клиентских предложений для маркетинговых услуг" },
+  { name: "market-report", cmd: "/market-report", cat: "marketing", icon: "📊", title: "Marketing Report (MD)", desc: "Генератор маркетинговых отчётов в формате Markdown" },
+  { name: "market-report-pdf", cmd: "/market-report-pdf", cat: "marketing", icon: "📑", title: "Marketing Report (PDF)", desc: "Генератор маркетинговых отчётов в формате PDF" },
+  { name: "marketing-skill", cmd: "/marketing-skill", cat: "marketing", icon: "🎯", title: "Marketing Skills (42)", desc: "42 маркетинговых агент-скилла в одном наборе" },
+  { name: "marketing-ideas", cmd: "/marketing-ideas", cat: "marketing", icon: "💡", title: "Marketing Ideas", desc: "Генерация маркетинговых идей и стратегий для SaaS" },
+  { name: "marketing-psychology", cmd: "/marketing-psychology", cat: "marketing", icon: "🧠", title: "Marketing Psychology", desc: "Применение психологических принципов и поведенческой науки к маркетингу" },
+  { name: "content-strategy", cmd: "/content-strategy", cat: "marketing", icon: "🗺️", title: "Content Strategy", desc: "Планирование контент-стратегии и выбор тем для создания" },
+  { name: "content-ops", cmd: "/content-ops", cat: "marketing", icon: "⚡", title: "Content Ops", desc: "Оценка, улучшение и итерация контента через экспертную панель" },
+  { name: "content-eval", cmd: "/content-eval", cat: "marketing", icon: "📐", title: "Content Eval", desc: "Оценка и анализ контента по метрикам качества" },
+  { name: "copywriting", cmd: "/copywriting", cat: "marketing", icon: "🖊️", title: "Copywriting", desc: "Написание и улучшение маркетинговых текстов для любых страниц" },
+  { name: "copy-editing", cmd: "/copy-editing", cat: "marketing", icon: "✏️", title: "Copy Editing", desc: "Редактирование и улучшение существующих маркетинговых текстов" },
+  { name: "cold-email", cmd: "/cold-email", cat: "marketing", icon: "📩", title: "Cold Email", desc: "Написание B2B холодных писем и follow-up последовательностей" },
+  { name: "email-sequence", cmd: "/email-sequence", cat: "marketing", icon: "🔄", title: "Email Sequence", desc: "Создание и оптимизация email-последовательностей и lifecycle email" },
+  { name: "social-content", cmd: "/social-content", cat: "marketing", icon: "🌐", title: "Social Content", desc: "Создание и оптимизация контента для LinkedIn, Twitter, Instagram, TikTok" },
+  { name: "x-longform-post", cmd: "/x-longform-post", cat: "marketing", icon: "🐦", title: "X Long-Form Post", desc: "Длинные посты и треды в X/Twitter в стиле founder/CEO" },
+  { name: "community-marketing", cmd: "/community-marketing", cat: "marketing", icon: "👥", title: "Community Marketing", desc: "Создание и использование онлайн-сообществ для роста продукта" },
+  { name: "brand-guidelines", cmd: "/brand-guidelines", cat: "marketing", icon: "🎨", title: "Brand Guidelines", desc: "Применение официальных цветов и типографики Anthropic к артефактам" },
+  { name: "internal-comms", cmd: "/internal-comms", cat: "marketing", icon: "💬", title: "Internal Comms", desc: "Написание внутренних коммуникаций в корпоративных форматах" },
+  { name: "outbound-engine", cmd: "/outbound-engine", cat: "marketing", icon: "📡", title: "Outbound Engine", desc: "Дизайн и оптимизация холодных outbound email-кампаний для Instantly" },
+  { name: "launch-strategy", cmd: "/launch-strategy", cat: "marketing", icon: "🎯", title: "Launch Strategy", desc: "Планирование запуска продукта, фичи или релиза" },
+  { name: "free-tool-strategy", cmd: "/free-tool-strategy", cat: "marketing", icon: "🛠️", title: "Free Tool Strategy", desc: "Планирование бесплатных инструментов для лидогенерации и SEO" },
+  { name: "lead-magnets", cmd: "/lead-magnets", cat: "marketing", icon: "🧲", title: "Lead Magnets", desc: "Создание и оптимизация лид-магнитов для сбора email" },
+  { name: "referral-program", cmd: "/referral-program", cat: "marketing", icon: "🔗", title: "Referral Program", desc: "Создание и оптимизация реферальных программ и word-of-mouth стратегий" },
+  { name: "directory-submissions", cmd: "/directory-submissions", cat: "marketing", icon: "📂", title: "Directory Submissions", desc: "Сабмит продукта в директории стартапов, SaaS, AI, агентов для бэклинков" },
+  { name: "product-marketing-context", cmd: "/product-marketing-context", cat: "marketing", icon: "📌", title: "Product Marketing Context", desc: "Создание и обновление product marketing context документа" },
+  { name: "market-competitors", cmd: "/market-competitors", cat: "marketing", icon: "🏆", title: "Competitive Intelligence", desc: "Анализ конкурентной среды и конкурентная разведка" },
+  { name: "competitor-profiling", cmd: "/competitor-profiling", cat: "marketing", icon: "🔬", title: "Competitor Profiling", desc: "Исследование и профилирование конкурентов по их URL" },
+  { name: "competitor-alternatives", cmd: "/competitor-alternatives", cat: "marketing", icon: "↔️", title: "Competitor Alternatives", desc: "Создание страниц сравнения с конкурентами для SEO" },
+
+  // ═══ CRO ═══
+  { name: "conversion-ops", cmd: "/conversion-ops", cat: "cro", icon: "⚡", title: "Conversion Ops", desc: "AI Conversion Ops — комплексная оптимизация конверсии" },
+  { name: "page-cro", cmd: "/page-cro", cat: "cro", icon: "📄", title: "Page CRO", desc: "Оптимизация конверсии маркетинговых страниц, включая homepage и landing pages" },
+  { name: "market-landing", cmd: "/market-landing", cat: "cro", icon: "🎯", title: "Landing Page CRO", desc: "Анализ и оптимизация landing pages для увеличения конверсии" },
+  { name: "form-cro", cmd: "/form-cro", cat: "cro", icon: "📝", title: "Form CRO", desc: "Оптимизация форм (кроме signup) — лид-формы, контакты, опросы" },
+  { name: "popup-cro", cmd: "/popup-cro", cat: "cro", icon: "🪟", title: "Popup CRO", desc: "Создание и оптимизация попапов, модалей, слайд-инов для конверсии" },
+  { name: "signup-flow-cro", cmd: "/signup-flow-cro", cat: "cro", icon: "✅", title: "Signup Flow CRO", desc: "Оптимизация потоков регистрации и активации триала" },
+  { name: "onboarding-cro", cmd: "/onboarding-cro", cat: "cro", icon: "🚀", title: "Onboarding CRO", desc: "Оптимизация постсайнап онбординга и time-to-value" },
+  { name: "paywall-upgrade-cro", cmd: "/paywall-upgrade-cro", cat: "cro", icon: "💳", title: "Paywall / Upgrade CRO", desc: "Оптимизация пейволлов, апгрейд-экранов и upsell-модалей" },
+  { name: "churn-prevention", cmd: "/churn-prevention", cat: "cro", icon: "🛡️", title: "Churn Prevention", desc: "Снижение оттока: cancel flows, save offers, payment recovery" },
+  { name: "ab-test-setup", cmd: "/ab-test-setup", cat: "cro", icon: "🧪", title: "A/B Test Setup", desc: "Планирование, дизайн и внедрение A/B тестов и экспериментов" },
+  { name: "analytics-tracking", cmd: "/analytics-tracking", cat: "cro", icon: "📈", title: "Analytics Tracking", desc: "Настройка и аудит аналитики и измерений" },
+
+  // ═══ SEO ═══
+  { name: "seo-ops", cmd: "/seo-ops", cat: "seo", icon: "🔍", title: "SEO Ops", desc: "AI SEO Ops — комплексное SEO управление" },
+  { name: "seo-audit", cmd: "/seo-audit", cat: "seo", icon: "🔎", title: "SEO Audit", desc: "Аудит и диагностика SEO проблем сайта" },
+  { name: "ai-seo", cmd: "/ai-seo", cat: "seo", icon: "🤖", title: "AI SEO", desc: "Оптимизация контента для AI поисковиков и появления в LLM-ответах" },
+  { name: "market-seo", cmd: "/market-seo", cat: "seo", icon: "📊", title: "SEO Content Audit", desc: "SEO контент-аудит с чеклистом on-page оптимизации" },
+  { name: "programmatic-seo", cmd: "/programmatic-seo", cat: "seo", icon: "⚙️", title: "Programmatic SEO", desc: "Создание SEO-страниц в масштабе через шаблоны и данные" },
+  { name: "schema-markup", cmd: "/schema-markup", cat: "seo", icon: "🏷️", title: "Schema Markup", desc: "Добавление и оптимизация schema markup и structured data" },
+  { name: "site-architecture", cmd: "/site-architecture", cat: "seo", icon: "🗂️", title: "Site Architecture", desc: "Планирование иерархии страниц, навигации и URL структуры" },
+  { name: "aso-audit", cmd: "/aso-audit", cat: "seo", icon: "📱", title: "ASO Audit", desc: "Аудит и оптимизация листинга в App Store и Google Play" },
+  { name: "yt-competitive-analysis", cmd: "/yt-competitive-analysis", cat: "seo", icon: "▶️", title: "YouTube Analysis", desc: "Анализ YouTube-каналов конкурентов и контент-стратегии" },
+
+  // ═══ SALES ═══
+  { name: "sales-pipeline", cmd: "/sales-pipeline", cat: "sales", icon: "🔄", title: "Sales Pipeline", desc: "AI Sales Pipeline — управление воронкой продаж" },
+  { name: "sales-playbook", cmd: "/sales-playbook", cat: "sales", icon: "📖", title: "Sales Playbook", desc: "AI Sales Playbook — value-based pricing и upselling стратегии" },
+  { name: "sales-enablement", cmd: "/sales-enablement", cat: "sales", icon: "💼", title: "Sales Enablement", desc: "Создание sales collateral, pitch decks, objection handling" },
+  { name: "revenue-intelligence", cmd: "/revenue-intelligence", cat: "sales", icon: "💡", title: "Revenue Intelligence", desc: "AI Revenue Intelligence — аналитика доходов" },
+  { name: "revops", cmd: "/revops", cat: "sales", icon: "⚙️", title: "RevOps", desc: "Revenue Operations, lead lifecycle и marketing-to-sales handoff" },
+  { name: "lead-dossier", cmd: "/lead-dossier", cat: "sales", icon: "🗂️", title: "Lead Dossier", desc: "Создание детальных досье на лидов и потенциальных клиентов" },
+  { name: "paid-ads", cmd: "/paid-ads", cat: "sales", icon: "💰", title: "Paid Ads", desc: "Настройка и оптимизация платных кампаний Google Ads, Meta, LinkedIn" },
+  { name: "ad-creative", cmd: "/ad-creative", cat: "sales", icon: "🎨", title: "Ad Creative", desc: "Генерация и итерация рекламных креативов для всех форматов" },
+  { name: "customer-research", cmd: "/customer-research", cat: "sales", icon: "🔬", title: "Customer Research", desc: "Проведение и синтез исследований клиентов" },
+  { name: "growth-engine", cmd: "/growth-engine", cat: "sales", icon: "📈", title: "Growth Engine", desc: "Growth Engine — комплексная система роста продукта" },
+
+  // ═══ DESIGN & UI ═══
+  { name: "ui-ux-pro-max", cmd: "/ui-ux-pro-max", cat: "design", icon: "🎨", title: "UI/UX Pro Max", desc: "67 стилей, 96 палитр, 57 пар шрифтов, 25 графиков, 13 стеков" },
+  { name: "frontend-design", cmd: "/frontend-design", cat: "design", icon: "💻", title: "Frontend Design", desc: "Создание production-grade UI с высоким дизайн-качеством" },
+  { name: "impeccable", cmd: "/impeccable", cat: "design", icon: "✨", title: "Impeccable", desc: "Дизайн, редизайн, аудит, полировка UI — безупречное качество" },
+  { name: "gpt-taste", cmd: "/gpt-taste", cat: "design", icon: "⭐", title: "GPT Taste", desc: "Elite UX/UI с GSAP анимациями, true randomization для layout variance" },
+  { name: "high-end-visual-design", cmd: "/high-end-visual-design", cat: "design", icon: "💎", title: "High-End Visual Design", desc: "Дизайн как в топовом агентстве — шрифты, тени, карточки, анимации" },
+  { name: "design-taste-frontend", cmd: "/design-taste-frontend", cat: "design", icon: "🖥️", title: "Design Taste Frontend", desc: "Senior UI/UX Engineer с metric-based правилами и строгими ограничениями" },
+  { name: "stitch-design-taste", cmd: "/stitch-design-taste", cat: "design", icon: "🧵", title: "Stitch Design Taste", desc: "Семантическая дизайн-система для Google Stitch — генерация DESIGN.md" },
+  { name: "emil-design-eng", cmd: "/emil-design-eng", cat: "design", icon: "🎭", title: "Emil Design Eng", desc: "Философия Emil Kowalski: UI полировка, анимации, невидимые детали" },
+  { name: "industrial-brutalist-ui", cmd: "/industrial-brutalist-ui", cat: "design", icon: "🏭", title: "Industrial Brutalist UI", desc: "Сырые механические интерфейсы: Swiss типографика, военная терминальная эстетика" },
+  { name: "minimalist-ui", cmd: "/minimalist-ui", cat: "design", icon: "⬜", title: "Minimalist UI", desc: "Чистые редакционные интерфейсы, тёплая монохромная палитра, типографический контраст" },
+  { name: "material-3", cmd: "/material-3", cat: "design", icon: "🎯", title: "Material 3", desc: "Реализация Google Material Design 3 (You) компонентов" },
+  { name: "canvas-design", cmd: "/canvas-design", cat: "design", icon: "🖼️", title: "Canvas Design", desc: "Создание визуального арта в .png и .pdf с дизайн-философией" },
+  { name: "algorithmic-art", cmd: "/algorithmic-art", cat: "design", icon: "🌀", title: "Algorithmic Art", desc: "Алгоритмическое искусство через p5.js с seeded randomness" },
+  { name: "theme-factory", cmd: "/theme-factory", cat: "design", icon: "🎨", title: "Theme Factory", desc: "Применение тем к артефактам: слайды, доки, HTML лендинги" },
+  { name: "image", cmd: "/image", cat: "design", icon: "🖼️", title: "Image Generation", desc: "Создание и оптимизация изображений для маркетинга" },
+  { name: "image-to-code", cmd: "/image-to-code", cat: "design", icon: "🔄", title: "Image to Code", desc: "Elite конвертация дизайн-скриншотов в код для Codex" },
+  { name: "redesign-existing-projects", cmd: "/redesign-existing-projects", cat: "design", icon: "♻️", title: "Redesign Projects", desc: "Апгрейд существующих сайтов и приложений до premium качества" },
+  { name: "clone-site", cmd: "/clone-site", cat: "design", icon: "🔁", title: "Clone Site", desc: "Клонирование любого сайта в pixel-perfect Next.js реплику" },
+  { name: "deck-generator", cmd: "/deck-generator", cat: "design", icon: "📽️", title: "Deck Generator", desc: "Генерация профессиональных презентаций с AI-изображениями" },
+
+  // ═══ ENGINEERING ═══
+  { name: "engineering", cmd: "/engineering", cat: "engineering", icon: "⚙️", title: "Engineering Advanced (25)", desc: "25 продвинутых инженерных скиллов: Agent design, RAG, и многое другое" },
+  { name: "engineering-team", cmd: "/engineering-team", cat: "engineering", icon: "👷", title: "Engineering Team (23)", desc: "23 инженерных скилла: архитектура, код, тесты, DevOps" },
+  { name: "mcp-builder", cmd: "/mcp-builder", cat: "engineering", icon: "🔌", title: "MCP Builder", desc: "Создание качественных MCP серверов для интеграции LLM с сервисами" },
+  { name: "prompt-engineer", cmd: "/prompt-engineer", cat: "engineering", icon: "💬", title: "Prompt Engineer", desc: "Создание, улучшение и оптимизация промптов по best practices" },
+  { name: "skill-creator", cmd: "/skill-creator", cat: "engineering", icon: "✨", title: "Skill Creator", desc: "Создание новых скиллов, улучшение существующих, измерение производительности" },
+  { name: "web-artifacts-builder", cmd: "/web-artifacts-builder", cat: "engineering", icon: "🏗️", title: "Web Artifacts Builder", desc: "Создание сложных multi-component HTML артефактов с современным frontend" },
+  { name: "artifacts-builder", cmd: "/artifacts-builder", cat: "engineering", icon: "🎯", title: "Artifacts Builder", desc: "Suite инструментов для создания Claude.ai HTML артефактов" },
+  { name: "full-output-enforcement", cmd: "/full-output-enforcement", cat: "engineering", icon: "🔒", title: "Full Output Enforcement", desc: "Запрет обрезки кода LLM, принудительная полная генерация" },
+  { name: "autoresearch", cmd: "/autoresearch", cat: "engineering", icon: "🔬", title: "Autoresearch", desc: "Karpathy-style autoresearch: 50+ вариантов, оценка 5 экспертами" },
+
+  // ═══ DOCUMENTS ═══
+  { name: "pdf", cmd: "/pdf", cat: "docs", icon: "📕", title: "PDF", desc: "Работа с PDF: чтение, извлечение, заполнение форм, конвертация" },
+  { name: "pdf-reading", cmd: "/pdf-reading", cat: "docs", icon: "📖", title: "PDF Reading", desc: "Чтение и извлечение контента из PDF файлов" },
+  { name: "docx", cmd: "/docx", cat: "docs", icon: "📘", title: "Word (DOCX)", desc: "Создание, чтение и редактирование Word документов (.docx)" },
+  { name: "xlsx", cmd: "/xlsx", cat: "docs", icon: "📗", title: "Excel (XLSX)", desc: "Работа с Excel таблицами: создание, чтение, анализ" },
+  { name: "pptx", cmd: "/pptx", cat: "docs", icon: "📙", title: "PowerPoint (PPTX)", desc: "Работа с PowerPoint файлами: создание, чтение, редактирование слайдов" },
+  { name: "file-reading", cmd: "/file-reading", cat: "docs", icon: "📂", title: "File Reading", desc: "Чтение загруженных файлов, когда контент не в контексте" },
+  { name: "doc-coauthoring", cmd: "/doc-coauthoring", cat: "docs", icon: "✍️", title: "Doc Co-Authoring", desc: "Совместное написание документации по структурированному workflow" },
+  { name: "video", cmd: "/video", cat: "docs", icon: "🎬", title: "Video Creation", desc: "Создание и производство видео контента с помощью AI инструментов" },
+  { name: "video-caption-generator", cmd: "/video-caption-generator", cat: "docs", icon: "💬", title: "Video Captions", desc: "Генерация субтитров и captions для видео" },
+  { name: "video-clip-pipeline", cmd: "/video-clip-pipeline", cat: "docs", icon: "✂️", title: "Video Clip Pipeline", desc: "Конвейер нарезки видео — длинные видео в клипы" },
+  { name: "short-form-pipeline", cmd: "/short-form-pipeline", cat: "docs", icon: "📲", title: "Short-Form Pipeline", desc: "Конвейер создания short-form видеоклипов для соцсетей" },
+  { name: "podcast-ops", cmd: "/podcast-ops", cat: "docs", icon: "🎙️", title: "Podcast Ops", desc: "Podcast-to-Everything: транскрипции, шоу-ноты, контент" },
+  { name: "slack-gif-creator", cmd: "/slack-gif-creator", cat: "docs", icon: "🎞️", title: "Slack GIF Creator", desc: "Создание анимированных GIF оптимизированных для Slack" },
+
+  // ═══ BUSINESS ═══
+  { name: "business-growth", cmd: "/business-growth", cat: "business", icon: "📈", title: "Business Growth (4)", desc: "4 скилла роста бизнеса: customer success, health metrics" },
+  { name: "c-level-advisor", cmd: "/c-level-advisor", cat: "business", icon: "👔", title: "C-Level Advisor (10)", desc: "10 C-level советников: CEO, CTO, COO, CPO, CFO и другие" },
+  { name: "finance", cmd: "/finance", cat: "business", icon: "💰", title: "Finance Skills", desc: "Финансовый аналитик: ratio analysis, DCF оценка" },
+  { name: "finance-ops", cmd: "/finance-ops", cat: "business", icon: "📊", title: "Finance Ops", desc: "AI финансовый анализ: CFO брифинги из QuickBooks, P&L, Balance Sheet" },
+  { name: "financial-calculator", cmd: "/financial-calculator", cat: "business", icon: "🧮", title: "Financial Calculator", desc: "Финансовые расчёты: налоги, кредиты, пенсия, rent vs buy" },
+  { name: "pricing-strategy", cmd: "/pricing-strategy", cat: "business", icon: "🏷️", title: "Pricing Strategy", desc: "Помощь с ценообразованием, упаковкой и монетизационной стратегией" },
+  { name: "project-management", cmd: "/project-management", cat: "business", icon: "📋", title: "PM Skills (6)", desc: "6 PM скиллов: RICE, agile, scrum master для Claude Code" },
+  { name: "product-team", cmd: "/product-team", cat: "business", icon: "🎯", title: "Product Team (10)", desc: "10 product скиллов: PM toolkit, agile PO, product analytics" },
+  { name: "ra-qm-team", cmd: "/ra-qm-team", cat: "business", icon: "⚖️", title: "RA/QM Team (12)", desc: "12 regulatory & QM скиллов: ISO 13485, MDR 2017/745" },
+  { name: "team-ops", cmd: "/team-ops", cat: "business", icon: "🏢", title: "Team Ops", desc: "AI Team Ops — управление командой и операциями" },
+  { name: "market-funnel", cmd: "/market-funnel", cat: "business", icon: "🔻", title: "Sales Funnel", desc: "Анализ и оптимизация воронки продаж по страницам" },
+  { name: "product-self-knowledge", cmd: "/product-self-knowledge", cat: "business", icon: "🤖", title: "Product Self-Knowledge", desc: "Консультация перед ответами о продуктах Anthropic — факты, модели" },
+
+  // ═══ LIFESTYLE / TASKS ═══
+  { name: "grocery-shopping", cmd: "/grocery-shopping", cat: "lifestyle", icon: "🛒", title: "Grocery Shopping", desc: "Заказ продуктов с доставкой — выбор магазина, список, бюджет" },
+  { name: "meal-delivery", cmd: "/meal-delivery", cat: "lifestyle", icon: "🍕", title: "Meal Delivery", desc: "Заказ еды с расчётом времени прибытия — от ресторана до доставки" },
+  { name: "hire-help", cmd: "/hire-help", cat: "lifestyle", icon: "🔧", title: "Hire Help", desc: "Поиск и бронирование сервис-провайдеров: уборка, ремонт, переезд" },
+  { name: "event-planning", cmd: "/event-planning", cat: "lifestyle", icon: "🎉", title: "Event Planning", desc: "Планирование мероприятий — от ужина до свадьбы" },
+  { name: "prescription-refill", cmd: "/prescription-refill", cat: "lifestyle", icon: "💊", title: "Prescription Refill", desc: "Обновление рецепта в аптеке по названию, Rx номеру или фото" },
+  { name: "return-refund", cmd: "/return-refund", cat: "lifestyle", icon: "↩️", title: "Return & Refund", desc: "Возврат товара или запрос возврата денег у любого ритейлера" },
+  { name: "cancel-unsubscribe", cmd: "/cancel-unsubscribe", cat: "lifestyle", icon: "🚫", title: "Cancel / Unsubscribe", desc: "Отмена подписки или отписка от сервиса по описанию или URL" },
+  { name: "call-to-book", cmd: "/call-to-book", cat: "lifestyle", icon: "📞", title: "Call to Book", desc: "Звонок для бронирования — проверка календаря, согласие, набор" },
+  { name: "benepass-reimbursement", cmd: "/benepass-reimbursement", cat: "lifestyle", icon: "💵", title: "Benepass Reimbursement", desc: "Возмещение расходов через Benepass для корпоративных льгот" },
+  { name: "file-expenses", cmd: "/file-expenses", cat: "lifestyle", icon: "🧾", title: "File Expenses", desc: "Подача расходов на любой платформе: Brex, Concur, Expensify" },
+  { name: "file-form", cmd: "/file-form", cat: "lifestyle", icon: "📋", title: "File Form", desc: "Бюрократические задачи: jury duty, штрафы, паспорта, DMV формы" },
+];
+
+let activeTab = 'all';
+
+function catColor(cat) {
+  return {
+    marketing: 'marketing', cro: 'cro', seo: 'seo',
+    sales: 'sales', design: 'design', engineering: 'engineering',
+    docs: 'docs', business: 'business', lifestyle: 'lifestyle'
+  }[cat] || 'marketing';
+}
+
+function buildGrid(filter = '') {
+  const grid = document.getElementById('grid');
+  const q = filter.toLowerCase();
+
+  const visible = skills.filter(s => {
+    const matchTab = activeTab === 'all' || s.cat === activeTab;
+    const matchSearch = !q || s.name.includes(q) || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q) || s.cmd.includes(q);
+    return matchTab && matchSearch;
+  });
+
+  // Count by category
+  const counts = {};
+  ['marketing','cro','seo','sales','design','engineering','docs','business','lifestyle'].forEach(c => {
+    counts[c] = skills.filter(s => s.cat === c && (!q || s.name.includes(q) || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q))).length;
+  });
+  document.getElementById('cnt-all').textContent = q ? skills.filter(s => !q || s.name.includes(q) || s.title.toLowerCase().includes(q) || s.desc.toLowerCase().includes(q)).length : skills.length;
+  Object.entries(counts).forEach(([c, n]) => {
+    const el = document.getElementById('cnt-' + c);
+    if (el) el.textContent = n;
+  });
+
+  if (!visible.length) {
+    grid.innerHTML = '<div class="no-results">🔍 Скиллы не найдены</div>';
+    return;
+  }
+
+  grid.innerHTML = visible.map(s => {
+    const c = catColor(s.cat);
+    return `
+    <div class="card cat-${c}" data-cat="${s.cat}" data-name="${s.name}">
+      <div class="card-header">
+        <div class="card-icon icon-${c}">${s.icon}</div>
+        <div>
+          <div class="card-title">${s.title}</div>
+          <div class="card-cat"><span class="badge badge-${c}">${s.cat}</span></div>
+        </div>
+      </div>
+      <div class="card-desc">${s.desc}</div>
+      <div class="card-cmd" onclick="copyCmd('${s.cmd}', this)">
+        <span class="cmd-text">${s.cmd}</span>
+        <button class="copy-btn">⎘</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function copyCmd(cmd, el) {
+  navigator.clipboard.writeText(cmd).then(() => {
+    const btn = el.querySelector('.copy-btn');
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '⎘'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function setTab(cat, el) {
+  activeTab = cat;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  buildGrid(document.getElementById('search').value);
+}
+
+function filterCards() {
+  buildGrid(document.getElementById('search').value);
+}
+
+buildGrid();
+</script>
+</body>
+</html>

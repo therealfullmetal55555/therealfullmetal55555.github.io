@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motion Toolkit — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); }
+
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 9999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+:root {
+  --v-bg:     oklch(4%  0.002 280);
+  --v-card:   oklch(7%  0.003 280);
+  --v-border: oklch(13% 0.004 280);
+  --v-muted:  oklch(38% 0.003 280);
+  --v-text:   oklch(90% 0.004 280);
+  --v-accent: oklch(65% 0.18  270);   /* electric violet */
+  --v-dim:    oklch(48% 0.10  270);
+}
+
+/* ── Hero ─────────────────────────────────────── */
+.hero-wrap {
+  min-height: 100svh;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  position: relative; overflow: hidden;
+  background: var(--v-bg);
+  padding: 0 48px 64px;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 55% 55% at 72% 28%, oklch(12% 0.07 270 / 0.7) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 45% at 12% 80%, oklch(9% 0.05 240 / 0.4) 0%, transparent 50%);
+}
+
+/* Waveform decoration */
+.hero-waveform {
+  position: absolute; right: 52px; top: 50%; transform: translateY(-50%);
+  opacity: 0.08; pointer-events: none;
+}
+
+.hero-scanlines {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, oklch(0% 0 0 / 0.025) 3px, oklch(0% 0 0 / 0.025) 4px);
+  pointer-events: none;
+}
+
+.hero-meta { position: relative; z-index: 2; margin-bottom: 28px; }
+.hero-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--v-muted); text-decoration: none; transition: color 0.2s;
+}
+.hero-back:hover { color: var(--v-text); }
+
+.hero-content { position: relative; z-index: 2; }
+
+.hero-eyebrow {
+  font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--v-muted); margin-bottom: 20px; font-family: monospace;
+}
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(44px, 8vw, 100px);
+  font-weight: 800; letter-spacing: -0.05em; line-height: 0.9;
+  color: var(--v-text); margin-bottom: 32px;
+}
+.hero-title em { font-style: normal; color: var(--v-accent); }
+
+.hero-desc {
+  font-size: 15px; font-weight: 300;
+  color: var(--v-muted); line-height: 1.8;
+  max-width: 48ch; margin-bottom: 40px;
+}
+
+.hero-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hero-tag {
+  font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--v-muted); border: 1px solid var(--v-border);
+  padding: 6px 12px; font-family: monospace;
+}
+
+/* ── Stats ────────────────────────────────────── */
+.stats-strip {
+  background: oklch(3.5% 0.002 280);
+  border-top: 1px solid var(--v-border); border-bottom: 1px solid var(--v-border);
+  padding: 48px; display: grid; grid-template-columns: repeat(4, 1fr);
+}
+.stat-item { padding: 0 32px; border-right: 1px solid var(--v-border); }
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-family: var(--f-head); font-size: clamp(28px, 4vw, 44px);
+  font-weight: 800; letter-spacing: -0.04em;
+  color: var(--v-accent); line-height: 1; margin-bottom: 8px;
+}
+.stat-label { font-size: 12px; font-weight: 300; color: var(--v-muted); line-height: 1.5; }
+
+/* ── Content sections ─────────────────────────── */
+.content-section {
+  padding: 88px 48px;
+  border-top: 1px solid var(--v-border);
+  background: var(--v-bg);
+}
+.section-label {
+  font-size: 10px; letter-spacing: 0.10em; text-transform: uppercase;
+  color: oklch(28% 0.003 280); margin-bottom: 56px; font-family: monospace;
+}
+
+/* ── AE FX Grid ──────────────────────────────── */
+.ae-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  margin-bottom: 2px;
+}
+
+.ae-card {
+  background: var(--v-card);
+  padding: 20px 18px;
+  position: relative; overflow: hidden;
+  transition: background 0.2s;
+}
+.ae-card:hover { background: oklch(9.5% 0.004 280); }
+
+.ae-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--v-accent);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.25s var(--ease);
+}
+.ae-card:hover::before { transform: scaleX(1); }
+
+.ae-num {
+  font-family: monospace; font-size: 9px;
+  color: oklch(25% 0.003 280); letter-spacing: 0.06em; margin-bottom: 10px;
+}
+.ae-name {
+  font-family: var(--f-head); font-size: 14px; font-weight: 700;
+  color: var(--v-text); letter-spacing: -0.01em; margin-bottom: 6px; line-height: 1.2;
+}
+.ae-desc {
+  font-size: 11px; font-weight: 300;
+  color: var(--v-muted); line-height: 1.5;
+}
+.ae-tag {
+  display: inline-block; margin-top: 8px;
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--v-accent); border: 1px solid oklch(65% 0.18 270 / 0.25);
+  padding: 2px 7px; font-family: monospace;
+}
+
+/* ── Pipeline block ──────────────────────────── */
+.pipeline {
+  display: flex; align-items: center; gap: 0;
+  margin-bottom: 48px; overflow-x: auto;
+}
+.pipe-step {
+  background: var(--v-card);
+  border: 1px solid var(--v-border);
+  padding: 16px 24px; flex-shrink: 0;
+  text-align: center;
+}
+.pipe-step:first-child { border-left: 2px solid var(--v-accent); }
+.pipe-name {
+  font-family: monospace; font-size: 12px;
+  color: var(--v-text); font-weight: 600; margin-bottom: 4px;
+}
+.pipe-note { font-size: 10px; color: var(--v-muted); }
+.pipe-arrow {
+  font-size: 14px; color: var(--v-dim);
+  padding: 0 8px; flex-shrink: 0;
+}
+
+/* ── Feature cards ───────────────────────────── */
+.feature-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+}
+.feature-card {
+  background: var(--v-card); padding: 28px;
+  position: relative; overflow: hidden; transition: background 0.2s;
+}
+.feature-card:hover { background: oklch(9% 0.004 280); }
+.feature-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--v-accent); opacity: 0; transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 0.5; }
+.feature-icon { width: 28px; height: 28px; margin-bottom: 20px; color: var(--v-accent); }
+.feature-name {
+  font-family: var(--f-head); font-size: 15px; font-weight: 700;
+  color: var(--v-text); letter-spacing: -0.02em; margin-bottom: 10px;
+}
+.feature-desc { font-size: 13px; font-weight: 300; color: var(--v-muted); line-height: 1.6; }
+
+/* ── Stack ───────────────────────────────────── */
+.stack-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 0; border-bottom: 1px solid var(--v-border);
+}
+.stack-name {
+  font-family: monospace; font-size: 14px; font-weight: 600;
+  color: var(--v-text); width: 180px; flex-shrink: 0;
+}
+.stack-role { font-size: 13px; font-weight: 300; color: var(--v-muted); flex: 1; }
+.stack-tag {
+  font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--v-accent); border: 1px solid oklch(65% 0.18 270 / 0.3);
+  padding: 3px 8px; font-family: monospace;
+}
+
+@media (max-width: 860px) {
+  .hero-wrap, .content-section { padding-left: 24px; padding-right: 24px; }
+  .stats-strip { grid-template-columns: 1fr 1fr; padding: 32px 24px; gap: 32px 0; }
+  .stat-item { border-right: none; padding: 0; }
+  .stat-item:nth-child(odd) { border-right: 1px solid var(--v-border); }
+  .ae-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 540px) {
+  .ae-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="site-nav">
+    <a href="projects.html" class="active">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+<!-- Hero -->
+<section class="hero-wrap">
+  <div class="hero-bg"></div>
+  <div class="hero-scanlines"></div>
+
+  <!-- Waveform SVG -->
+  <div class="hero-waveform" aria-hidden="true">
+    <svg width="340" height="120" viewBox="0 0 340 120" fill="none">
+      <polyline points="0,60 20,30 40,90 60,20 80,80 100,40 120,70 140,10 160,90 180,50 200,75 220,25 240,85 260,45 280,65 300,30 320,70 340,50"
+        stroke="oklch(65% 0.18 270)" stroke-width="1.5" opacity="0.8"/>
+      <polyline points="0,60 20,55 40,65 60,50 80,70 100,55 120,62 140,48 160,72 180,58 200,64 220,52 240,68 260,56 280,63 300,53 320,66 340,60"
+        stroke="oklch(65% 0.18 270)" stroke-width="0.5" opacity="0.3"/>
+    </svg>
+  </div>
+
+  <div class="hero-meta">
+    <a class="hero-back" href="projects.html">← Проекты</a>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">After Effects · Premiere Pro · ScriptUI</p>
+    <h1 class="hero-title">Motion<br><em>Toolkit</em><br>v3</h1>
+    <p class="hero-desc">
+      Два инструмента для постпродакшна: ScriptUI-панель для After Effects
+      с 9 FX-инструментами — и отдельный MCP-сервер для Premiere Pro,
+      который даёт AI-агентам полный доступ к таймлайну через 27 категорий инструментов.
+    </p>
+    <div class="hero-tags">
+      <span class="hero-tag">After Effects</span>
+      <span class="hero-tag">ExtendScript</span>
+      <span class="hero-tag">ScriptUI</span>
+      <span class="hero-tag">Premiere Pro</span>
+      <span class="hero-tag">CEP</span>
+      <span class="hero-tag">ActionManager</span>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<div class="stats-strip">
+  <div class="stat-item">
+    <div class="stat-num">9</div>
+    <div class="stat-label">инструментов<br>в панели AE</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">v3</div>
+    <div class="stat-label">текущая<br>версия</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">2</div>
+    <div class="stat-label">приложения:<br>AE + PR</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">CEP</div>
+    <div class="stat-label">архитектура<br>расширения</div>
+  </div>
+</div>
+
+<!-- AE Tools -->
+<section class="content-section">
+  <p class="section-label">— After Effects · Motion Toolkit</p>
+
+  <div class="ae-grid">
+
+    <div class="ae-card">
+      <div class="ae-num">01</div>
+      <div class="ae-name">Posterize Time</div>
+      <div class="ae-desc">Применяет Posterize Time с заданным FPS на выбранные или все слои — имитация плёночного дроп-фрейма.</div>
+      <span class="ae-tag">Time</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">02</div>
+      <div class="ae-name">Paper Cutout</div>
+      <div class="ae-desc">Stroke + Roughen Edges на все слои. Рваные края, грубый контур — аппликационный стиль без ротоскопии.</div>
+      <span class="ae-tag">FX</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">03</div>
+      <div class="ae-name">Film Grime</div>
+      <div class="ae-desc">Add Grain + дублирование слоя с Screen блендингом для халации. Тёплый тинт, пересвет в красном канале.</div>
+      <span class="ae-tag">Film</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">04</div>
+      <div class="ae-name">Texture Overlay</div>
+      <div class="ae-desc">Solid-слой с зерном в Overlay режиме поверх компа. Настраиваемая непрозрачность — мгновенная фактура.</div>
+      <span class="ae-tag">Texture</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">05</div>
+      <div class="ae-name">Color Grade</div>
+      <div class="ae-desc">Adjustment-слой с HueSaturation + Brightness&Contrast. Быстрая базовая цветокоррекция в один вызов.</div>
+      <span class="ae-tag">Color</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">06</div>
+      <div class="ae-name">Mirror / Kaleidoscope</div>
+      <div class="ae-desc">Горизонтальный, вертикальный или двойной Mirror-эффект. Центр зеркалирования — середина компа.</div>
+      <span class="ae-tag">FX</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">07</div>
+      <div class="ae-name">Mosaic</div>
+      <div class="ae-desc">Mosaic-пиксель с настройкой плитки H×V. Цензурный квадрат, CCTV-артефакты, lo-res стиль.</div>
+      <span class="ae-tag">FX</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">08</div>
+      <div class="ae-name">Vamp Glow</div>
+      <div class="ae-desc">Screen-дубль слоя + Gaussian Blur с контролем радиуса и непрозрачности. Тёмный мягкий глоу без плагинов.</div>
+      <span class="ae-tag">Glow</span>
+    </div>
+
+    <div class="ae-card">
+      <div class="ae-num">09</div>
+      <div class="ae-name">Threshold Look</div>
+      <div class="ae-desc">Порог по яркости + Tint с тремя режимами: mono, deep blue, crimson. Резкий плакатный вид.</div>
+      <span class="ae-tag">Look</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- PR MCP Server -->
+<section class="content-section">
+  <p class="section-label">— Premiere Pro · MCP Server</p>
+
+  <div class="pipeline" style="margin-bottom:48px">
+    <div class="pipe-step">
+      <div class="pipe-name">Claude / AI Agent</div>
+      <div class="pipe-note">MCP client</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-name">MCP Server (Node.js)</div>
+      <div class="pipe-note">27 категорий инструментов</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-name">CEP Bridge (polling)</div>
+      <div class="pipe-note">cmd_*.jsx → temp dir</div>
+    </div>
+    <div class="pipe-arrow">→</div>
+    <div class="pipe-step">
+      <div class="pipe-name">Premiere Pro</div>
+      <div class="pipe-note">ExtendScript engine</div>
+    </div>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <div class="feature-name">27 категорий MCP-инструментов</div>
+      <div class="feature-desc">Timeline, effects, transitions, audio, text, markers, keyframes, export, captions, playback, workspace, source monitor — AI управляет Premiere напрямую.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+      <div class="feature-name">File-polling bridge</div>
+      <div class="feature-desc">MCP-сервер пишет .jsx-команды в tmp-директорию каждые 200мс. CEP-плагин подхватывает, выполняет через evalScript(), пишет результат обратно.</div>
+    </div>
+    <div class="feature-card">
+      <svg class="feature-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+      </svg>
+      <div class="feature-name">QE DOM доступ</div>
+      <div class="feature-desc">Часть инструментов использует недокументированный QE DOM API — ripple delete, roll edit, slip/slide, скорость клипа. Мощнее стандартного ExtendScript.</div>
+    </div>
+  </div>
+
+  <!-- Tool categories -->
+  <div style="margin-top: 48px; display: flex; flex-wrap: wrap; gap: 6px;">
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">discovery</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">project</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">media</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">sequence</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">timeline</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-accent); border:1px solid oklch(65% 0.18 270 / 0.3); padding:4px 10px;">effects</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">transitions</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-accent); border:1px solid oklch(65% 0.18 270 / 0.3); padding:4px 10px;">audio</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">text</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">markers</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">tracks</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">keyframes</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-accent); border:1px solid oklch(65% 0.18 270 / 0.3); padding:4px 10px;">export</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">captions</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">playback</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">workspace</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">selection</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">clipboard</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">source-monitor</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">inspection</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">scripting</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">metadata</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">advanced</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">health</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">playhead</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">track-targeting</span>
+    <span style="font-family:monospace; font-size:10px; color:var(--v-muted); border:1px solid var(--v-border); padding:4px 10px;">project-manager</span>
+  </div>
+</section>
+
+<!-- Stack -->
+<section class="content-section">
+  <p class="section-label">— Стек</p>
+
+  <div class="stack-row">
+    <span class="stack-name">ExtendScript (JSX)</span>
+    <span class="stack-role">Вся логика AE: эффекты, слои, undo-группы</span>
+    <span class="stack-tag">Core</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">ScriptUI</span>
+    <span class="stack-role">Нативный UI внутри After Effects без CEP</span>
+    <span class="stack-tag">AE UI</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">MCP SDK (Node.js)</span>
+    <span class="stack-role">Model Context Protocol сервер — точка входа для AI-агентов</span>
+    <span class="stack-tag">PR Core</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">CEP / Chromium</span>
+    <span class="stack-role">Bridge-плагин внутри Premiere: polling tmp-директории каждые 200мс</span>
+    <span class="stack-tag">PR Bridge</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">csInterface.js</span>
+    <span class="stack-role">JS ↔ ExtendScript вызовы внутри CEP-плагина</span>
+    <span class="stack-tag">PR Bridge</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">QE DOM API</span>
+    <span class="stack-role">Недокументированный API PR для ripple/roll/slip/slide/speed</span>
+    <span class="stack-tag">PR Internal</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">AE ActionManager API</span>
+    <span class="stack-role">Низкоуровневый доступ к внутренним командам After Effects</span>
+    <span class="stack-tag">AE Internal</span>
+  </div>
+  <div class="stack-row">
+    <span class="stack-name">BlendingMode API</span>
+    <span class="stack-role">Screen, Overlay — программный контроль режимов наложения в AE</span>
+    <span class="stack-tag">AE Layers</span>
+  </div>
+</section>
+
+<footer class="site-footer" style="border-top-color: var(--v-border);">
+  <span>© 2026 Кирилл Цыганов</span>
+  <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+</footer>
+
+</div>
+
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

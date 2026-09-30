@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Material Design 3 — Component Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,300;8..144,400;8..144,500;8..144,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  <style>
+    /* ── MD3 Token System ─────────────────────────────────────── */
+    :root {
+      /* Light scheme — Purple seed */
+      --md-sys-color-primary:                  #6750A4;
+      --md-sys-color-on-primary:               #FFFFFF;
+      --md-sys-color-primary-container:        #EADDFF;
+      --md-sys-color-on-primary-container:     #21005D;
+      --md-sys-color-secondary:                #625B71;
+      --md-sys-color-on-secondary:             #FFFFFF;
+      --md-sys-color-secondary-container:      #E8DEF8;
+      --md-sys-color-on-secondary-container:   #1D192B;
+      --md-sys-color-tertiary:                 #7D5260;
+      --md-sys-color-on-tertiary:              #FFFFFF;
+      --md-sys-color-tertiary-container:       #FFD8E4;
+      --md-sys-color-on-tertiary-container:    #31111D;
+      --md-sys-color-error:                    #B3261E;
+      --md-sys-color-on-error:                 #FFFFFF;
+      --md-sys-color-error-container:          #F9DEDC;
+      --md-sys-color-on-error-container:       #410E0B;
+      --md-sys-color-surface:                  #FEF7FF;
+      --md-sys-color-on-surface:               #1D1B20;
+      --md-sys-color-on-surface-variant:       #49454F;
+      --md-sys-color-surface-container-lowest: #FFFFFF;
+      --md-sys-color-surface-container-low:    #F7F2FA;
+      --md-sys-color-surface-container:        #F3EDF7;
+      --md-sys-color-surface-container-high:   #ECE6F0;
+      --md-sys-color-surface-container-highest:#E6E0E9;
+      --md-sys-color-inverse-surface:          #322F35;
+      --md-sys-color-inverse-on-surface:       #F5EFF7;
+      --md-sys-color-inverse-primary:          #D0BCFF;
+      --md-sys-color-outline:                  #79747E;
+      --md-sys-color-outline-variant:          #CAC4D0;
+      --md-sys-color-scrim:                    #000000;
+
+      /* Shape */
+      --md-sys-shape-corner-none:              0px;
+      --md-sys-shape-corner-extra-small:       4px;
+      --md-sys-shape-corner-small:             8px;
+      --md-sys-shape-corner-medium:            12px;
+      --md-sys-shape-corner-large:             16px;
+      --md-sys-shape-corner-extra-large:       28px;
+      --md-sys-shape-corner-full:              9999px;
+
+      /* Typography */
+      --md-sys-typescale-font: 'Roboto Flex', sans-serif;
+
+      /* Motion */
+      --md-sys-motion-easing-emphasized:            cubic-bezier(0.2, 0, 0, 1);
+      --md-sys-motion-easing-emphasized-decelerate: cubic-bezier(0.05, 0.7, 0.1, 1);
+      --md-sys-motion-easing-emphasized-accelerate: cubic-bezier(0.3, 0, 0.8, 0.15);
+      --md-sys-motion-easing-standard:              cubic-bezier(0.2, 0, 0, 1);
+      --md-sys-motion-duration-short4:   200ms;
+      --md-sys-motion-duration-medium2:  300ms;
+      --md-sys-motion-duration-medium4:  400ms;
+      --md-sys-motion-duration-long2:    500ms;
+    }
+
+    [data-theme="dark"] {
+      --md-sys-color-primary:                  #D0BCFF;
+      --md-sys-color-on-primary:               #381E72;
+      --md-sys-color-primary-container:        #4F378B;
+      --md-sys-color-on-primary-container:     #EADDFF;
+      --md-sys-color-secondary:                #CCC2DC;
+      --md-sys-color-on-secondary:             #332D41;
+      --md-sys-color-secondary-container:      #4A4458;
+      --md-sys-color-on-secondary-container:   #E8DEF8;
+      --md-sys-color-tertiary:                 #EFB8C8;
+      --md-sys-color-on-tertiary:              #492532;
+      --md-sys-color-tertiary-container:       #633B48;
+      --md-sys-color-on-tertiary-container:    #FFD8E4;
+      --md-sys-color-error:                    #F2B8B5;
+      --md-sys-color-on-error:                 #601410;
+      --md-sys-color-error-container:          #8C1D18;
+      --md-sys-color-on-error-container:       #F9DEDC;
+      --md-sys-color-surface:                  #141218;
+      --md-sys-color-on-surface:               #E6E0E9;
+      --md-sys-color-on-surface-variant:       #CAC4D0;
+      --md-sys-color-surface-container-lowest: #0F0D13;
+      --md-sys-color-surface-container-low:    #1D1B20;
+      --md-sys-color-surface-container:        #211F26;
+      --md-sys-color-surface-container-high:   #2B2930;
+      --md-sys-color-surface-container-highest:#36343B;
+      --md-sys-color-inverse-surface:          #E6E0E9;
+      --md-sys-color-inverse-on-surface:       #322F35;
+      --md-sys-color-inverse-primary:          #6750A4;
+      --md-sys-color-outline:                  #938F99;
+      --md-sys-color-outline-variant:          #49454F;
+    }
+
+    /* ── Base Reset ───────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--md-sys-typescale-font);
+      background: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      transition:
+        background var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard),
+        color      var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+      min-height: 100vh;
+    }
+
+    /* ── App Shell ────────────────────────────────────────────── */
+    .app { display: flex; min-height: 100vh; }
+
+    /* Nav rail (≥600px) */
+    .nav-rail {
+      width: 88px;
+      background: var(--md-sys-color-surface-container-low);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 16px 0;
+      gap: 4px;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      border-right: 1px solid var(--md-sys-color-outline-variant);
+      z-index: 100;
+      transition: background var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    }
+
+    .nav-rail__logo {
+      width: 48px; height: 48px;
+      border-radius: var(--md-sys-shape-corner-medium);
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
+    }
+
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 4px; width: 72px; padding: 4px;
+      border-radius: var(--md-sys-shape-corner-full);
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--md-sys-color-on-surface-variant);
+      transition: color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      position: relative;
+    }
+
+    .nav-item__indicator {
+      width: 64px; height: 32px;
+      border-radius: var(--md-sys-shape-corner-full);
+      display: flex; align-items: center; justify-content: center;
+      transition:
+        background var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
+        width      var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
+    }
+
+    .nav-item.active .nav-item__indicator {
+      background: var(--md-sys-color-secondary-container);
+    }
+    .nav-item.active { color: var(--md-sys-color-on-surface); }
+    .nav-item.active .material-symbols-outlined { font-variation-settings: 'FILL' 1; }
+
+    .nav-item__label {
+      font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: 0.5px;
+    }
+
+    .nav-item:hover .nav-item__indicator {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 8%, transparent);
+    }
+    .nav-item.active:hover .nav-item__indicator {
+      background: color-mix(in srgb, var(--md-sys-color-secondary-container) 92%, var(--md-sys-color-on-surface-variant) 8%);
+    }
+
+    .material-symbols-outlined {
+      font-size: 24px;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* Main content offset for rail */
+    .main {
+      margin-left: 88px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top App Bar */
+    .top-app-bar {
+      height: 64px;
+      padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--md-sys-color-surface);
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      position: sticky; top: 0; z-index: 50;
+      transition: background var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-standard);
+    }
+
+    .top-app-bar__title {
+      font-size: 22px; font-weight: 400; line-height: 28px; letter-spacing: 0;
+    }
+
+    .top-app-bar__actions { display: flex; gap: 8px; align-items: center; }
+
+    /* ── Icon Button ──────────────────────────────────────────── */
+    .icon-btn {
+      width: 48px; height: 48px;
+      border-radius: var(--md-sys-shape-corner-full);
+      border: none; background: transparent;
+      color: var(--md-sys-color-on-surface-variant);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition:
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        color      var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      position: relative; overflow: hidden;
+    }
+    .icon-btn:hover {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 8%, transparent);
+    }
+    .icon-btn:active {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 12%, transparent);
+    }
+    .icon-btn.filled {
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+    .icon-btn.filled:hover {
+      background: color-mix(in srgb, var(--md-sys-color-primary) 92%, var(--md-sys-color-on-primary) 8%);
+    }
+
+    /* ── Content Body ─────────────────────────────────────────── */
+    .content {
+      padding: 32px 24px;
+      max-width: 1040px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex; flex-direction: column; gap: 48px;
+    }
+
+    /* ── Section ──────────────────────────────────────────────── */
+    .section-header {
+      margin-bottom: 24px;
+    }
+    .section-header h2 {
+      font-size: 28px; font-weight: 400; line-height: 36px; letter-spacing: 0;
+      color: var(--md-sys-color-on-surface);
+    }
+    .section-header p {
+      font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0.25px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 8px;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────────── */
+    .hero {
+      background: var(--md-sys-color-primary-container);
+      border-radius: var(--md-sys-shape-corner-extra-large);
+      padding: 48px 40px;
+      display: flex; flex-direction: column; gap: 24px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, color-mix(in srgb, var(--md-sys-color-tertiary-container) 40%, transparent) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__eyebrow {
+      font-size: 12px; font-weight: 500; line-height: 16px; letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--md-sys-color-on-primary-container);
+      opacity: 0.7;
+    }
+    .hero__title {
+      font-size: 57px; font-weight: 400; line-height: 64px; letter-spacing: -0.25px;
+      color: var(--md-sys-color-on-primary-container);
+    }
+    .hero__title strong { font-weight: 700; }
+    .hero__subtitle {
+      font-size: 16px; font-weight: 400; line-height: 24px; letter-spacing: 0.5px;
+      color: var(--md-sys-color-on-primary-container);
+      max-width: 520px; opacity: 0.85;
+    }
+    .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+
+    /* ── Buttons ──────────────────────────────────────────────── */
+    .btn {
+      height: 40px;
+      padding: 0 24px;
+      border-radius: var(--md-sys-shape-corner-full);
+      border: none;
+      font-family: var(--md-sys-typescale-font);
+      font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: 0.1px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition:
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        box-shadow  var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        transform   var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      position: relative; overflow: hidden;
+      white-space: nowrap;
+    }
+    .btn:active { transform: scale(0.98); }
+
+    .btn-filled {
+      background: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+    .btn-filled:hover {
+      background: color-mix(in srgb, var(--md-sys-color-primary) 92%, var(--md-sys-color-on-primary) 8%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    }
+
+    .btn-tonal {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+    }
+    .btn-tonal:hover {
+      background: color-mix(in srgb, var(--md-sys-color-secondary-container) 92%, var(--md-sys-color-on-secondary-container) 8%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    }
+
+    .btn-outlined {
+      background: transparent;
+      color: var(--md-sys-color-primary);
+      border: 1px solid var(--md-sys-color-outline);
+    }
+    .btn-outlined:hover {
+      background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+    }
+
+    .btn-elevated {
+      background: var(--md-sys-color-surface-container-low);
+      color: var(--md-sys-color-primary);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    }
+    .btn-elevated:hover {
+      background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 92%, var(--md-sys-color-primary) 8%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+    }
+
+    .btn-text {
+      background: transparent;
+      color: var(--md-sys-color-primary);
+      padding: 0 12px;
+    }
+    .btn-text:hover {
+      background: color-mix(in srgb, var(--md-sys-color-primary) 8%, transparent);
+    }
+
+    .btn .material-symbols-outlined { font-size: 18px; }
+
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+    /* ── FAB ──────────────────────────────────────────────────── */
+    .fab {
+      position: fixed; bottom: 24px; right: 24px;
+      height: 56px; padding: 0 16px;
+      border-radius: var(--md-sys-shape-corner-large);
+      background: var(--md-sys-color-primary-container);
+      color: var(--md-sys-color-on-primary-container);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--md-sys-typescale-font);
+      font-size: 14px; font-weight: 500; letter-spacing: 0.1px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+      z-index: 200;
+      transition:
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        box-shadow  var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        transform   var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized);
+    }
+    .fab:hover {
+      background: color-mix(in srgb, var(--md-sys-color-primary-container) 92%, var(--md-sys-color-on-primary-container) 8%);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+    }
+    .fab:active { transform: scale(0.97); }
+
+    /* ── Cards ────────────────────────────────────────────────── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: var(--md-sys-shape-corner-medium);
+      overflow: hidden;
+      transition:
+        box-shadow  var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        transform   var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-2px); }
+
+    .card--elevated {
+      background: var(--md-sys-color-surface-container-low);
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    }
+    .card--elevated:hover {
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 2px 6px 2px rgba(0,0,0,.15);
+    }
+
+    .card--outlined {
+      background: var(--md-sys-color-surface);
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .card--outlined:hover {
+      box-shadow: 0 1px 2px rgba(0,0,0,.3), 0 1px 3px 1px rgba(0,0,0,.15);
+    }
+
+    .card--filled {
+      background: var(--md-sys-color-surface-container-highest);
+    }
+    .card--filled:hover {
+      background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, var(--md-sys-color-on-surface) 8%);
+    }
+
+    .card__media {
+      width: 100%; aspect-ratio: 16/9;
+      background: var(--md-sys-color-primary-container);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .card__media-icon {
+      font-size: 48px;
+      color: var(--md-sys-color-on-primary-container);
+    }
+    .card__media-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg,
+        var(--md-sys-color-primary-container),
+        var(--md-sys-color-secondary-container));
+    }
+
+    .card__content { padding: 16px; }
+    .card__overline {
+      font-size: 11px; font-weight: 500; letter-spacing: 1.5px;
+      text-transform: uppercase; color: var(--md-sys-color-on-surface-variant);
+      margin-bottom: 4px;
+    }
+    .card__title {
+      font-size: 16px; font-weight: 500; line-height: 24px; letter-spacing: 0.15px;
+      color: var(--md-sys-color-on-surface);
+    }
+    .card__body {
+      font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: 0.25px;
+      color: var(--md-sys-color-on-surface-variant);
+      margin-top: 8px;
+    }
+    .card__actions {
+      padding: 8px 8px 12px;
+      display: flex; gap: 8px; justify-content: flex-end;
+    }
+
+    /* ── Chips ────────────────────────────────────────────────── */
+    .chip-set { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    .chip {
+      height: 32px; padding: 0 16px;
+      border-radius: var(--md-sys-shape-corner-full);
+      font-family: var(--md-sys-typescale-font);
+      font-size: 14px; font-weight: 500; line-height: 20px; letter-spacing: 0.1px;
+      cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition:
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      position: relative; overflow: hidden;
+    }
+    .chip .material-symbols-outlined { font-size: 18px; }
+
+    .chip-assist {
+      background: var(--md-sys-color-surface-container-low);
+      color: var(--md-sys-color-on-surface);
+      border: 1px solid var(--md-sys-color-outline);
+    }
+    .chip-assist:hover {
+      background: color-mix(in srgb, var(--md-sys-color-surface-container-low) 92%, var(--md-sys-color-on-surface) 8%);
+    }
+
+    .chip-filter {
+      background: transparent;
+      color: var(--md-sys-color-on-surface-variant);
+      border: 1px solid var(--md-sys-color-outline);
+    }
+    .chip-filter:hover {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface-variant) 8%, transparent);
+    }
+    .chip-filter.selected {
+      background: var(--md-sys-color-secondary-container);
+      color: var(--md-sys-color-on-secondary-container);
+      border-color: transparent;
+    }
+
+    .chip-input {
+      background: var(--md-sys-color-surface-container-highest);
+      color: var(--md-sys-color-on-surface);
+      border: none;
+    }
+
+    .chip-suggestion {
+      background: var(--md-sys-color-surface-container-low);
+      color: var(--md-sys-color-on-surface);
+      border: 1px solid var(--md-sys-color-outline);
+    }
+
+    /* ── Text Fields ──────────────────────────────────────────── */
+    .form { display: flex; flex-direction: column; gap: 20px; max-width: 560px; }
+
+    .field {
+      position: relative;
+      display: flex; flex-direction: column;
+    }
+
+    /* Outlined text field */
+    .field--outlined {
+      background: transparent;
+    }
+    .field--outlined .field__input {
+      height: 56px;
+      padding: 16px;
+      border: 1px solid var(--md-sys-color-outline);
+      border-radius: var(--md-sys-shape-corner-small);
+      background: transparent;
+      color: var(--md-sys-color-on-surface);
+      font-family: var(--md-sys-typescale-font);
+      font-size: 16px; font-weight: 400; line-height: 24px;
+      outline: none;
+      transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      width: 100%;
+    }
+    .field--outlined .field__input:hover {
+      border-color: var(--md-sys-color-on-surface);
+    }
+    .field--outlined .field__input:focus {
+      border-width: 2px;
+      border-color: var(--md-sys-color-primary);
+    }
+    .field--outlined .field__label {
+      position: absolute;
+      left: 12px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px; color: var(--md-sys-color-on-surface-variant);
+      pointer-events: none;
+      padding: 0 4px;
+      background: var(--md-sys-color-surface);
+      transition:
+        top      var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        font-size var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        color    var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .field--outlined .field__input:focus ~ .field__label,
+    .field--outlined .field__input:not(:placeholder-shown) ~ .field__label {
+      top: 0; font-size: 12px;
+      color: var(--md-sys-color-primary);
+    }
+    .field--outlined .field__input:not(:focus):not(:placeholder-shown) ~ .field__label {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    /* Filled text field */
+    .field--filled .field__input {
+      height: 56px;
+      padding: 20px 16px 4px;
+      background: var(--md-sys-color-surface-container-highest);
+      border: none;
+      border-bottom: 1px solid var(--md-sys-color-on-surface-variant);
+      border-radius: var(--md-sys-shape-corner-small) var(--md-sys-shape-corner-small) 0 0;
+      color: var(--md-sys-color-on-surface);
+      font-family: var(--md-sys-typescale-font);
+      font-size: 16px; font-weight: 400; line-height: 24px;
+      outline: none;
+      width: 100%;
+      transition:
+        background      var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        border-color    var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .field--filled .field__input:hover {
+      background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, var(--md-sys-color-on-surface) 8%);
+    }
+    .field--filled .field__input:focus {
+      border-bottom: 2px solid var(--md-sys-color-primary);
+      background: color-mix(in srgb, var(--md-sys-color-surface-container-highest) 92%, var(--md-sys-color-on-surface) 8%);
+    }
+    .field--filled .field__label {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 16px; color: var(--md-sys-color-on-surface-variant);
+      pointer-events: none;
+      transition:
+        top      var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        font-size var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        color    var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .field--filled .field__input:focus ~ .field__label,
+    .field--filled .field__input:not(:placeholder-shown) ~ .field__label {
+      top: 14px; font-size: 12px;
+      color: var(--md-sys-color-primary);
+    }
+    .field--filled .field__input:not(:focus):not(:placeholder-shown) ~ .field__label {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .field__supporting {
+      font-size: 12px; color: var(--md-sys-color-on-surface-variant);
+      padding: 4px 16px 0;
+    }
+
+    .form__actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+    /* ── Switch ───────────────────────────────────────────────── */
+    .switch-list { display: flex; flex-direction: column; gap: 12px; }
+    .switch-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--md-sys-color-surface-container);
+      border-radius: var(--md-sys-shape-corner-medium);
+    }
+    .switch-row__label {
+      font-size: 14px; font-weight: 500; color: var(--md-sys-color-on-surface);
+    }
+    .switch-row__sub {
+      font-size: 12px; color: var(--md-sys-color-on-surface-variant);
+    }
+
+    .switch {
+      position: relative; width: 52px; height: 32px; cursor: pointer;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .switch__track {
+      position: absolute; inset: 0;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-surface-container-highest);
+      border: 2px solid var(--md-sys-color-outline);
+      transition:
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .switch input:checked ~ .switch__track {
+      background: var(--md-sys-color-primary);
+      border-color: var(--md-sys-color-primary);
+    }
+    .switch__thumb {
+      position: absolute; top: 50%; left: 6px;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-outline);
+      transition:
+        left     var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
+        width    var(--md-sys-motion-duration-medium2) var(--md-sys-motion-easing-emphasized),
+        background var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+      pointer-events: none;
+    }
+    .switch input:checked ~ .switch__thumb {
+      left: 28px; width: 24px; height: 24px;
+      left: 22px; top: 50%;
+      background: var(--md-sys-color-on-primary);
+    }
+
+    /* ── Radio & Checkbox ─────────────────────────────────────── */
+    .selection-group { display: flex; flex-direction: column; gap: 8px; }
+    .selection-item {
+      display: flex; align-items: center; gap: 12px;
+      cursor: pointer; padding: 8px;
+      border-radius: var(--md-sys-shape-corner-small);
+      font-size: 14px; color: var(--md-sys-color-on-surface);
+    }
+    .selection-item:hover {
+      background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+    }
+
+    .radio-custom {
+      width: 20px; height: 20px; flex-shrink: 0;
+      border-radius: 50%;
+      border: 2px solid var(--md-sys-color-on-surface-variant);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .radio-custom.checked {
+      border-color: var(--md-sys-color-primary);
+    }
+    .radio-custom.checked::after {
+      content: '';
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--md-sys-color-primary);
+    }
+
+    .checkbox-custom {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      border: 2px solid var(--md-sys-color-on-surface-variant);
+      display: flex; align-items: center; justify-content: center;
+      transition:
+        border-color var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        background  var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .checkbox-custom.checked {
+      background: var(--md-sys-color-primary);
+      border-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+    }
+    .checkbox-custom.checked .material-symbols-outlined { font-size: 14px; }
+
+    /* ── Progress ─────────────────────────────────────────────── */
+    .progress-section { display: flex; flex-direction: column; gap: 24px; }
+
+    .linear-progress {
+      height: 4px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-secondary-container);
+      overflow: hidden;
+      position: relative;
+    }
+    .linear-progress__indicator {
+      height: 100%;
+      background: var(--md-sys-color-primary);
+      border-radius: var(--md-sys-shape-corner-full);
+      transition: width 0.6s var(--md-sys-motion-easing-emphasized);
+    }
+    .linear-progress--indeterminate .linear-progress__indicator {
+      width: 40%;
+      animation: linear-indeterminate 2s var(--md-sys-motion-easing-standard) infinite;
+    }
+    @keyframes linear-indeterminate {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(350%); }
+    }
+
+    .circular-progress-row { display: flex; gap: 24px; align-items: center; }
+    .circular-progress {
+      width: 48px; height: 48px;
+      position: relative;
+    }
+    .circular-progress svg {
+      transform: rotate(-90deg);
+      width: 100%; height: 100%;
+    }
+    .circular-progress__track {
+      fill: none;
+      stroke: var(--md-sys-color-secondary-container);
+      stroke-width: 4;
+    }
+    .circular-progress__indicator {
+      fill: none;
+      stroke: var(--md-sys-color-primary);
+      stroke-width: 4;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.6s var(--md-sys-motion-easing-emphasized);
+    }
+    .circular-progress--indeterminate .circular-progress__indicator {
+      animation: circular-indeterminate 1.5s linear infinite;
+    }
+    @keyframes circular-indeterminate {
+      0%   { stroke-dashoffset: 100; }
+      50%  { stroke-dashoffset: 20; }
+      100% { stroke-dashoffset: 100; transform: rotate(360deg); }
+    }
+
+    /* ── Snackbar ─────────────────────────────────────────────── */
+    .snackbar {
+      position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--md-sys-color-inverse-surface);
+      color: var(--md-sys-color-inverse-on-surface);
+      padding: 14px 16px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      font-size: 14px; line-height: 20px;
+      display: flex; align-items: center; gap: 16px;
+      min-width: 300px; max-width: 600px;
+      box-shadow: 0 3px 5px rgba(0,0,0,.2), 0 6px 10px rgba(0,0,0,.14), 0 1px 18px rgba(0,0,0,.12);
+      opacity: 0;
+      transition:
+        transform var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-emphasized-decelerate),
+        opacity  var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
+      z-index: 300;
+      pointer-events: none;
+    }
+    .snackbar.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .snackbar__action {
+      color: var(--md-sys-color-inverse-primary);
+      background: none; border: none;
+      font-family: var(--md-sys-typescale-font);
+      font-size: 14px; font-weight: 500; letter-spacing: 0.1px;
+      cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── Color Swatches ───────────────────────────────────────── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 4px;
+    }
+    .swatch {
+      height: 64px;
+      border-radius: var(--md-sys-shape-corner-small);
+      padding: 8px 12px;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      font-size: 11px; font-weight: 500; letter-spacing: 0.5px;
+    }
+    .swatch__name { opacity: 0.8; }
+
+    /* ── Typography Scale ─────────────────────────────────────── */
+    .type-scale { display: flex; flex-direction: column; gap: 8px; }
+    .type-row {
+      display: flex; align-items: baseline; gap: 16px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .type-row__meta {
+      width: 140px; flex-shrink: 0;
+      font-size: 11px; color: var(--md-sys-color-on-surface-variant);
+    }
+
+    /* ── Divider ──────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--md-sys-color-outline-variant);
+    }
+
+    /* ── Badge ────────────────────────────────────────────────── */
+    .badge-demo { display: flex; gap: 24px; align-items: center; }
+    .badge-wrap { position: relative; display: inline-flex; }
+    .badge {
+      position: absolute; top: 0; right: 0;
+      transform: translate(40%, -40%);
+      min-width: 16px; height: 16px;
+      border-radius: var(--md-sys-shape-corner-full);
+      background: var(--md-sys-color-error);
+      color: var(--md-sys-color-on-error);
+      font-size: 11px; font-weight: 500; line-height: 16px;
+      padding: 0 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .badge--dot {
+      width: 6px; height: 6px; min-width: 6px;
+      padding: 0; top: 2px; right: 2px;
+      transform: none;
+    }
+
+    /* ── Tooltip ──────────────────────────────────────────────── */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip {
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: var(--md-sys-color-inverse-surface);
+      color: var(--md-sys-color-inverse-on-surface);
+      padding: 4px 8px;
+      border-radius: var(--md-sys-shape-corner-extra-small);
+      font-size: 12px; font-weight: 400; line-height: 16px; letter-spacing: 0.4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition:
+        opacity   var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard),
+        transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard);
+    }
+    .tooltip-wrap:hover .tooltip {
+      opacity: 1; transform: translateX(-50%) scale(1);
+    }
+
+    /* ── Two-column grid ──────────────────────────────────────── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    /* ── Bottom nav (compact <600px) ──────────────────────────── */
+    .bottom-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0;
+      height: 80px;
+      background: var(--md-sys-color-surface-container);
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      z-index: 100;
+      justify-content: space-around; align-items: center;
+      padding-bottom: 16px;
+    }
+    .bottom-nav .nav-item {
+      flex-direction: column; width: 64px;
+    }
+    .bottom-nav .nav-item__indicator {
+      width: 64px; height: 32px;
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 599px) {
+      .nav-rail { display: none; }
+      .main { margin-left: 0; margin-bottom: 80px; }
+      .bottom-nav { display: flex; }
+      .hero__title { font-size: 36px; line-height: 44px; }
+      .two-col { grid-template-columns: 1fr; }
+      .fab { bottom: 96px; }
+    }
+
+    @media (min-width: 1200px) {
+      .content { padding: 40px 48px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Navigation Rail -->
+  <nav class="nav-rail" aria-label="Main navigation">
+    <div class="nav-rail__logo">
+      <span class="material-symbols-outlined">palette</span>
+    </div>
+
+    <a class="nav-item active" data-section="overview" href="#overview" onclick="navigate(event, 'overview')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">dashboard</span>
+      </div>
+      <span class="nav-item__label">Overview</span>
+    </a>
+    <a class="nav-item" data-section="components" href="#components" onclick="navigate(event, 'components')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">widgets</span>
+      </div>
+      <span class="nav-item__label">Components</span>
+    </a>
+    <a class="nav-item" data-section="forms" href="#forms" onclick="navigate(event, 'forms')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">edit_note</span>
+      </div>
+      <span class="nav-item__label">Forms</span>
+    </a>
+    <a class="nav-item" data-section="tokens" href="#tokens" onclick="navigate(event, 'tokens')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">style</span>
+      </div>
+      <span class="nav-item__label">Tokens</span>
+    </a>
+  </nav>
+
+  <!-- Bottom Nav (mobile) -->
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <a class="nav-item active" data-section="overview" href="#overview" onclick="navigate(event, 'overview')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">dashboard</span>
+      </div>
+      <span class="nav-item__label">Overview</span>
+    </a>
+    <a class="nav-item" data-section="components" href="#components" onclick="navigate(event, 'components')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">widgets</span>
+      </div>
+      <span class="nav-item__label">Components</span>
+    </a>
+    <a class="nav-item" data-section="forms" href="#forms" onclick="navigate(event, 'forms')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">edit_note</span>
+      </div>
+      <span class="nav-item__label">Forms</span>
+    </a>
+    <a class="nav-item" data-section="tokens" href="#tokens" onclick="navigate(event, 'tokens')">
+      <div class="nav-item__indicator">
+        <span class="material-symbols-outlined">style</span>
+      </div>
+      <span class="nav-item__label">Tokens</span>
+    </a>
+  </nav>
+
+  <div class="main">
+    <!-- Top App Bar -->
+    <header class="top-app-bar">
+      <h1 class="top-app-bar__title">Material Design 3</h1>
+      <div class="top-app-bar__actions">
+        <div class="tooltip-wrap">
+          <button class="icon-btn" onclick="showSnackbar('Search coming soon')" aria-label="Search">
+            <span class="material-symbols-outlined">search</span>
+          </button>
+          <span class="tooltip">Search</span>
+        </div>
+        <div class="tooltip-wrap">
+          <button class="icon-btn" id="theme-btn" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+          </button>
+          <span class="tooltip">Toggle dark mode</span>
+        </div>
+        <div class="badge-wrap">
+          <button class="icon-btn" onclick="showSnackbar('3 new notifications')" aria-label="Notifications">
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <span class="badge">3</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <!-- ── Overview Section ── -->
+      <section id="overview">
+
+        <!-- Hero -->
+        <div class="hero">
+          <div class="hero__eyebrow">Material Design 3 · Material You</div>
+          <h2 class="hero__title">Personal. Adaptive.<br><strong>Expressive.</strong></h2>
+          <p class="hero__subtitle">
+            A design system built on tonal color, rounded forms, and motion with
+            spring physics — adapting to every screen size and user preference.
+          </p>
+          <div class="hero__actions">
+            <button class="btn btn-filled" onclick="scrollTo('components')">
+              <span class="material-symbols-outlined">widgets</span>
+              Explore components
+            </button>
+            <button class="btn btn-tonal" onclick="scrollTo('tokens')">
+              <span class="material-symbols-outlined">style</span>
+              View tokens
+            </button>
+            <button class="btn btn-outlined" onclick="toggleTheme()">
+              <span class="material-symbols-outlined">dark_mode</span>
+              Toggle dark mode
+            </button>
+          </div>
+        </div>
+
+        <!-- Typography Scale -->
+        <div class="section-header" style="margin-top: 0;">
+          <h2>Typography Scale</h2>
+          <p>MD3 defines 15 type roles across 5 categories — Display, Headline, Title, Body, Label.</p>
+        </div>
+        <div class="type-scale">
+          <div class="type-row">
+            <div class="type-row__meta">Display Large<br>57sp · 400</div>
+            <div style="font-size:32px;font-weight:400;line-height:1.2;letter-spacing:-0.25px;">Material You</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Headline Medium<br>28sp · 400</div>
+            <div style="font-size:24px;font-weight:400;line-height:36px;">Adaptive &amp; Expressive Design</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Title Large<br>22sp · 400</div>
+            <div style="font-size:22px;font-weight:400;line-height:28px;">Dynamic Color System</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Title Medium<br>16sp · 500</div>
+            <div style="font-size:16px;font-weight:500;line-height:24px;letter-spacing:0.15px;">Shape &amp; Tonal Elevation</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Body Large<br>16sp · 400</div>
+            <div style="font-size:16px;font-weight:400;line-height:24px;letter-spacing:0.5px;">MD3 uses tonal surfaces instead of shadows to communicate depth.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Body Medium<br>14sp · 400</div>
+            <div style="font-size:14px;font-weight:400;line-height:20px;letter-spacing:0.25px;">Spring-based motion physics replace fixed easing curves for components.</div>
+          </div>
+          <div class="type-row">
+            <div class="type-row__meta">Label Large<br>14sp · 500</div>
+            <div style="font-size:14px;font-weight:500;line-height:20px;letter-spacing:0.1px;">Filled button · Chip · Tab label</div>
+          </div>
+          <div class="type-row" style="border-bottom:none;">
+            <div class="type-row__meta">Label Small<br>11sp · 500</div>
+            <div style="font-size:11px;font-weight:500;line-height:16px;letter-spacing:0.5px;text-transform:uppercase;">Caption · Overline · Badge</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── Components Section ── -->
+      <section id="components">
+        <div class="section-header">
+          <h2>Buttons</h2>
+          <p>Five variants from high-emphasis filled to low-emphasis text, plus icon buttons.</p>
+        </div>
+        <div class="btn-group">
+          <button class="btn btn-filled" onclick="showSnackbar('Filled button clicked')">
+            <span class="material-symbols-outlined">add</span>
+            Filled
+          </button>
+          <button class="btn btn-tonal" onclick="showSnackbar('Tonal button clicked')">
+            <span class="material-symbols-outlined">bookmark</span>
+            Tonal
+          </button>
+          <button class="btn btn-elevated" onclick="showSnackbar('Elevated button clicked')">
+            <span class="material-symbols-outlined">cloud_upload</span>
+            Elevated
+          </button>
+          <button class="btn btn-outlined" onclick="showSnackbar('Outlined button clicked')">
+            <span class="material-symbols-outlined">share</span>
+            Outlined
+          </button>
+          <button class="btn btn-text" onclick="showSnackbar('Text button clicked')">
+            Learn more
+          </button>
+        </div>
+
+        <div class="btn-group" style="margin-top:16px;">
+          <div class="tooltip-wrap">
+            <button class="icon-btn" onclick="showSnackbar('Standard icon button')">
+              <span class="material-symbols-outlined">favorite</span>
+            </button>
+            <span class="tooltip">Favourite</span>
+          </div>
+          <div class="tooltip-wrap">
+            <button class="icon-btn filled" onclick="showSnackbar('Filled icon button')">
+              <span class="material-symbols-outlined">edit</span>
+            </button>
+            <span class="tooltip">Edit</span>
+          </div>
+          <div class="tooltip-wrap">
+            <button class="icon-btn" style="background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);" onclick="showSnackbar('Tonal icon button')">
+              <span class="material-symbols-outlined">star</span>
+            </button>
+            <span class="tooltip">Star</span>
+          </div>
+          <div class="tooltip-wrap">
+            <button class="icon-btn" style="border:1px solid var(--md-sys-color-outline);" onclick="showSnackbar('Outlined icon button')">
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+            <span class="tooltip">More options</span>
+          </div>
+        </div>
+
+        <!-- Chips -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Chips</h2>
+          <p>Assist, filter (click to select), input, and suggestion variants.</p>
+        </div>
+        <div class="chip-set" id="chip-set">
+          <button class="chip chip-assist" onclick="showSnackbar('Setting up…')">
+            <span class="material-symbols-outlined">settings</span>
+            Settings
+          </button>
+          <button class="chip chip-filter" onclick="toggleChip(this)">Design</button>
+          <button class="chip chip-filter" onclick="toggleChip(this)">Development</button>
+          <button class="chip chip-filter selected">
+            <span class="material-symbols-outlined">check</span>
+            Material 3
+          </button>
+          <button class="chip chip-filter" onclick="toggleChip(this)">Motion</button>
+          <button class="chip chip-input">
+            <span class="material-symbols-outlined">person</span>
+            Satoshi
+            <span class="material-symbols-outlined" onclick="showSnackbar('Chip removed')" style="cursor:pointer;font-size:16px;">close</span>
+          </button>
+          <button class="chip chip-suggestion" onclick="showSnackbar('Suggestion applied')">Purple theme</button>
+          <button class="chip chip-suggestion" onclick="showSnackbar('Suggestion applied')">Dark mode</button>
+        </div>
+
+        <!-- Cards -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Cards</h2>
+          <p>Elevated, outlined, and filled variants — all with tonal, not shadow-based, depth.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card card--elevated" onclick="showSnackbar('Elevated card')">
+            <div class="card__media">
+              <div class="card__media-bg"></div>
+              <span class="material-symbols-outlined card__media-icon">layers</span>
+            </div>
+            <div class="card__content">
+              <div class="card__overline">Elevated</div>
+              <div class="card__title">Tonal elevation</div>
+              <div class="card__body">Depth communicated through surface color tint, not drop shadows.</div>
+            </div>
+            <div class="card__actions">
+              <button class="btn btn-text" style="height:36px;" onclick="event.stopPropagation();showSnackbar('Learn more')">Learn more</button>
+              <button class="btn btn-filled" style="height:36px;padding:0 16px;" onclick="event.stopPropagation();showSnackbar('Action!')">Action</button>
+            </div>
+          </div>
+
+          <div class="card card--outlined" onclick="showSnackbar('Outlined card')">
+            <div class="card__media" style="background:var(--md-sys-color-tertiary-container);">
+              <div class="card__media-bg" style="background:linear-gradient(135deg,var(--md-sys-color-tertiary-container),var(--md-sys-color-primary-container));"></div>
+              <span class="material-symbols-outlined card__media-icon" style="color:var(--md-sys-color-on-tertiary-container);">palette</span>
+            </div>
+            <div class="card__content">
+              <div class="card__overline">Outlined</div>
+              <div class="card__title">Dynamic color</div>
+              <div class="card__body">A single seed color generates a full harmonious scheme across all roles.</div>
+            </div>
+            <div class="card__actions">
+              <button class="btn btn-text" style="height:36px;" onclick="event.stopPropagation();showSnackbar('Learn more')">Learn more</button>
+              <button class="btn btn-tonal" style="height:36px;padding:0 16px;" onclick="event.stopPropagation();showSnackbar('Action!')">Action</button>
+            </div>
+          </div>
+
+          <div class="card card--filled" onclick="showSnackbar('Filled card')">
+            <div class="card__media" style="background:var(--md-sys-color-secondary-container);">
+              <div class="card__media-bg" style="background:linear-gradient(135deg,var(--md-sys-color-secondary-container),var(--md-sys-color-tertiary-container));"></div>
+              <span class="material-symbols-outlined card__media-icon" style="color:var(--md-sys-color-on-secondary-container);">motion_photos_on</span>
+            </div>
+            <div class="card__content">
+              <div class="card__overline">Filled</div>
+              <div class="card__title">Spring motion</div>
+              <div class="card__body">MD3 Expressive introduces physics-based spring animations.</div>
+            </div>
+            <div class="card__actions">
+              <button class="btn btn-text" style="height:36px;" onclick="event.stopPropagation();showSnackbar('Learn more')">Learn more</button>
+              <button class="btn btn-outlined" style="height:36px;padding:0 16px;" onclick="event.stopPropagation();showSnackbar('Action!')">Action</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Badges &amp; Tooltips</h2>
+          <p>Small dot badges and large count badges. Hover any button for a tooltip.</p>
+        </div>
+        <div class="badge-demo">
+          <div class="badge-wrap">
+            <button class="icon-btn" onclick="showSnackbar('3 messages')">
+              <span class="material-symbols-outlined">mail</span>
+            </button>
+            <span class="badge">3</span>
+          </div>
+          <div class="badge-wrap">
+            <button class="icon-btn" onclick="showSnackbar('99+ alerts')">
+              <span class="material-symbols-outlined">notifications</span>
+            </button>
+            <span class="badge">99+</span>
+          </div>
+          <div class="badge-wrap">
+            <button class="icon-btn" onclick="showSnackbar('New update')">
+              <span class="material-symbols-outlined">update</span>
+            </button>
+            <span class="badge badge--dot" style="background:var(--md-sys-color-error);"></span>
+          </div>
+          <div class="tooltip-wrap" style="margin-left:8px;">
+            <button class="btn btn-elevated">
+              <span class="material-symbols-outlined">info</span>
+              Hover me
+            </button>
+            <span class="tooltip">This is a plain tooltip</span>
+          </div>
+        </div>
+
+        <!-- Progress Indicators -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Progress Indicators</h2>
+          <p>Linear and circular, determinate and indeterminate.</p>
+        </div>
+        <div class="progress-section">
+          <div>
+            <p style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">Linear — determinate 65%</p>
+            <div class="linear-progress">
+              <div class="linear-progress__indicator" style="width:65%"></div>
+            </div>
+          </div>
+          <div>
+            <p style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">Linear — indeterminate</p>
+            <div class="linear-progress linear-progress--indeterminate">
+              <div class="linear-progress__indicator"></div>
+            </div>
+          </div>
+          <div class="circular-progress-row">
+            <div>
+              <p style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">Circular 75%</p>
+              <div class="circular-progress">
+                <svg viewBox="0 0 48 48">
+                  <circle class="circular-progress__track" cx="24" cy="24" r="20"/>
+                  <circle class="circular-progress__indicator" cx="24" cy="24" r="20"
+                    stroke-dasharray="125.66"
+                    stroke-dashoffset="31.4"/>
+                </svg>
+              </div>
+            </div>
+            <div>
+              <p style="font-size:12px;color:var(--md-sys-color-on-surface-variant);margin-bottom:8px;">Indeterminate</p>
+              <div class="circular-progress circular-progress--indeterminate">
+                <svg viewBox="0 0 48 48">
+                  <circle class="circular-progress__track" cx="24" cy="24" r="20"/>
+                  <circle class="circular-progress__indicator" cx="24" cy="24" r="20"
+                    stroke-dasharray="125.66"
+                    stroke-dashoffset="80"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── Forms Section ── -->
+      <section id="forms">
+        <div class="two-col">
+          <div>
+            <div class="section-header">
+              <h2>Text Fields</h2>
+              <p>Outlined and filled variants with floating labels.</p>
+            </div>
+            <form class="form" onsubmit="handleSubmit(event)">
+              <div class="field field--outlined">
+                <input class="field__input" type="text" id="name" placeholder=" " autocomplete="name">
+                <label class="field__label" for="name">Full name</label>
+              </div>
+              <div class="field field--outlined">
+                <input class="field__input" type="email" id="email" placeholder=" " autocomplete="email">
+                <label class="field__label" for="email">Email address</label>
+                <span class="field__supporting">We'll never share your email</span>
+              </div>
+              <div class="field field--filled">
+                <input class="field__input" type="text" id="subject" placeholder=" ">
+                <label class="field__label" for="subject">Subject (filled variant)</label>
+              </div>
+              <div class="field field--outlined">
+                <input class="field__input" type="text" id="message" placeholder=" " style="height:80px;padding-top:24px;">
+                <label class="field__label" for="message">Message</label>
+              </div>
+              <div class="form__actions">
+                <button type="reset" class="btn btn-text">Cancel</button>
+                <button type="submit" class="btn btn-filled">
+                  <span class="material-symbols-outlined">send</span>
+                  Send
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div>
+            <div class="section-header">
+              <h2>Selection Controls</h2>
+              <p>Switch, radio buttons, and checkboxes.</p>
+            </div>
+            <div class="switch-list">
+              <div class="switch-row">
+                <div>
+                  <div class="switch-row__label">Dark mode</div>
+                  <div class="switch-row__sub">Reduce eye strain at night</div>
+                </div>
+                <label class="switch" aria-label="Dark mode">
+                  <input type="checkbox" id="dark-switch" onchange="toggleThemeSwitch(this)">
+                  <div class="switch__track"></div>
+                  <div class="switch__thumb"></div>
+                </label>
+              </div>
+              <div class="switch-row">
+                <div>
+                  <div class="switch-row__label">Dynamic color</div>
+                  <div class="switch-row__sub">Adapt to wallpaper palette</div>
+                </div>
+                <label class="switch" aria-label="Dynamic color">
+                  <input type="checkbox" checked>
+                  <div class="switch__track"></div>
+                  <div class="switch__thumb"></div>
+                </label>
+              </div>
+              <div class="switch-row">
+                <div>
+                  <div class="switch-row__label">High contrast</div>
+                  <div class="switch-row__sub">Increase text legibility</div>
+                </div>
+                <label class="switch" aria-label="High contrast">
+                  <input type="checkbox">
+                  <div class="switch__track"></div>
+                  <div class="switch__thumb"></div>
+                </label>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;">
+              <p style="font-size:14px;font-weight:500;color:var(--md-sys-color-on-surface);margin-bottom:8px;">Corner shape</p>
+              <div class="selection-group" id="radio-group">
+                <label class="selection-item" onclick="selectRadio(this)">
+                  <div class="radio-custom checked" aria-checked="true"></div>
+                  <span>Extra large (28dp) — dialogs</span>
+                </label>
+                <label class="selection-item" onclick="selectRadio(this)">
+                  <div class="radio-custom"></div>
+                  <span>Large (16dp) — FABs, drawers</span>
+                </label>
+                <label class="selection-item" onclick="selectRadio(this)">
+                  <div class="radio-custom"></div>
+                  <span>Medium (12dp) — cards</span>
+                </label>
+                <label class="selection-item" onclick="selectRadio(this)">
+                  <div class="radio-custom"></div>
+                  <span>Full (∞) — buttons, chips</span>
+                </label>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;">
+              <p style="font-size:14px;font-weight:500;color:var(--md-sys-color-on-surface);margin-bottom:8px;">Features</p>
+              <div class="selection-group">
+                <label class="selection-item" onclick="toggleCheckbox(this)">
+                  <div class="checkbox-custom checked">
+                    <span class="material-symbols-outlined">check</span>
+                  </div>
+                  <span>Dynamic color</span>
+                </label>
+                <label class="selection-item" onclick="toggleCheckbox(this)">
+                  <div class="checkbox-custom checked">
+                    <span class="material-symbols-outlined">check</span>
+                  </div>
+                  <span>Spring motion physics</span>
+                </label>
+                <label class="selection-item" onclick="toggleCheckbox(this)">
+                  <div class="checkbox-custom"></div>
+                  <span>M3 Expressive shape morphing</span>
+                </label>
+                <label class="selection-item" onclick="toggleCheckbox(this)">
+                  <div class="checkbox-custom checked">
+                    <span class="material-symbols-outlined">check</span>
+                  </div>
+                  <span>Adaptive layouts</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <!-- ── Tokens Section ── -->
+      <section id="tokens">
+        <div class="section-header">
+          <h2>Color Token System</h2>
+          <p>All colors come from <code style="font-size:13px;background:var(--md-sys-color-surface-container);padding:2px 6px;border-radius:4px;">--md-sys-color-*</code> tokens — never hardcoded hex values.</p>
+        </div>
+        <div class="color-grid">
+          <div class="swatch" style="background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);">
+            <span class="swatch__name">Primary</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-on-primary);color:var(--md-sys-color-primary);border:1px solid var(--md-sys-color-outline-variant);">
+            <span class="swatch__name">On Primary</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);">
+            <span class="swatch__name">Primary Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-on-primary-container);color:var(--md-sys-color-primary-container);">
+            <span class="swatch__name">On Primary Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-secondary);color:var(--md-sys-color-on-secondary);">
+            <span class="swatch__name">Secondary</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-secondary-container);color:var(--md-sys-color-on-secondary-container);">
+            <span class="swatch__name">Secondary Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-tertiary);color:var(--md-sys-color-on-tertiary);">
+            <span class="swatch__name">Tertiary</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-tertiary-container);color:var(--md-sys-color-on-tertiary-container);">
+            <span class="swatch__name">Tertiary Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-error);color:var(--md-sys-color-on-error);">
+            <span class="swatch__name">Error</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-error-container);color:var(--md-sys-color-on-error-container);">
+            <span class="swatch__name">Error Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);border:1px solid var(--md-sys-color-outline-variant);">
+            <span class="swatch__name">Surface</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-surface-container);color:var(--md-sys-color-on-surface);">
+            <span class="swatch__name">Surface Container</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-surface-container-high);color:var(--md-sys-color-on-surface);">
+            <span class="swatch__name">Surface Container High</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-surface-container-highest);color:var(--md-sys-color-on-surface);">
+            <span class="swatch__name">Surface Container Highest</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-inverse-surface);color:var(--md-sys-color-inverse-on-surface);">
+            <span class="swatch__name">Inverse Surface</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-outline);color:#fff;">
+            <span class="swatch__name">Outline</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-outline-variant);color:var(--md-sys-color-on-surface);">
+            <span class="swatch__name">Outline Variant</span>
+          </div>
+          <div class="swatch" style="background:var(--md-sys-color-inverse-primary);color:var(--md-sys-color-on-primary-container);">
+            <span class="swatch__name">Inverse Primary</span>
+          </div>
+        </div>
+
+        <!-- Elevation via tonal surface -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Elevation via Tonal Surface</h2>
+          <p>MD3 uses surface tint color — not shadows — to communicate depth.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px;">
+          <div style="height:80px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-lowest);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant);">Level 0</span>
+            <span style="font-size:14px;font-weight:500;">Surface</span>
+          </div>
+          <div style="height:80px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-low);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant);">Level 1</span>
+            <span style="font-size:14px;font-weight:500;">+5% tint</span>
+          </div>
+          <div style="height:80px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant);">Level 2</span>
+            <span style="font-size:14px;font-weight:500;">+8% tint</span>
+          </div>
+          <div style="height:80px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-high);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant);">Level 3</span>
+            <span style="font-size:14px;font-weight:500;">+11% tint</span>
+          </div>
+          <div style="height:80px;border-radius:var(--md-sys-shape-corner-medium);background:var(--md-sys-color-surface-container-highest);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;">
+            <span style="font-size:11px;color:var(--md-sys-color-on-surface-variant);">Level 4–5</span>
+            <span style="font-size:14px;font-weight:500;">+14% tint</span>
+          </div>
+        </div>
+
+        <!-- Shape scale -->
+        <div class="section-header" style="margin-top:40px;">
+          <h2>Shape Scale</h2>
+          <p>Consistent corner radii via <code style="font-size:13px;background:var(--md-sys-color-surface-container);padding:2px 6px;border-radius:4px;">--md-sys-shape-corner-*</code> tokens.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;">
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-none);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">none</span><span style="font-size:13px;font-weight:500;">0dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-extra-small);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">extra-small</span><span style="font-size:13px;font-weight:500;">4dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-small);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">small</span><span style="font-size:13px;font-weight:500;">8dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-medium);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">medium</span><span style="font-size:13px;font-weight:500;">12dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-large);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">large</span><span style="font-size:13px;font-weight:500;">16dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-extra-large);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">extra-large</span><span style="font-size:13px;font-weight:500;">28dp</span>
+          </div>
+          <div style="height:72px;background:var(--md-sys-color-primary-container);color:var(--md-sys-color-on-primary-container);border-radius:var(--md-sys-shape-corner-full);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">
+            <span style="font-size:11px;opacity:.7;">full</span><span style="font-size:13px;font-weight:500;">∞</span>
+          </div>
+        </div>
+
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="scrollTo('overview')">
+  <span class="material-symbols-outlined">arrow_upward</span>
+  Back to top
+</button>
+
+<!-- Snackbar -->
+<div class="snackbar" id="snackbar" role="status" aria-live="polite">
+  <span id="snackbar-msg"></span>
+  <button class="snackbar__action" onclick="hideSnackbar()">Dismiss</button>
+</div>
+
+<script>
+  // ── Theme ──────────────────────────────────────────────────────
+  let dark = false;
+  let snackTimer;
+
+  function toggleTheme() {
+    dark = !dark;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+    document.getElementById('theme-icon').textContent = dark ? 'light_mode' : 'dark_mode';
+    const sw = document.getElementById('dark-switch');
+    if (sw) sw.checked = dark;
+  }
+
+  function toggleThemeSwitch(el) {
+    dark = el.checked;
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+    document.getElementById('theme-icon').textContent = dark ? 'light_mode' : 'dark_mode';
+  }
+
+  // Respect system preference on load
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    dark = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('theme-icon').textContent = 'light_mode';
+    const sw = document.getElementById('dark-switch');
+    if (sw) sw.checked = true;
+  }
+
+  // ── Navigation ─────────────────────────────────────────────────
+  function navigate(e, section) {
+    e.preventDefault();
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelectorAll(`.nav-item[data-section="${section}"]`)
+      .forEach(i => i.classList.add('active'));
+    scrollTo(section);
+  }
+
+  function scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Sync nav on scroll
+  const sections = ['overview','components','forms','tokens'];
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        sections.forEach(s => {
+          document.querySelectorAll(`.nav-item[data-section="${s}"]`)
+            .forEach(i => i.classList.toggle('active', s === e.target.id));
+        });
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => {
+    const el = document.getElementById(s);
+    if (el) observer.observe(el);
+  });
+
+  // ── Snackbar ───────────────────────────────────────────────────
+  function showSnackbar(msg) {
+    clearTimeout(snackTimer);
+    document.getElementById('snackbar-msg').textContent = msg;
+    document.getElementById('snackbar').classList.add('visible');
+    snackTimer = setTimeout(hideSnackbar, 3000);
+  }
+
+  function hideSnackbar() {
+    document.getElementById('snackbar').classList.remove('visible');
+  }
+
+  // ── Chips ──────────────────────────────────────────────────────
+  function toggleChip(el) {
+    el.classList.toggle('selected');
+    const isSelected = el.classList.contains('selected');
+    if (isSelected) {
+      el.innerHTML = `<span class="material-symbols-outlined">check</span>${el.textContent.trim()}`;
+    } else {
+      el.textContent = el.textContent.trim();
+    }
+    showSnackbar(isSelected ? `Filter "${el.textContent.trim().replace('check','').trim()}" applied` : 'Filter removed');
+  }
+
+  // ── Selection controls ─────────────────────────────────────────
+  function selectRadio(item) {
+    item.closest('.selection-group').querySelectorAll('.radio-custom').forEach(r => {
+      r.classList.remove('checked');
+      r.setAttribute('aria-checked','false');
+    });
+    item.querySelector('.radio-custom').classList.add('checked');
+    item.querySelector('.radio-custom').setAttribute('aria-checked','true');
+  }
+
+  function toggleCheckbox(item) {
+    const cb = item.querySelector('.checkbox-custom');
+    cb.classList.toggle('checked');
+    if (cb.classList.contains('checked')) {
+      cb.innerHTML = `<span class="material-symbols-outlined">check</span>`;
+    } else {
+      cb.innerHTML = '';
+    }
+  }
+
+  // ── Form ──────────────────────────────────────────────────────
+  function handleSubmit(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    showSnackbar(name ? `Message sent by ${name}!` : 'Message sent!');
+    e.target.reset();
+  }
+</script>
+</body>
+</html>

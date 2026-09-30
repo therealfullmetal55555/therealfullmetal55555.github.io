@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кирилл Цыганов</title>
+<meta name="description" content="Кирилл Цыганов — диджитал маркетолог и разработчик. Продвижение на маркетплейсах, Telegram-боты, генеративное искусство.">
+<meta property="og:title" content="Кирилл Цыганов">
+<meta property="og:description" content="Диджитал маркетолог и разработчик. Маркетплейсы, боты, creative dev.">
+<meta property="og:image" content="img/IMG_9657.PNG">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="css/main.css">
+<style>
+
+/* ── HERO ─────────────────────────────────────────────────── */
+.hero {
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background: var(--void);
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0.18;
+  filter: grayscale(100%);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top,   var(--void) 0%, transparent 45%),
+    linear-gradient(to right, oklch(5% 0.004 60 / 0.5) 0%, transparent 60%);
+}
+
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 48px 52px;
+  height: 100%;
+}
+
+.hero-eyeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.hero-year {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(35% 0.003 60);
+}
+
+.hero-discipline {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: oklch(35% 0.003 60);
+  text-align: right;
+}
+
+.hero-title {
+  font-family: var(--f-head);
+  font-size: clamp(52px, 11.5vw, 148px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  color: var(--void-text);
+  margin-bottom: 40px;
+  display: block;
+}
+
+.hero-bottom {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.hero-tag {
+  font-size: 12px;
+  font-weight: 300;
+  color: oklch(45% 0.003 60);
+  line-height: 1.7;
+  max-width: 34ch;
+}
+
+.hero-links {
+  display: flex;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.hero-link {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: oklch(42% 0.003 60);
+  text-decoration: none;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hero-link:hover { color: var(--void-text); }
+
+/* ── SCROLL HINT ──────────────────────────────────────────── */
+.hero-scroll {
+  position: relative;
+  z-index: 2;
+  padding: 0 48px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.hero-scroll span {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(28% 0.003 60);
+}
+.hero-scroll-line {
+  flex: 1;
+  max-width: 64px;
+  height: 1px;
+  background: oklch(18% 0.003 60);
+}
+
+/* ── SELECTED WORK ────────────────────────────────────────── */
+.work-section {
+  background: var(--ivory);
+  padding: 96px 48px 80px;
+}
+
+.work-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--ink);
+}
+
+.work-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.work-count {
+  font-family: var(--f-head);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--ink-muted);
+}
+
+/* Editorial work list */
+.work-list { }
+
+.work-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto auto;
+  align-items: center;
+  gap: 0 28px;
+  padding: 26px 0;
+  border-bottom: 1px solid var(--ink-hair);
+  text-decoration: none;
+  color: var(--ink);
+  transition: transform 0.35s var(--ease);
+  cursor: pointer;
+}
+.work-row:hover { transform: translateX(6px); }
+.work-row:hover .work-name { opacity: 0.5; }
+.work-row:hover .work-arrow { transform: translate(3px, -3px); }
+
+.work-num {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+  opacity: 0.5;
+}
+
+.work-name {
+  font-family: var(--f-head);
+  font-size: clamp(20px, 3vw, 36px);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  transition: opacity 0.2s;
+}
+
+.work-meta {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  color: var(--ink-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-align: right;
+  opacity: 0.7;
+}
+
+.work-arrow {
+  font-size: 14px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease);
+}
+
+/* ── ABOUT STRIP ──────────────────────────────────────────── */
+.about-section {
+  background: var(--void);
+  padding: 96px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: end;
+}
+
+.about-label {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: oklch(30% 0.003 60);
+  margin-bottom: 28px;
+  display: block;
+}
+
+.about-headline {
+  font-family: var(--f-head);
+  font-size: clamp(32px, 5vw, 62px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: var(--void-text);
+}
+
+.about-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: 2px;
+}
+
+.about-right p {
+  font-size: 15px;
+  font-weight: 300;
+  color: oklch(56% 0.003 60);
+  line-height: 1.85;
+  max-width: 48ch;
+  margin-bottom: 10px;
+}
+.about-right p strong { color: var(--void-text); font-weight: 500; }
+
+.about-cta {
+  margin-top: 36px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+@media (max-width: 860px) {
+  .hero-inner { padding: 0 24px 48px; }
+  .hero-scroll { padding: 0 24px 16px; }
+  .work-section { padding: 72px 24px 64px; }
+  .about-section { grid-template-columns: 1fr; gap: 48px; padding: 72px 24px; }
+  .hero-eyeline { display: none; }
+  .hero-bottom { flex-direction: column; align-items: flex-start; gap: 20px; }
+}
+@media (max-width: 600px) {
+  .work-row { grid-template-columns: 36px 1fr auto; gap: 0 16px; }
+  .work-meta { display: none; }
+}
+@media (max-width: 480px) {
+  .hero-title { letter-spacing: -0.04em; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header" id="site-header">
+  <a href="index.html" class="logo">
+    <span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span>
+  </a>
+  <nav class="site-nav">
+    <a href="projects.html">Проекты</a>
+    <a href="about.html">О себе</a>
+    <a href="contact.html">Контакт</a>
+  </nav>
+</header>
+
+<div class="page-wrapper">
+
+  <!-- HERO -->
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+      <source src="hero.mov" type="video/mp4">
+      <source src="hardrock.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-inner">
+      <div class="hero-eyeline">
+        <span class="hero-year">Movi Group — 2026</span>
+        <span class="hero-discipline">Маркетинг · Dev · Creative</span>
+      </div>
+
+      <h1 class="hero-title">Кирилл<br>Цыганов</h1>
+
+      <div class="hero-bottom">
+        <p class="hero-tag">
+          Диджитал маркетолог и разработчик.<br>
+          Продвижение на маркетплейсах, Telegram-боты, генеративное искусство.
+        </p>
+        <div class="hero-links">
+          <a class="hero-link" href="projects.html">Проекты →</a>
+          <a class="hero-link" href="contact.html">Контакт →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- SELECTED WORK -->
+  <section class="work-section">
+    <div class="work-header reveal">
+      <span class="work-label">Выбранные работы</span>
+      <span class="work-count">09</span>
+    </div>
+
+    <div class="work-list">
+      <a class="work-row reveal" href="fares-korea.html">
+        <span class="work-num">01</span>
+        <span class="work-name">Fares Korea</span>
+        <span class="work-meta">WB · OZON · KIT</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d1" href="phantom.html">
+        <span class="work-num">02</span>
+        <span class="work-name">Telegram Spy Bot</span>
+        <span class="work-meta">Python · MTProto</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d2" href="webdesign.html">
+        <span class="work-num">03</span>
+        <span class="work-name">Web Design</span>
+        <span class="work-meta">CSS · Motion</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d3" href="analytics.html">
+        <span class="work-num">04</span>
+        <span class="work-name">Analytics Pipeline</span>
+        <span class="work-meta">Python · Streamlit</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <div class="work-row reveal d4" style="cursor:default;">
+        <span class="work-num">05</span>
+        <span class="work-name">Visual Studies</span>
+        <span class="work-meta">TouchDesigner</span>
+        <span class="work-arrow" style="opacity:0.25;">—</span>
+      </div>
+      <a class="work-row reveal d5" href="panels.html">
+        <span class="work-num">06</span>
+        <span class="work-name">Industrial Lo-Fi Panel</span>
+        <span class="work-meta">ExtendScript · PS</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d6" href="panels-video.html">
+        <span class="work-num">07</span>
+        <span class="work-name">Motion Toolkit</span>
+        <span class="work-meta">AE · PR · MCP</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d7" href="operatorflow.html">
+        <span class="work-num">08</span>
+        <span class="work-name">OperatorFlow</span>
+        <span class="work-meta">DAG · Zero-dep</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d8" href="swarm-operator.html">
+        <span class="work-num">09</span>
+        <span class="work-name">SWARM // OPERATOR</span>
+        <span class="work-meta">Multi-Agent · Event-Bus</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d9" href="agent-firewall.html">
+        <span class="work-num">10</span>
+        <span class="work-name">AGENT // FIREWALL</span>
+        <span class="work-meta">DevSecOps · AST Lexer</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d10" href="subsecond.html">
+        <span class="work-num">11</span>
+        <span class="work-name">SUBSECOND</span>
+        <span class="work-meta">Realtime Voice · &lt;300ms SLA</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d11" href="synapse.html">
+        <span class="work-num">12</span>
+        <span class="work-name">SYNAPSE</span>
+        <span class="work-meta">Vector DB · HNSW Skip-Graph</span>
+        <span class="work-arrow">↗</span>
+      </a>
+      <a class="work-row reveal d12" href="hypercontext.html">
+        <span class="work-num">13</span>
+        <span class="work-name">HYPERCONTEXT</span>
+        <span class="work-meta">Gemini 2.0 API · 2M Context</span>
+        <span class="work-arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-section" aria-hidden="true">
+    <div class="marquee-track">
+      <span class="marquee-item">Python</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Telegram Bot</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Wildberries</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">TouchDesigner</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Node.js</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">CSS Motion</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Generative Art</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">OZON</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">TypeScript</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">MTProto</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Movi Group</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">SEO</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Python</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Telegram Bot</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Wildberries</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">TouchDesigner</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Node.js</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">CSS Motion</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Generative Art</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">OZON</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">TypeScript</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">MTProto</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">Movi Group</span><span class="marquee-sep">·</span>
+      <span class="marquee-item">SEO</span><span class="marquee-sep">·</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about-section">
+    <div>
+      <span class="about-label reveal">О себе</span>
+      <h2 class="about-headline reveal d1">
+        Маркетинг,<br>разработка,<br>запуск.
+      </h2>
+    </div>
+    <div class="about-right">
+      <p class="reveal d1">
+        Работаю в <strong>Movi Group</strong> — диджитал маркетинг, продвижение на маркетплейсах, разработка инструментов.
+      </p>
+      <p class="reveal d2">
+        Параллельно — <strong>TouchDesigner</strong>, генеративное искусство и собственные dev-проекты.
+      </p>
+      <div class="about-cta reveal d3">
+        <a href="about.html" class="btn btn--ghost">О себе →</a>
+        <a href="contact.html" class="btn btn--ghost">Написать</a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="footer-cta reveal">
+      <span class="footer-cta-label">Есть проект?</span>
+      <h2 class="footer-cta-headline">Напишем.</h2>
+      <a href="mailto:millyrock2900 [at] gmail.com" class="btn btn--inv">millyrock2900 [at] gmail.com →</a>
+    </div>
+    <div class="footer-meta">
+      <span>© 2026 Кирилл Цыганов</span>
+      <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* Header: white on dark, ink on light */
+const header = document.getElementById('site-header');
+const workSection = document.querySelector('.work-section');
+
+function syncHeader() {
+  const rect = workSection.getBoundingClientRect();
+  header.classList.toggle('site-header--light', rect.top <= 60);
+}
+syncHeader();
+window.addEventListener('scroll', syncHeader, { passive: true });
+
+/* Reveal */
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); }),
+  { threshold: 0.06, rootMargin: '0px 0px -24px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+/* Text Scramble */
+const CHARS = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function scramble(el) {
+  const original = el.dataset.original || el.textContent;
+  el.dataset.original = original;
+  let frame = 0;
+  const total = 14;
+  const id = setInterval(() => {
+    el.textContent = original.split('').map((ch, i) => {
+      if (ch === ' ') return ' ';
+      if (frame / total > i / original.length) return ch;
+      return CHARS[Math.floor(Math.random() * CHARS.length)];
+    }).join('');
+    if (++frame > total) { el.textContent = original; clearInterval(id); }
+  }, 32);
+}
+document.querySelectorAll('.work-name').forEach(el => {
+  const row = el.closest('.work-row');
+  if (row) row.addEventListener('mouseenter', () => scramble(el));
+});
+
+</script>
+<script src="js/nav.js"></script>
+<script src="js/transitions.js"></script>
+<script src="js/cursor.js"></script>
+</body>
+</html>

@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FARES KOREA — Rich Content</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: #fff;
+    color: #2d2d2d;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ─── COLORS ─── */
+  :root {
+    --pink: #D91E8E;
+    --pink-light: #F72EA0;
+    --pink-pale: #FDE8F5;
+    --yellow-bg: #FFF9E6;
+    --yellow-mid: #FFF0CC;
+    --dark: #1A1A2E;
+    --gray: #f5f5f5;
+    --text: #333;
+  }
+
+  /* ─── BLOCK 1: HERO ─── */
+  .hero {
+    background: linear-gradient(135deg, #FFF9E6 0%, #FDE8F5 100%);
+    padding: 60px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(217,30,142,0.07);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: rgba(217,30,142,0.05);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--pink);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1.2;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .hero h1 span { color: var(--pink); }
+  .hero-sub {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 36px;
+    font-weight: 500;
+  }
+  .hero-pills {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .pill {
+    background: #fff;
+    border: 2px solid var(--pink);
+    color: var(--pink);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 8px 20px;
+    border-radius: 30px;
+  }
+
+  /* ─── BLOCK 2: DOUBLE ACTION ─── */
+  .double-action {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .da-panel {
+    padding: 50px 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .da-panel:first-child { background: var(--pink); color: #fff; }
+  .da-panel:last-child { background: var(--yellow-bg); }
+  .da-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+  .da-panel:first-child .da-icon { background: rgba(255,255,255,0.2); }
+  .da-panel:last-child .da-icon { background: var(--pink-pale); }
+  .da-panel h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 12px;
+  }
+  .da-panel:last-child h2 { color: var(--pink); }
+  .da-list {
+    list-style: none;
+    font-size: 14px;
+    line-height: 2;
+    font-weight: 500;
+  }
+  .da-panel:first-child .da-list { color: rgba(255,255,255,0.9); }
+  .da-panel:last-child .da-list { color: #555; }
+
+  /* ─── SECTION HEADER ─── */
+  .section-header {
+    text-align: center;
+    padding: 50px 40px 30px;
+    background: #fff;
+  }
+  .section-header h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .section-header h2 span { color: var(--pink); }
+  .section-header p {
+    font-size: 15px;
+    color: #888;
+    font-weight: 500;
+  }
+  .divider {
+    width: 60px; height: 4px;
+    background: var(--pink);
+    border-radius: 2px;
+    margin: 14px auto 0;
+  }
+
+  /* ─── BLOCK 3: INGREDIENTS ─── */
+  .ingredients {
+    background: var(--yellow-bg);
+    padding: 10px 30px 50px;
+  }
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 10px;
+  }
+  .ing-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 22px;
+    box-shadow: 0 4px 20px rgba(217,30,142,0.08);
+    border-top: 4px solid var(--pink);
+    transition: transform 0.2s;
+  }
+  .ing-card:hover { transform: translateY(-3px); }
+  .ing-num {
+    width: 32px; height: 32px;
+    background: var(--pink);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .ing-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--pink);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .ing-card p {
+    font-size: 12.5px;
+    color: #555;
+    line-height: 1.7;
+    font-weight: 500;
+  }
+  .ing-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 10px;
+  }
+  .ing-tag {
+    background: var(--pink-pale);
+    color: var(--pink);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+  }
+
+  /* ─── BLOCK 4: BENEFITS TIMELINE ─── */
+  .benefits {
+    background: #fff;
+    padding: 10px 40px 50px;
+  }
+  .benefit-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .benefit-row:last-child { border-bottom: none; }
+  .benefit-icon-wrap {
+    width: 56px; height: 56px;
+    min-width: 56px;
+    background: var(--pink-pale);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .benefit-text h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .benefit-text h3 em {
+    font-style: normal;
+    color: var(--pink);
+  }
+  .benefit-text p {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+
+  /* ─── BLOCK 5: FOR WHOM ─── */
+  .for-whom {
+    background: linear-gradient(135deg, var(--pink) 0%, #a8006e 100%);
+    padding: 50px 40px;
+    color: #fff;
+  }
+  .for-whom .section-header {
+    background: transparent;
+    padding: 0 0 30px;
+  }
+  .for-whom .section-header h2 { color: #fff; }
+  .for-whom .section-header h2 span { color: #FFE066; }
+  .for-whom .section-header p { color: rgba(255,255,255,0.7); }
+  .for-whom .divider { background: #FFE066; }
+  .audience-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .audience-card {
+    background: rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 28px 22px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .audience-age {
+    font-size: 32px;
+    font-weight: 900;
+    color: #FFE066;
+    line-height: 1;
+  }
+  .audience-age span { font-size: 16px; font-weight: 700; }
+  .audience-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 8px 0 10px;
+    color: #fff;
+  }
+  .audience-card ul {
+    list-style: none;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    line-height: 2;
+    font-weight: 500;
+  }
+  .audience-card ul li::before {
+    content: '✓ ';
+    color: #FFE066;
+    font-weight: 700;
+  }
+
+  /* ─── BLOCK 6: HOW TO TAKE ─── */
+  .how-to {
+    background: var(--yellow-bg);
+    padding: 50px 40px;
+  }
+  .steps-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 10px;
+    position: relative;
+  }
+  .steps-grid::before {
+    content: '';
+    position: absolute;
+    top: 36px; left: 10%; right: 10%;
+    height: 3px;
+    background: linear-gradient(to right, var(--pink), var(--pink-light));
+    z-index: 0;
+    border-radius: 2px;
+  }
+  .step {
+    text-align: center;
+    padding: 0 10px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-circle {
+    width: 72px; height: 72px;
+    background: var(--pink);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 26px;
+    box-shadow: 0 8px 24px rgba(217,30,142,0.3);
+    border: 4px solid #fff;
+  }
+  .step h3 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+  .step p {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .effect-bar {
+    display: flex;
+    gap: 16px;
+    margin-top: 36px;
+  }
+  .effect-item {
+    flex: 1;
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+  }
+  .effect-num {
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .effect-text {
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  /* ─── BLOCK 7: STATS ─── */
+  .stats {
+    background: var(--dark);
+    padding: 50px 40px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background-color: #333;
+  }
+  .stat-item {
+    background: var(--dark);
+    padding: 30px 20px;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--pink);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num span { font-size: 22px; }
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.7);
+    font-weight: 600;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ─── BLOCK 8: FAQ ─── */
+  .faq {
+    background: #fff;
+    padding: 50px 40px;
+  }
+  .faq-item {
+    border: 1px solid #f0e6f6;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .faq-q {
+    padding: 18px 22px;
+    background: var(--pink-pale);
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .faq-q::before {
+    content: 'В';
+    width: 26px; height: 26px;
+    min-width: 26px;
+    background: var(--pink);
+    color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .faq-a {
+    padding: 16px 22px;
+    font-size: 13.5px;
+    color: #555;
+    line-height: 1.7;
+    font-weight: 500;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .faq-a::before {
+    content: 'О';
+    width: 26px; height: 26px;
+    min-width: 26px;
+    background: #eee;
+    color: #555;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+
+  /* ─── BLOCK 9: FOOTER DISCLAIMER ─── */
+  .disclaimer {
+    background: var(--yellow-bg);
+    padding: 30px 40px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    border-top: 3px solid var(--pink);
+  }
+  .disclaimer-icon { font-size: 32px; }
+  .disclaimer-text h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 4px;
+  }
+  .disclaimer-text p {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  /* ─── BLOCK 10: CTA BANNER ─── */
+  .cta {
+    background: linear-gradient(135deg, var(--pink) 0%, #7B0063 100%);
+    padding: 50px 40px;
+    text-align: center;
+    color: #fff;
+  }
+  .cta h2 {
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 10px;
+  }
+  .cta p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 28px;
+    font-weight: 500;
+  }
+  .cta-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+  }
+  .cta-stat { text-align: center; }
+  .cta-stat strong {
+    display: block;
+    font-size: 32px;
+    font-weight: 900;
+    color: #FFE066;
+  }
+  .cta-stat span {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<!-- BLOCK 1: HERO -->
+<section class="hero">
+  <div class="hero-badge">FARES KOREA · Made in Korea</div>
+  <h1>Комплекс для женского<br><span>здоровья и красоты</span></h1>
+  <p class="hero-sub">7 природных компонентов · 96 капсул · Полный курс</p>
+  <div class="hero-pills">
+    <div class="pill">Маточное молочко</div>
+    <div class="pill">Овечья плацента</div>
+    <div class="pill">Гиалуроновая кислота</div>
+    <div class="pill">Мака перуанская</div>
+    <div class="pill">Соевые изофлавоны</div>
+    <div class="pill">Виноград. косточки</div>
+    <div class="pill">Витамины</div>
+  </div>
+</section>
+
+<!-- BLOCK 2: DOUBLE ACTION -->
+<section class="double-action">
+  <div class="da-panel">
+    <div class="da-icon">💊</div>
+    <h2>ЗДОРОВЬЕ</h2>
+    <ul class="da-list">
+      <li>Гормональный баланс</li>
+      <li>Снижение симптомов ПМС</li>
+      <li>Контроль климакса</li>
+      <li>Снижение приливов</li>
+      <li>Защита костной ткани</li>
+      <li>Сердечно-сосудистая защита</li>
+      <li>Нормализация цикла</li>
+    </ul>
+  </div>
+  <div class="da-panel">
+    <div class="da-icon">✨</div>
+    <h2>КРАСОТА</h2>
+    <ul class="da-list">
+      <li>Упругость кожи</li>
+      <li>Красивый цвет лица</li>
+      <li>Антивозрастное действие</li>
+      <li>Увлажнение изнутри</li>
+      <li>Венозная профилактика</li>
+      <li>Энергия и выносливость</li>
+      <li>Снижение стресса</li>
+    </ul>
+  </div>
+</section>
+
+<!-- BLOCK 3: INGREDIENTS -->
+<div class="section-header" style="background:var(--yellow-bg); padding-top:50px;">
+  <h2>Состав: <span>7 активных компонентов</span></h2>
+  <p>Каждый ингредиент имеет научно подтверждённое действие</p>
+  <div class="divider"></div>
+</div>
+<section class="ingredients">
+  <div class="ingredients-grid">
+
+    <div class="ing-card">
+      <div class="ing-num">1</div>
+      <h3>Маточное молочко</h3>
+      <p>Нормализует менструальный цикл, снижает ПМС на 50%, поддерживает гормональный баланс без синтетических гормонов. Улучшает память и концентрацию.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">ПМС -50%</span>
+        <span class="ing-tag">Цикл</span>
+        <span class="ing-tag">Гормоны</span>
+      </div>
+    </div>
+
+    <div class="ing-card">
+      <div class="ing-num">2</div>
+      <h3>Овечья плацента</h3>
+      <p>Содержит 60+ активных компонентов: аминокислоты, пептиды, факторы роста. Замедляет старение, восстанавливает ткани, компенсирует дефицит эстрогенов.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">60+ компонентов</span>
+        <span class="ing-tag">Омоложение</span>
+      </div>
+    </div>
+
+    <div class="ing-card">
+      <div class="ing-num">3</div>
+      <h3>Экстракт виноградных косточек</h3>
+      <p>Мощный антиоксидант. Улучшает упругость и цвет кожи, укрепляет стенки сосудов, профилактика варикоза и венозной недостаточности.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">Кожа</span>
+        <span class="ing-tag">Сосуды</span>
+        <span class="ing-tag">Антиоксидант</span>
+      </div>
+    </div>
+
+    <div class="ing-card">
+      <div class="ing-num">4</div>
+      <h3>Мака перуанская</h3>
+      <p>Природный адаптоген. Повышает либидо и физическую выносливость, снижает хронический стресс, восстанавливает гормональный фон.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">Либидо</span>
+        <span class="ing-tag">Энергия</span>
+        <span class="ing-tag">Антистресс</span>
+      </div>
+    </div>
+
+    <div class="ing-card">
+      <div class="ing-num">5</div>
+      <h3>Соевые изофлавоны</h3>
+      <p>Фитоэстрогены. Облегчают приливы, защищают костную ткань от остеопороза, снижают риски сердечно-сосудистых заболеваний в период климакса.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">Климакс</span>
+        <span class="ing-tag">Приливы</span>
+        <span class="ing-tag">Кости</span>
+      </div>
+    </div>
+
+    <div class="ing-card">
+      <div class="ing-num">6</div>
+      <h3>Гиалуроновая кислота + Витамины</h3>
+      <p>Гиалуронка увлажняет кожу изнутри и поддерживает суставы. Витаминный комплекс усиливает действие всех компонентов и восполняет дефициты.</p>
+      <div class="ing-tags">
+        <span class="ing-tag">Увлажнение</span>
+        <span class="ing-tag">Суставы</span>
+        <span class="ing-tag">Витамины</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- BLOCK 4: KEY BENEFITS -->
+<div class="section-header">
+  <h2>Ключевые <span>эффекты</span></h2>
+  <p>Доказанные результаты при регулярном приёме</p>
+  <div class="divider"></div>
+</div>
+<section class="benefits">
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">🌸</div>
+    <div class="benefit-text">
+      <h3>Снижение симптомов <em>ПМС на 50%</em></h3>
+      <p>Маточное молочко снижает болезненность, перепады настроения и отёчность в предменструальный период. Эффект подтверждён клиническими исследованиями.</p>
+    </div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">⚖️</div>
+    <div class="benefit-text">
+      <h3>Гормональная <em>поддержка без синтетики</em></h3>
+      <p>Комплекс помогает эндокринной системе восстановить баланс естественным путём — без синтетических гормонов и побочных эффектов ЗГТ.</p>
+    </div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">🔥</div>
+    <div class="benefit-text">
+      <h3>Контроль <em>климакса и приливов</em></h3>
+      <p>Соевые изофлавоны — природные фитоэстрогены — снижают частоту и интенсивность приливов, улучшают сон и эмоциональный фон в период менопаузы.</p>
+    </div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">✨</div>
+    <div class="benefit-text">
+      <h3>Молодость кожи и <em>антивозрастной эффект</em></h3>
+      <p>Плацента + гиалуроновая кислота + экстракт виноградных косточек работают синергично: повышают упругость, выравнивают тон, замедляют старение изнутри.</p>
+    </div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">💪</div>
+    <div class="benefit-text">
+      <h3>Энергия, либидо и <em>выносливость</em></h3>
+      <p>Мака перуанская повышает жизненный тонус и либидо, снижает хроническую усталость и помогает легче справляться со стрессом.</p>
+    </div>
+  </div>
+  <div class="benefit-row">
+    <div class="benefit-icon-wrap">🦴</div>
+    <div class="benefit-text">
+      <h3>Защита <em>костей и сердца</em></h3>
+      <p>Соевые изофлавоны снижают риск остеопороза и сердечно-сосудистых нарушений, характерных для периода снижения эстрогенов.</p>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCK 5: FOR WHOM -->
+<section class="for-whom">
+  <div class="section-header">
+    <h2>Для <span>кого</span> создан комплекс</h2>
+    <p>Подходит для женщин на всех этапах жизни</p>
+    <div class="divider"></div>
+  </div>
+  <div class="audience-grid">
+    <div class="audience-card">
+      <div class="audience-age">25–35<span> лет</span></div>
+      <h3>Молодость и тонус</h3>
+      <ul>
+        <li>ПМС и нерегулярный цикл</li>
+        <li>Стресс и хроническая усталость</li>
+        <li>Тусклая кожа</li>
+        <li>Планирование беременности</li>
+      </ul>
+    </div>
+    <div class="audience-card">
+      <div class="audience-age">35–50<span> лет</span></div>
+      <h3>Гормональный баланс</h3>
+      <ul>
+        <li>Гормональные колебания</li>
+        <li>Первые признаки старения кожи</li>
+        <li>Снижение либидо</li>
+        <li>Предменопауза</li>
+      </ul>
+    </div>
+    <div class="audience-card">
+      <div class="audience-age">50+<span> лет</span></div>
+      <h3>Климакс и менопауза</h3>
+      <ul>
+        <li>Приливы и перепады настроения</li>
+        <li>Хрупкость костей</li>
+        <li>Риски для сердца</li>
+        <li>Мягкая альтернатива ЗГТ</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCK 6: HOW TO TAKE -->
+<div class="section-header" style="background:var(--yellow-bg); padding-top:50px;">
+  <h2>Как <span>принимать</span></h2>
+  <p>Простая схема приёма для максимального результата</p>
+  <div class="divider"></div>
+</div>
+<section class="how-to">
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-circle">🌅</div>
+      <h3>Утром</h3>
+      <p>2 капсулы<br>во время завтрака</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">☀️</div>
+      <h3>В обед</h3>
+      <p>2 капсулы<br>во время еды</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">📅</div>
+      <h3>Курс</h3>
+      <p>32–48 дней<br>(1–2 упаковки)</p>
+    </div>
+    <div class="step">
+      <div class="step-circle">🔄</div>
+      <h3>Повтор</h3>
+      <p>Перерыв 2 нед.<br>Повторить курс</p>
+    </div>
+  </div>
+  <div class="effect-bar">
+    <div class="effect-item">
+      <div class="effect-num">7</div>
+      <div class="effect-text">дней до<br>первых результатов</div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-num">3–4</div>
+      <div class="effect-text">недели до<br>видимого эффекта</div>
+    </div>
+    <div class="effect-item">
+      <div class="effect-num">96</div>
+      <div class="effect-text">капсул —<br>полный курс</div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOCK 7: STATS -->
+<section class="stats">
+  <div class="stat-item">
+    <div class="stat-num">7<span>+</span></div>
+    <div class="stat-label">Активных<br>компонентов</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">60<span>+</span></div>
+    <div class="stat-label">Элементов<br>в плаценте</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">50<span>%</span></div>
+    <div class="stat-label">Снижение<br>симптомов ПМС</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">96</div>
+    <div class="stat-label">Капсул<br>полный курс</div>
+  </div>
+</section>
+
+<!-- BLOCK 8: FAQ -->
+<div class="section-header">
+  <h2>Часто задаваемые <span>вопросы</span></h2>
+  <div class="divider"></div>
+</div>
+<section class="faq">
+  <div class="faq-item">
+    <div class="faq-q">Можно ли принимать при климаксе?</div>
+    <div class="faq-a">Да, комплекс специально разработан в том числе для поддержки в период менопаузы. Соевые изофлавоны и маточное молочко снижают приливы, стабилизируют настроение и защищают костную ткань.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Когда ждать первых результатов?</div>
+    <div class="faq-a">Первые изменения (уровень энергии, качество сна) заметны уже через 7 дней. Видимый эффект для кожи и гормонального фона — через 3–4 недели регулярного приёма.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Есть ли противопоказания?</div>
+    <div class="faq-a">Индивидуальная непереносимость компонентов, беременность, период кормления грудью. Перед приёмом рекомендуется проконсультироваться с врачом.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Можно ли совмещать с другими препаратами?</div>
+    <div class="faq-a">Как правило да, но при приёме гормональных препаратов или антикоагулянтов — обязательна консультация врача перед началом приёма.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Сколько упаковок нужно на курс?</div>
+    <div class="faq-a">Одна упаковка (96 капсул) при приёме 2 капсулы 2 раза в день рассчитана на 24 дня. Для полного курса рекомендуется 2 упаковки (48 дней).</div>
+  </div>
+</section>
+
+<!-- BLOCK 9: DISCLAIMER -->
+<section class="disclaimer">
+  <div class="disclaimer-icon">ℹ️</div>
+  <div class="disclaimer-text">
+    <h4>Биологически активная добавка к пище</h4>
+    <p>Не является лекарственным средством. Перед применением рекомендуется проконсультироваться с врачом. Хранить в сухом прохладном месте при температуре не выше +25°C. Беречь от детей.</p>
+  </div>
+</section>
+
+<!-- BLOCK 10: CTA -->
+<section class="cta">
+  <h2>FARES KOREA</h2>
+  <p>Женское здоровье и красота — в одном курсе</p>
+  <div class="cta-stats">
+    <div class="cta-stat">
+      <strong>96</strong>
+      <span>капсул</span>
+    </div>
+    <div class="cta-stat">
+      <strong>7</strong>
+      <span>компонентов</span>
+    </div>
+    <div class="cta-stat">
+      <strong>32–48</strong>
+      <span>дней курс</span>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

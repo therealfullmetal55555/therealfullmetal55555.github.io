@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Фарист Строй — Превью соц. сетей</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0F1C2E;
+    --blue: #1B4A8A;
+    --orange: #E8570A;
+    --light: #F4F6F9;
+    --mid: #C8D0DB;
+    --white: #ffffff;
+  }
+
+  body {
+    font-family: 'Manrope', sans-serif;
+    background: #0a1520;
+    color: #fff;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: var(--navy);
+    border-bottom: 2px solid var(--orange);
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .page-header .logo-mark {
+    width: 44px; height: 44px;
+    background: var(--orange);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; color: #fff;
+    letter-spacing: -1px;
+  }
+  .page-header h1 {
+    font-size: 20px; font-weight: 700; color: #fff;
+  }
+  .page-header p {
+    font-size: 13px; color: var(--mid); margin-top: 2px;
+  }
+
+  /* ── TABS ── */
+  .platform-tabs {
+    display: flex;
+    gap: 0;
+    padding: 32px 40px 0;
+    border-bottom: 1px solid #1e3050;
+  }
+  .tab-btn {
+    padding: 12px 28px;
+    background: none;
+    border: none;
+    color: #7a95b4;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all .2s;
+    letter-spacing: .3px;
+  }
+  .tab-btn:hover { color: #fff; }
+  .tab-btn.active {
+    color: #fff;
+    border-bottom-color: var(--orange);
+  }
+
+  /* ── CONTENT AREA ── */
+  .platform-view {
+    display: none;
+    padding: 40px;
+  }
+  .platform-view.active { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; }
+
+  .view-label {
+    flex: 0 0 220px;
+  }
+  .view-label h2 {
+    font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 8px;
+  }
+  .view-label p {
+    font-size: 13px; color: #5d7fa0; line-height: 1.6;
+  }
+  .view-label .stats {
+    margin-top: 20px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .stat-item {
+    background: #112033;
+    border: 1px solid #1e3050;
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .stat-item .num {
+    font-size: 20px; font-weight: 800; color: var(--orange);
+  }
+  .stat-item .lbl {
+    font-size: 11px; color: #5d7fa0; text-transform: uppercase; letter-spacing: .5px;
+  }
+
+  .mockup-wrap {
+    flex: 1;
+  }
+
+  /* ────────────────────────────────
+     TELEGRAM MOCKUP
+  ──────────────────────────────── */
+  .phone-frame {
+    width: 360px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 44px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 2px #2a3f58, inset 0 0 0 1px rgba(255,255,255,.1);
+    overflow: hidden;
+    position: relative;
+  }
+  .phone-notch {
+    height: 28px;
+    background: #111;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 0 0 18px 18px;
+    margin: 0 60px;
+    position: relative;
+    z-index: 10;
+  }
+  .phone-notch::before {
+    content: '';
+    width: 80px; height: 6px;
+    background: #333;
+    border-radius: 3px;
+  }
+  .phone-status {
+    background: #212d3b;
+    padding: 6px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 11px; color: #aaa;
+  }
+  .tg-channel-header {
+    background: #212d3b;
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #2e3d50;
+  }
+  .tg-back { color: #5b9cf6; font-size: 16px; }
+  .tg-ava {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; color: #fff;
+    overflow: hidden; flex-shrink: 0;
+  }
+  .tg-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .tg-channel-info h3 { font-size: 13px; font-weight: 700; color: #fff; }
+  .tg-channel-info p { font-size: 11px; color: #7a95b4; }
+  .tg-feed {
+    background: #17212b;
+    height: 560px;
+    overflow-y: auto;
+    padding: 10px 0;
+    scrollbar-width: none;
+  }
+  .tg-feed::-webkit-scrollbar { display: none; }
+
+  /* pinned */
+  .tg-pinned {
+    margin: 0 8px 8px;
+    background: #1c2d3e;
+    border-radius: 10px;
+    padding: 8px 10px;
+    font-size: 11px; color: #7a95b4;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tg-pinned span { color: #fff; font-weight: 600; }
+
+  .tg-post {
+    margin: 0 8px 6px;
+    background: #1c2d3e;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .tg-post-img {
+    width: 100%; height: 180px;
+    object-fit: cover; display: block;
+  }
+  .tg-post-body { padding: 10px 12px; }
+  .tg-post-text {
+    font-size: 12px; color: #ccd6e0; line-height: 1.55;
+  }
+  .tg-post-text strong { color: #fff; }
+  .tg-post-meta {
+    margin-top: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px; color: #5d7fa0;
+  }
+  .tg-reactions {
+    display: flex; gap: 6px;
+  }
+  .tg-react {
+    background: #253445;
+    border-radius: 10px; padding: 2px 7px;
+    font-size: 11px;
+  }
+
+  /* service message */
+  .tg-svc {
+    text-align: center;
+    font-size: 10px; color: #5d7fa0;
+    padding: 4px 16px 8px;
+  }
+
+  /* ────────────────────────────────
+     VK MOCKUP
+  ──────────────────────────────── */
+  .browser-frame {
+    width: 780px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 30px 60px rgba(0,0,0,.5);
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  .browser-chrome {
+    background: #2c2c2c;
+    padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .browser-dots { display: flex; gap: 5px; }
+  .browser-dot {
+    width: 11px; height: 11px; border-radius: 50%;
+  }
+  .d-red { background: #ff5f56; }
+  .d-yellow { background: #ffbd2e; }
+  .d-green { background: #27c93f; }
+  .browser-url {
+    flex: 1; background: #3d3d3d; border-radius: 5px;
+    padding: 4px 10px; font-size: 11px; color: #aaa;
+    margin: 0 8px;
+  }
+
+  .vk-page { background: #edeef0; display: flex; flex-direction: column; }
+  .vk-topbar {
+    background: #2a5885;
+    padding: 0 20px;
+    display: flex; align-items: center; gap: 16px; height: 44px;
+  }
+  .vk-logo { color: #fff; font-weight: 800; font-size: 20px; letter-spacing: -1px; }
+  .vk-search {
+    flex: 1; background: rgba(255,255,255,.15); border-radius: 6px;
+    height: 28px; display: flex; align-items: center; padding: 0 10px;
+    font-size: 12px; color: rgba(255,255,255,.6);
+  }
+  .vk-nav-icons { display: flex; gap: 20px; margin-left: auto; }
+  .vk-nav-icons span { color: rgba(255,255,255,.8); font-size: 11px; cursor: pointer; }
+
+  .vk-body { display: flex; gap: 0; }
+  .vk-sidebar {
+    width: 200px; flex-shrink: 0;
+    background: #edeef0;
+    padding: 12px 8px;
+    border-right: 1px solid #dfe1e3;
+  }
+  .vk-menu-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 8px; border-radius: 6px;
+    font-size: 12px; color: #2c2d2e; cursor: pointer;
+  }
+  .vk-menu-item:hover { background: #d9dade; }
+  .vk-menu-item.active { background: #cce0ff; color: #2a5885; font-weight: 600; }
+  .vk-menu-icon { font-size: 16px; width: 20px; text-align: center; }
+
+  .vk-main { flex: 1; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+  .vk-group-header {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .vk-cover {
+    width: 100%; height: 120px;
+    object-fit: cover; display: block;
+  }
+  .vk-group-info {
+    padding: 12px 14px;
+    display: flex; align-items: flex-end; gap: 12px;
+  }
+  .vk-group-ava {
+    width: 56px; height: 56px; border-radius: 8px;
+    background: var(--blue);
+    border: 3px solid #fff;
+    margin-top: -28px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 16px; color: #fff;
+    flex-shrink: 0; overflow: hidden;
+  }
+  .vk-group-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .vk-group-name { font-size: 15px; font-weight: 700; color: #2c2d2e; }
+  .vk-group-sub { font-size: 11px; color: #818c99; }
+  .vk-group-btn {
+    margin-left: auto;
+    background: #2a5885; color: #fff;
+    border: none; border-radius: 6px;
+    padding: 6px 14px; font-size: 12px; cursor: pointer;
+  }
+
+  .vk-post {
+    background: #fff; border-radius: 8px; overflow: hidden;
+  }
+  .vk-post-head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 12px;
+  }
+  .vk-post-ava {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--blue); overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px; color: #fff;
+  }
+  .vk-post-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .vk-post-name { font-size: 12px; font-weight: 700; color: #2c2d2e; }
+  .vk-post-date { font-size: 11px; color: #818c99; }
+  .vk-post-img { width: 100%; max-height: 220px; object-fit: cover; display: block; }
+  .vk-post-text {
+    padding: 10px 12px;
+    font-size: 12px; color: #2c2d2e; line-height: 1.5;
+  }
+  .vk-post-actions {
+    padding: 6px 12px;
+    display: flex; gap: 16px;
+    border-top: 1px solid #edeef0;
+  }
+  .vk-act { font-size: 11px; color: #818c99; display: flex; align-items: center; gap: 4px; }
+
+  /* ────────────────────────────────
+     DZEN MOCKUP
+  ──────────────────────────────── */
+  .dzen-page { background: #fff; }
+  .dzen-topbar {
+    background: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0 20px;
+    display: flex; align-items: center; height: 48px; gap: 16px;
+  }
+  .dzen-logo { font-weight: 900; font-size: 18px; color: #000; letter-spacing: -1px; }
+  .dzen-logo span { color: #ff6420; }
+  .dzen-search {
+    flex: 1; background: #f5f5f5; border-radius: 6px;
+    height: 32px; display: flex; align-items: center; padding: 0 12px;
+    font-size: 12px; color: #999;
+  }
+  .dzen-nav {
+    display: flex; gap: 20px; margin-left: auto; font-size: 12px; color: #555;
+  }
+
+  .dzen-channel-header {
+    background: #fff;
+    padding: 20px;
+    display: flex; align-items: center; gap: 16px;
+    border-bottom: 1px solid #eee;
+  }
+  .dzen-ava {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--blue); overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 22px; color: #fff;
+  }
+  .dzen-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .dzen-ch-name { font-size: 20px; font-weight: 800; color: #000; }
+  .dzen-ch-sub { font-size: 12px; color: #666; margin-top: 2px; }
+  .dzen-sub-btn {
+    margin-left: auto;
+    background: #ff6420; color: #fff; border: none;
+    border-radius: 6px; padding: 8px 18px; font-size: 13px; cursor: pointer;
+    font-weight: 600;
+  }
+
+  .dzen-feed {
+    padding: 16px 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    background: #f5f5f5;
+    max-height: 380px; overflow-y: auto;
+    scrollbar-width: none;
+  }
+  .dzen-feed::-webkit-scrollbar { display: none; }
+
+  .dzen-article {
+    background: #fff;
+    border-radius: 8px; overflow: hidden;
+    display: flex; gap: 0;
+  }
+  .dzen-art-img {
+    width: 200px; height: 120px; object-fit: cover; flex-shrink: 0;
+  }
+  .dzen-art-body { padding: 14px 16px; flex: 1; }
+  .dzen-art-tag { font-size: 10px; color: #ff6420; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+  .dzen-art-title { font-size: 14px; font-weight: 700; color: #111; margin: 4px 0 6px; line-height: 1.35; }
+  .dzen-art-text { font-size: 12px; color: #555; line-height: 1.5; }
+  .dzen-art-meta { font-size: 10px; color: #999; margin-top: 8px; }
+
+  /* ────────────────────────────────
+     MAX MOCKUP
+  ──────────────────────────────── */
+  .max-phone {
+    width: 360px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 44px;
+    box-shadow: 0 40px 80px rgba(0,0,0,.6), 0 0 0 2px #2a3f58;
+    overflow: hidden;
+  }
+  .max-status {
+    background: #1a1a2e;
+    padding: 6px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 10px; color: #aaa;
+  }
+  .max-topbar {
+    background: #1a1a2e;
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid #2a2a4a;
+  }
+  .max-ava {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: #2d4a9e; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; color: #fff; flex-shrink: 0;
+  }
+  .max-ava img { width: 100%; height: 100%; object-fit: cover; }
+  .max-ch-name { font-size: 13px; font-weight: 700; color: #fff; }
+  .max-ch-sub { font-size: 11px; color: #7a7aaa; }
+  .max-feed {
+    background: #12122a;
+    height: 560px; overflow-y: auto;
+    padding: 8px 0;
+    scrollbar-width: none;
+  }
+  .max-feed::-webkit-scrollbar { display: none; }
+  .max-post {
+    margin: 0 8px 6px;
+    background: #1e1e3a;
+    border-radius: 12px; overflow: hidden;
+  }
+  .max-post-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+  .max-post-body { padding: 10px 12px; }
+  .max-post-text { font-size: 12px; color: #c8c8e0; line-height: 1.55; }
+  .max-post-text strong { color: #fff; }
+  .max-post-meta {
+    margin-top: 8px; display: flex; align-items: center;
+    justify-content: space-between; font-size: 10px; color: #5555a0;
+  }
+  .max-react { display: flex; gap: 6px; }
+  .max-r { background: #282848; border-radius: 10px; padding: 2px 7px; font-size: 11px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .browser-frame { width: 100%; }
+    .vk-sidebar { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="logo-mark">ФС</div>
+  <div>
+    <h1>Фарист Строй — Превью соц. сетей</h1>
+    <p>Как аккаунты бренда выглядят на 4 платформах</p>
+  </div>
+</header>
+
+<!-- TABS -->
+<nav class="platform-tabs">
+  <button class="tab-btn active" data-id="telegram">✈ Telegram</button>
+  <button class="tab-btn" data-id="vk">🔵 ВКонтакте</button>
+  <button class="tab-btn" data-id="dzen">🟠 Дзен</button>
+  <button class="tab-btn" data-id="max">💬 MAX</button>
+</nav>
+
+<!-- ═══════════════════════════════════
+     TELEGRAM
+═══════════════════════════════════ -->
+<section class="platform-view active" id="telegram">
+  <div class="view-label">
+    <h2>Telegram</h2>
+    <p>Канал «Фарист Строй» — строительство, интерьеры, кейсы, советы собственникам.</p>
+    <div class="stats">
+      <div class="stat-item"><div class="num">2 400+</div><div class="lbl">подписчиков</div></div>
+      <div class="stat-item"><div class="num">18%</div><div class="lbl">охват поста</div></div>
+      <div class="stat-item"><div class="num">3–4×</div><div class="lbl">постов в неделю</div></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="phone-frame">
+      <div style="background:#000; border-radius:44px 44px 0 0; padding-top:10px;">
+        <div class="phone-notch"></div>
+      </div>
+      <div class="phone-status">
+        <span>9:41</span>
+        <span>●●●●  WiFi  🔋</span>
+      </div>
+      <div class="tg-channel-header">
+        <div class="tg-back">‹</div>
+        <div class="tg-ava"><img src="fs-img/a01.png" alt=""></div>
+        <div class="tg-channel-info">
+          <h3>Фарист Строй</h3>
+          <p>2 418 подписчиков</p>
+        </div>
+        <div style="margin-left:auto; color:#5b9cf6; font-size:18px;">⋮</div>
+      </div>
+      <div class="tg-feed">
+        <div class="tg-svc">апрель 2025</div>
+        <div class="tg-pinned">📌 Закреплено: <span>Кейс — ЖК «Северная Звезда»</span></div>
+
+        <!-- Post 1 -->
+        <div class="tg-post">
+          <img class="tg-post-img" src="fs-img/s01.png" alt="Строительный объект">
+          <div class="tg-post-body">
+            <div class="tg-post-text">
+              <strong>🏗 ЖК «Северная Звезда» — сдан в срок</strong><br>
+              240 квартир, финишная отделка, сроки выдержаны. Вот как это выглядит изнутри 👇
+            </div>
+            <div class="tg-post-meta">
+              <div class="tg-reactions">
+                <span class="tg-react">👍 84</span>
+                <span class="tg-react">🔥 31</span>
+                <span class="tg-react">💬 12</span>
+              </div>
+              <span>18:42 · 1.1K 👁</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="tg-post">
+          <img class="tg-post-img" src="fs-img/s03.png" alt="Интерьер">
+          <div class="tg-post-body">
+            <div class="tg-post-text">
+              <strong>Открытая кухня + гостиная</strong> — самая популярная планировка 2024 года в наших проектах.<br>
+              Почему — рассказываем в статье 👆
+            </div>
+            <div class="tg-post-meta">
+              <div class="tg-reactions">
+                <span class="tg-react">❤️ 56</span>
+                <span class="tg-react">💬 8</span>
+              </div>
+              <span>14:10 · 892 👁</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="tg-post">
+          <img class="tg-post-img" src="fs-img/s05.png" alt="Фасад">
+          <div class="tg-post-body">
+            <div class="tg-post-text">
+              <strong>Фасады нашего последнего объекта</strong><br>
+              Немецкий кирпич, теплопотери −35% по сравнению с типовым проектом.
+            </div>
+            <div class="tg-post-meta">
+              <div class="tg-reactions">
+                <span class="tg-react">🏠 47</span>
+                <span class="tg-react">💬 5</span>
+              </div>
+              <span>10:00 · 743 👁</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     VK
+═══════════════════════════════════ -->
+<section class="platform-view" id="vk">
+  <div class="view-label">
+    <h2>ВКонтакте</h2>
+    <p>Группа для широкой аудитории: клиенты, партнёры, соискатели. Акцент на фото и кейсы.</p>
+    <div class="stats">
+      <div class="stat-item"><div class="num">5 100+</div><div class="lbl">участников</div></div>
+      <div class="stat-item"><div class="num">12%</div><div class="lbl">охват поста</div></div>
+      <div class="stat-item"><div class="num">5×</div><div class="lbl">постов в неделю</div></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="browser-frame">
+      <div class="browser-chrome">
+        <div class="browser-dots">
+          <div class="browser-dot d-red"></div>
+          <div class="browser-dot d-yellow"></div>
+          <div class="browser-dot d-green"></div>
+        </div>
+        <div class="browser-url">vk.com/farist_stroy</div>
+      </div>
+      <div class="vk-page">
+        <div class="vk-topbar">
+          <div class="vk-logo">VK</div>
+          <div class="vk-search">🔍 &nbsp;Поиск</div>
+          <div class="vk-nav-icons">
+            <span>💬</span><span>🔔</span><span>👤</span>
+          </div>
+        </div>
+        <div class="vk-body">
+          <div class="vk-sidebar">
+            <div class="vk-menu-item active"><span class="vk-menu-icon">🏠</span>Моя страница</div>
+            <div class="vk-menu-item"><span class="vk-menu-icon">📰</span>Новости</div>
+            <div class="vk-menu-item"><span class="vk-menu-icon">👥</span>Друзья</div>
+            <div class="vk-menu-item"><span class="vk-menu-icon">📸</span>Фото</div>
+            <div class="vk-menu-item"><span class="vk-menu-icon">🎬</span>Видео</div>
+            <div class="vk-menu-item"><span class="vk-menu-icon">🗂</span>Сообщества</div>
+          </div>
+          <div class="vk-main">
+            <!-- Group header -->
+            <div class="vk-group-header">
+              <img class="vk-cover" src="fs-img/s02.png" alt="Обложка">
+              <div class="vk-group-info">
+                <div class="vk-group-ava"><img src="fs-img/a01.png" alt=""></div>
+                <div>
+                  <div class="vk-group-name">Фарист Строй</div>
+                  <div class="vk-group-sub">5 134 участника · Строительная компания</div>
+                </div>
+                <button class="vk-group-btn">+ Подписаться</button>
+              </div>
+            </div>
+
+            <!-- Post 1 -->
+            <div class="vk-post">
+              <div class="vk-post-head">
+                <div class="vk-post-ava"><img src="fs-img/a01.png" alt=""></div>
+                <div>
+                  <div class="vk-post-name">Фарист Строй</div>
+                  <div class="vk-post-date">27 апреля в 10:00</div>
+                </div>
+              </div>
+              <img class="vk-post-img" src="fs-img/s04.png" alt="Объект">
+              <div class="vk-post-text">
+                <strong>Завершили монтаж фасада на объекте в Москве-Сити.</strong> Вентилируемый фасад из натурального камня, 14-й этаж. Смотрите, как выглядит финальный результат 👇
+              </div>
+              <div class="vk-post-actions">
+                <span class="vk-act">👍 142</span>
+                <span class="vk-act">💬 23</span>
+                <span class="vk-act">↩ Поделиться</span>
+                <span class="vk-act" style="margin-left:auto">👁 3.2K</span>
+              </div>
+            </div>
+
+            <!-- Post 2 -->
+            <div class="vk-post">
+              <div class="vk-post-head">
+                <div class="vk-post-ava"><img src="fs-img/a01.png" alt=""></div>
+                <div>
+                  <div class="vk-post-name">Фарист Строй</div>
+                  <div class="vk-post-date">25 апреля в 14:30</div>
+                </div>
+              </div>
+              <img class="vk-post-img" src="fs-img/s06.png" alt="Интерьер">
+              <div class="vk-post-text">
+                Дизайн-проект квартиры-студии 42 м². Минимализм, тёплые тона, максимум света. Наша команда — от нулевого цикла до финишной отделки.
+              </div>
+              <div class="vk-post-actions">
+                <span class="vk-act">👍 98</span>
+                <span class="vk-act">💬 17</span>
+                <span class="vk-act">↩ Поделиться</span>
+                <span class="vk-act" style="margin-left:auto">👁 2.1K</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     ДЗЕН
+═══════════════════════════════════ -->
+<section class="platform-view" id="dzen">
+  <div class="view-label">
+    <h2>Дзен</h2>
+    <p>Экспертный контент: длинные статьи, гайды, разборы. Привлечение органического трафика.</p>
+    <div class="stats">
+      <div class="stat-item"><div class="num">1 800+</div><div class="lbl">подписчиков</div></div>
+      <div class="stat-item"><div class="num">4 500</div><div class="lbl">дочитываний/мес</div></div>
+      <div class="stat-item"><div class="num">2×</div><div class="lbl">статьи в неделю</div></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="browser-frame">
+      <div class="browser-chrome">
+        <div class="browser-dots">
+          <div class="browser-dot d-red"></div>
+          <div class="browser-dot d-yellow"></div>
+          <div class="browser-dot d-green"></div>
+        </div>
+        <div class="browser-url">dzen.ru/farist_stroy</div>
+      </div>
+      <div class="dzen-page">
+        <div class="dzen-topbar">
+          <div class="dzen-logo">Д<span>зен</span></div>
+          <div class="dzen-search">🔍 &nbsp;Поиск</div>
+          <div class="dzen-nav">
+            <span>Главная</span><span>Мои каналы</span><span>Создать</span>
+          </div>
+        </div>
+        <div class="dzen-channel-header">
+          <div class="dzen-ava"><img src="fs-img/a01.png" alt=""></div>
+          <div>
+            <div class="dzen-ch-name">Фарист Строй</div>
+            <div class="dzen-ch-sub">1 834 подписчика · Строительство и ремонт</div>
+          </div>
+          <button class="dzen-sub-btn">Подписаться</button>
+        </div>
+        <div class="dzen-feed">
+          <div class="dzen-article">
+            <img class="dzen-art-img" src="fs-img/s07.png" alt="">
+            <div class="dzen-art-body">
+              <div class="dzen-art-tag">Кейс</div>
+              <div class="dzen-art-title">Как мы сдали 240 квартир на 12 дней раньше срока</div>
+              <div class="dzen-art-text">Разбираем, как правильное планирование поставок и BIM-модель помогли нам избежать задержек...</div>
+              <div class="dzen-art-meta">Фарист Строй · 8 мин · 2.1K дочитываний</div>
+            </div>
+          </div>
+          <div class="dzen-article">
+            <img class="dzen-art-img" src="fs-img/s08.png" alt="">
+            <div class="dzen-art-body">
+              <div class="dzen-art-tag">Советы</div>
+              <div class="dzen-art-title">5 ошибок при выборе подрядчика для ремонта квартиры</div>
+              <div class="dzen-art-text">Многие заказчики теряют деньги из-за типичных ошибок на старте. Вот что нужно проверить до подписания договора...</div>
+              <div class="dzen-art-meta">Фарист Строй · 6 мин · 3.8K дочитываний</div>
+            </div>
+          </div>
+          <div class="dzen-article">
+            <img class="dzen-art-img" src="fs-img/s09.png" alt="">
+            <div class="dzen-art-body">
+              <div class="dzen-art-tag">Материалы</div>
+              <div class="dzen-art-title">Вентилируемый фасад или штукатурка: что выгоднее в 2025</div>
+              <div class="dzen-art-text">Сравниваем два самых популярных типа фасадного решения по цене, долговечности и теплопотерям...</div>
+              <div class="dzen-art-meta">Фарист Строй · 5 мин · 1.4K дочитываний</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════
+     MAX
+═══════════════════════════════════ -->
+<section class="platform-view" id="max">
+  <div class="view-label">
+    <h2>MAX</h2>
+    <p>Мессенджер от МТС — молодая аудитория, короткие форматы, push-уведомления.</p>
+    <div class="stats">
+      <div class="stat-item"><div class="num">640+</div><div class="lbl">подписчиков</div></div>
+      <div class="stat-item"><div class="num">22%</div><div class="lbl">открываемость</div></div>
+      <div class="stat-item"><div class="num">3×</div><div class="lbl">постов в неделю</div></div>
+    </div>
+  </div>
+  <div class="mockup-wrap">
+    <div class="max-phone">
+      <div style="background:#000; border-radius:44px 44px 0 0; padding-top:10px;">
+        <div class="phone-notch"></div>
+      </div>
+      <div class="max-status">
+        <span>9:41</span>
+        <span>●●●●  MAX  🔋</span>
+      </div>
+      <div class="max-topbar">
+        <div class="max-ava"><img src="fs-img/a01.png" alt=""></div>
+        <div>
+          <div class="max-ch-name">Фарист Строй</div>
+          <div class="max-ch-sub">641 подписчик</div>
+        </div>
+        <div style="margin-left:auto; color:#7a7aaa; font-size:18px;">⋮</div>
+      </div>
+      <div class="max-feed">
+
+        <!-- Post 1 -->
+        <div class="max-post">
+          <img class="max-post-img" src="fs-img/s02.png" alt="">
+          <div class="max-post-body">
+            <div class="max-post-text">
+              <strong>🏗 Объект месяца:</strong> торговый центр в Химках.<br>
+              Стекло, сталь, 6 этажей — сдаём на этой неделе.
+            </div>
+            <div class="max-post-meta">
+              <div class="max-react">
+                <span class="max-r">🔥 44</span>
+                <span class="max-r">👍 28</span>
+              </div>
+              <span>17:00 · 410 👁</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 2 -->
+        <div class="max-post">
+          <img class="max-post-img" src="fs-img/s03.png" alt="">
+          <div class="max-post-body">
+            <div class="max-post-text">
+              Светлая гостиная, панорамные окна, высота потолков 3.2 м.<br>
+              <strong>Наш последний сданный объект — ЖК «Рассвет»</strong>
+            </div>
+            <div class="max-post-meta">
+              <div class="max-react">
+                <span class="max-r">❤️ 36</span>
+                <span class="max-r">💬 9</span>
+              </div>
+              <span>12:30 · 318 👁</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Post 3 -->
+        <div class="max-post">
+          <img class="max-post-img" src="fs-img/a04.png" alt="">
+          <div class="max-post-body">
+            <div class="max-post-text">
+              <strong>Факты о Фарист Строй:</strong><br>
+              · 15 лет на рынке<br>
+              · 120+ сданных объектов<br>
+              · Гарантия 5 лет на все работы
+            </div>
+            <div class="max-post-meta">
+              <div class="max-react">
+                <span class="max-r">💪 52</span>
+              </div>
+              <span>09:00 · 521 👁</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var buttons = document.querySelectorAll('.tab-btn');
+  var sections = document.querySelectorAll('.platform-view');
+
+  buttons.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.getAttribute('data-id');
+
+      // deactivate all
+      buttons.forEach(function(b) { b.classList.remove('active'); });
+      sections.forEach(function(s) { s.classList.remove('active'); });
+
+      // activate clicked
+      this.classList.add('active');
+      var target = document.getElementById(id);
+      if (target) target.classList.add('active');
+    });
+  });
+});
+</script>
+</body>
+</html>

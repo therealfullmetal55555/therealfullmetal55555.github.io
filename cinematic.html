@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liquid Glass UI — Кирилл Цыганов</title>
+<link rel="stylesheet" href="css/main.css">
+<style>
+body { background: var(--void); color: var(--void-text); overflow-x: hidden; }
+
+/* ── Liquid-glass utilities ──────────────────────────────── */
+.lg {
+  background: rgba(255,255,255,0.01);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  position: relative;
+  overflow: hidden;
+}
+.lg::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.38) 0%,
+    rgba(255,255,255,0.10) 20%,
+    rgba(255,255,255,0)    40%,
+    rgba(255,255,255,0)    60%,
+    rgba(255,255,255,0.10) 80%,
+    rgba(255,255,255,0.38) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.lg-strong {
+  background: rgba(255,255,255,0.02);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  box-shadow: 4px 4px 16px rgba(0,0,0,0.18), inset 0 1px 1px rgba(255,255,255,0.12);
+  position: relative;
+  overflow: hidden;
+}
+.lg-strong::before {
+  content: "";
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.42) 0%,
+    rgba(255,255,255,0.12) 20%,
+    rgba(255,255,255,0)    40%,
+    rgba(255,255,255,0)    60%,
+    rgba(255,255,255,0.12) 80%,
+    rgba(255,255,255,0.42) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.cin-hero {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.cin-video {
+  position: absolute;
+  left: 50%; top: 0;
+  transform: translateX(-50%);
+  width: 120%; height: 120%;
+  object-fit: cover;
+  object-position: center top;
+  z-index: 0;
+  opacity: 0;
+}
+
+/* No overlay — contrast via glass */
+.cin-layer {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column;
+  height: 100%;
+}
+
+/* ── Navbar ──────────────────────────────────────────────── */
+.cin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 48px;
+}
+.cin-nav-logo {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.cin-nav-logo span {
+  font-family: var(--f-head);
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: -0.05em;
+}
+.cin-nav-pill {
+  border-radius: 9999px;
+  padding: 6px 6px;
+  display: flex; align-items: center; gap: 4px;
+}
+.cin-nav-link {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.75);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 9999px;
+  transition: color 0.2s;
+}
+.cin-nav-link:hover { color: rgba(255,255,255,1); }
+.cin-nav-cta {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 500;
+  background: rgba(255,255,255,0.95);
+  color: #000;
+  border: none;
+  border-radius: 9999px;
+  padding: 9px 18px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  transition: opacity 0.2s;
+  text-decoration: none;
+}
+.cin-nav-cta:hover { opacity: 0.85; }
+.cin-nav-spacer { width: 44px; }
+
+/* ── Hero center ─────────────────────────────────────────── */
+.cin-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px;
+  gap: 20px;
+}
+
+.cin-badge {
+  border-radius: 9999px;
+  padding: 5px 6px;
+  display: inline-flex; align-items: center; gap: 8px;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.3s forwards;
+}
+.cin-badge-chip {
+  background: rgba(255,255,255,0.95);
+  color: #000;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 9999px;
+}
+.cin-badge-text {
+  font-family: var(--f-body);
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  padding-right: 10px;
+}
+
+.cin-title {
+  font-family: var(--f-head);
+  font-size: clamp(52px, 10vw, 128px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  color: rgba(255,255,255,0.97);
+  max-width: 10ch;
+  opacity: 0;
+  filter: blur(12px);
+  animation: blurIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.5s forwards;
+}
+
+.cin-sub {
+  font-family: var(--f-body);
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.65);
+  line-height: 1.65;
+  max-width: 46ch;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.75s forwards;
+}
+
+.cin-actions {
+  display: flex; align-items: center; gap: 28px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 0.95s forwards;
+}
+.cin-btn-primary {
+  border-radius: 9999px;
+  padding: 11px 22px;
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.9);
+  border: none;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none;
+}
+.cin-btn-secondary {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.55);
+  background: none; border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 6px;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.cin-btn-secondary:hover { color: rgba(255,255,255,0.85); }
+
+/* ── Stat cards ──────────────────────────────────────────── */
+.cin-stats {
+  display: flex; gap: 14px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 1.1s forwards;
+}
+.cin-card {
+  border-radius: 18px;
+  padding: 20px;
+  width: 200px;
+  display: flex; flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+.cin-card-num {
+  font-family: var(--f-head);
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: rgba(255,255,255,0.92);
+}
+.cin-card-label {
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.4;
+}
+
+/* ── Partners ────────────────────────────────────────────── */
+.cin-partners {
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+  padding-bottom: 32px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) 1.25s forwards;
+}
+.cin-partners-label {
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-family: var(--f-body);
+  font-size: 11px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.55);
+}
+.cin-partners-row {
+  display: flex; align-items: center; gap: 36px;
+}
+.cin-partner-name {
+  font-family: var(--f-head);
+  font-size: clamp(16px, 2.4vw, 26px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: rgba(255,255,255,0.22);
+  transition: color 0.3s;
+  cursor: default;
+}
+.cin-partner-name:hover { color: rgba(255,255,255,0.5); }
+
+/* ── Keyframes ───────────────────────────────────────────── */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes blurIn {
+  to { opacity: 1; filter: blur(0); }
+}
+
+/* ── Technique section ───────────────────────────────────── */
+.cin-about {
+  background: var(--void);
+  border-top: 1px solid var(--void-border);
+  padding: 104px 48px;
+}
+.cin-about-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+  margin-bottom: 96px;
+}
+.cin-about-label {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: oklch(28% 0.003 60);
+  padding-top: 8px;
+  flex-shrink: 0;
+}
+.cin-about-title {
+  font-family: var(--f-head);
+  font-size: clamp(42px, 7vw, 96px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  color: var(--void-text);
+}
+.cin-about-title em {
+  font-style: normal;
+  color: oklch(30% 0.003 60);
+}
+.cin-about-desc {
+  font-family: var(--f-body);
+  font-size: 14px;
+  font-weight: 300;
+  color: oklch(45% 0.003 60);
+  line-height: 1.9;
+  max-width: 44ch;
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+/* ── Capability cards ────────────────────────────────────── */
+.cin-caps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--void-border);
+  border: 1px solid var(--void-border);
+}
+.cin-cap {
+  background: var(--void);
+  padding: 44px 36px;
+  display: flex; flex-direction: column; gap: 20px;
+  transition: background 0.3s;
+}
+.cin-cap:hover { background: oklch(6.5% 0.004 60); }
+.cin-cap-n {
+  font-family: var(--f-head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: oklch(22% 0.003 60);
+}
+.cin-cap-title {
+  font-family: var(--f-head);
+  font-size: clamp(22px, 3vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--void-text);
+}
+.cin-cap-body {
+  font-family: var(--f-body);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: oklch(42% 0.003 60);
+  max-width: 32ch;
+  flex: 1;
+}
+.cin-cap-tags {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.cin-cap-tag {
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: oklch(28% 0.003 60);
+  border: 1px solid oklch(14% 0.003 60);
+  padding: 4px 10px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.cin-cap:hover .cin-cap-tag { color: oklch(40% 0.003 60); border-color: oklch(20% 0.003 60); }
+
+/* ── Live preview strip ──────────────────────────────────── */
+.cin-preview {
+  border-top: 1px solid var(--void-border);
+  padding: 104px 48px;
+}
+.cin-preview-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: oklch(26% 0.003 60);
+  font-family: var(--f-mono);
+  margin-bottom: 48px;
+}
+.cin-preview-frame {
+  position: relative;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #000;
+}
+.cin-preview-video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+}
+.cin-preview-over {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 40px;
+  gap: 8px;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%);
+}
+.cin-preview-tag {
+  border-radius: 9999px;
+  padding: 4px 14px;
+  font-family: var(--f-mono);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+}
+.cin-preview-title {
+  font-family: var(--f-head);
+  font-size: clamp(28px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: rgba(255,255,255,0.95);
+}
+
+/* ── CTA strip ───────────────────────────────────────────── */
+.cin-cta-strip {
+  border-top: 1px solid var(--void-border);
+  padding: 80px 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+.cin-cta-text {
+  font-family: var(--f-head);
+  font-size: clamp(28px, 5vw, 64px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--void-text);
+}
+.cin-cta-text em {
+  font-style: normal;
+  color: oklch(30% 0.003 60);
+}
+.cin-cta-actions { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .cin-nav { padding: 16px 20px; }
+  .cin-nav-pill { display: none; }
+  .cin-center { padding: 0 16px; }
+  .cin-stats { flex-direction: column; gap: 10px; }
+  .cin-card { width: 100%; }
+  .cin-about { padding: 72px 20px; }
+  .cin-about-top { flex-direction: column; gap: 28px; }
+  .cin-caps { grid-template-columns: 1fr; }
+  .cin-preview { padding: 72px 20px; }
+  .cin-cta-strip { flex-direction: column; align-items: flex-start; padding: 60px 20px; }
+  .cin-partners-row { gap: 20px; flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section class="cin-hero">
+  <video id="heroVideo" class="cin-video" muted playsinline preload="auto"></video>
+
+  <div class="cin-layer">
+    <!-- Navbar -->
+    <nav class="cin-nav">
+      <div class="cin-nav-logo lg">
+        <span>к</span>
+      </div>
+
+      <div class="cin-nav-pill lg">
+        <a href="index.html" class="cin-nav-link">Главная</a>
+        <a href="projects.html" class="cin-nav-link">Проекты</a>
+        <a href="webdesign.html" class="cin-nav-link">Web Design</a>
+        <a href="contact.html" class="cin-nav-link">Контакт</a>
+        <a href="contact.html" class="cin-nav-cta">
+          Связаться
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+      </div>
+
+      <div class="cin-nav-spacer"></div>
+    </nav>
+
+    <!-- Center content -->
+    <div class="cin-center">
+      <!-- Badge -->
+      <div class="cin-badge lg">
+        <span class="cin-badge-chip">Live Demo</span>
+        <span class="cin-badge-text">Liquid Glass UI · Video Crossfade · 2026</span>
+      </div>
+
+      <!-- Title -->
+      <h1 class="cin-title">Cinematic<br>Web UI</h1>
+
+      <!-- Subtitle -->
+      <p class="cin-sub">
+        Жидкое стекло, фоновое видео с плавным кросс-фейдом через requestAnimationFrame, пословные blur-анимации. Всё без CSS-transition на видео.
+      </p>
+
+      <!-- Actions -->
+      <div class="cin-actions">
+        <a href="webdesign.html" class="cin-btn-primary lg-strong">
+          ← Все техники
+        </a>
+        <a href="contact.html" class="cin-btn-secondary">
+          Заказать проект
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg>
+        </a>
+      </div>
+
+      <!-- Stats -->
+      <div class="cin-stats">
+        <div class="cin-card lg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <div>
+            <div class="cin-card-num">500ms</div>
+            <div class="cin-card-label">Fade-duration<br>rAF-точность</div>
+          </div>
+        </div>
+        <div class="cin-card lg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          </svg>
+          <div>
+            <div class="cin-card-num">0 CSS</div>
+            <div class="cin-card-label">Переходов на видео<br>чистый JS loop</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partners -->
+    <div class="cin-partners">
+      <div class="cin-partners-label lg">Технологии</div>
+      <div class="cin-partners-row">
+        <span class="cin-partner-name">React</span>
+        <span class="cin-partner-name">Framer</span>
+        <span class="cin-partner-name">Tailwind</span>
+        <span class="cin-partner-name">rAF API</span>
+        <span class="cin-partner-name">CSS Mask</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ──────────────────────────────────────────────── -->
+<section class="cin-about">
+  <div class="cin-about-top reveal">
+    <span class="cin-about-label">07 · Техника</span>
+    <h2 class="cin-about-title">
+      Liquid<br>
+      <em>Glass</em><br>
+      UI
+    </h2>
+    <p class="cin-about-desc">
+      Жидкое стекло — эффект на основе backdrop-filter, псевдоэлемента с gradient-border через CSS mask, и многослойных box-shadow. Видео-фон использует ручной кросс-фейд: opacity управляется requestAnimationFrame без CSS transition, что даёт плавный loop с fade-out за 0.55 сек до конца ролика.
+    </p>
+  </div>
+
+  <div class="cin-caps">
+    <div class="cin-cap reveal">
+      <span class="cin-cap-n">01</span>
+      <h3 class="cin-cap-title">Gradient<br>Border</h3>
+      <p class="cin-cap-body">Border из чистого CSS — линейный градиент на псевдоэлементе с padding + CSS mask: exclude. Никаких дополнительных DOM-элементов.</p>
+      <div class="cin-cap-tags">
+        <span class="cin-cap-tag">CSS Mask</span>
+        <span class="cin-cap-tag">::before</span>
+        <span class="cin-cap-tag">Linear Gradient</span>
+      </div>
+    </div>
+    <div class="cin-cap reveal">
+      <span class="cin-cap-n">02</span>
+      <h3 class="cin-cap-title">rAF<br>Crossfade</h3>
+      <p class="cin-cap-body">Video loop без CSS. requestAnimationFrame считывает текущий opacity и интерполирует к цели — каждый новый вызов отменяет предыдущий через cancelAnimationFrame.</p>
+      <div class="cin-cap-tags">
+        <span class="cin-cap-tag">rAF</span>
+        <span class="cin-cap-tag">Video API</span>
+        <span class="cin-cap-tag">No CSS Trans</span>
+      </div>
+    </div>
+    <div class="cin-cap reveal">
+      <span class="cin-cap-n">03</span>
+      <h3 class="cin-cap-title">Blur<br>Entrance</h3>
+      <p class="cin-cap-body">Пословная анимация через Framer Motion keyframes: blur(10px) → blur(5px) → blur(0) с 3-шаговым easing и stagger 100ms между словами.</p>
+      <div class="cin-cap-tags">
+        <span class="cin-cap-tag">Framer Motion</span>
+        <span class="cin-cap-tag">IntersectionObserver</span>
+        <span class="cin-cap-tag">Keyframes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── LIVE PREVIEW ───────────────────────────────────────── -->
+<section class="cin-preview">
+  <div class="cin-preview-label reveal">Live preview — фоновое видео</div>
+  <div class="cin-preview-frame reveal">
+    <video id="previewVideo" class="cin-preview-video" muted playsinline preload="auto"></video>
+    <div class="cin-preview-over">
+      <div class="cin-preview-tag lg">Cinematic UI · Demo</div>
+      <div class="cin-preview-title">Venture Past<br>Our Sky</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA ───────────────────────────────────────────────── -->
+<section class="cin-cta-strip reveal">
+  <div class="cin-cta-text">
+    Нужен такой<br>
+    <em>же сайт?</em>
+  </div>
+  <div class="cin-cta-actions">
+    <a href="contact.html" class="btn btn--inv">Написать →</a>
+    <a href="projects.html" class="btn">Все проекты</a>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────────── -->
+<footer class="site-footer">
+  <a href="index.html" class="logo"><span class="l-first">кирилл</span><span class="l-mid">·</span><span class="l-last">цыганов</span></a>
+  <nav class="footer-nav">
+    <a href="mailto:millyrock2900 [at] gmail.com">millyrock2900 [at] gmail.com</a>
+  </nav>
+</footer>
+
+<script>
+// ── FadingVideo (vanilla) ─────────────────────────────────
+const FADE_MS = 500;
+const FADE_OUT_LEAD = 0.55;
+
+function initFadingVideo(video, src) {
+  let rafId = null;
+  let fadingOut = false;
+  video.src = src;
+
+  function fadeTo(target, duration) {
+    if (rafId) cancelAnimationFrame(rafId);
+    const start = performance.now();
+    const from = parseFloat(video.style.opacity) || 0;
+    function step(now) {
+      const t = Math.min((now - start) / duration, 1);
+      video.style.opacity = from + (target - from) * t;
+      if (t < 1) rafId = requestAnimationFrame(step);
+      else rafId = null;
+    }
+    rafId = requestAnimationFrame(step);
+  }
+
+  video.addEventListener('loadeddata', () => {
+    video.style.opacity = '0';
+    video.play().catch(() => {});
+    fadeTo(1, FADE_MS);
+  });
+
+  video.addEventListener('timeupdate', () => {
+    if (!fadingOut && video.duration > 0) {
+      const rem = video.duration - video.currentTime;
+      if (rem <= FADE_OUT_LEAD && rem > 0) {
+        fadingOut = true;
+        fadeTo(0, FADE_MS);
+      }
+    }
+  });
+
+  video.addEventListener('ended', () => {
+    video.style.opacity = '0';
+    setTimeout(() => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+      fadingOut = false;
+      fadeTo(1, FADE_MS);
+    }, 100);
+  });
+}
+
+initFadingVideo(
+  document.getElementById('heroVideo'),
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_080021_d598092b-c4c2-4e53-8e46-94cf9064cd50.mp4'
+);
+initFadingVideo(
+  document.getElementById('previewVideo'),
+  'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260418_094631_d30ab262-45ee-4b7d-99f3-5d5848c8ef13.mp4'
+);
+
+// ── Scroll reveal ─────────────────────────────────────────
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.animation = 'fadeUp 0.75s cubic-bezier(0.22,1,0.36,1) forwards';
+      revObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(20px)';
+  revObs.observe(el);
+});
+</script>
+</body>
+</html>
